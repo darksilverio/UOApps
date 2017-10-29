@@ -1,0 +1,44 @@
+SET %skinit 0
+
+SET %cuttingTool WRH_OMH_BPH
+
+FINDITEM YFM G_2
+;;FINDITEM RVH G_3
+if #findkind <> -1
+{
+   set %corpse #findid
+   if %skinit = 1
+      GOSUB skinit
+   GOSUB openCorpse
+   ignoreitem %corpse
+}
+
+SUB openCorpse
+
+  set #lObjectID %corpse ;sets the corpse as lastobject used
+  event Macro 17 0 ;use last object macro
+  ;wait 5
+RETURN
+
+
+SUB skinit
+  findItem %cuttingTool C_ , #BACKPACKID ;Finds Dagger or Kryss to skin corpse with
+  If #findKind = -1
+  {
+    findItem %cuttingTool C_ , #CHARID ;Finds Dagger or Kryss to skin corpse with
+    If #findKind = -1
+    {
+      msg Dam wheres my cutting tool? $
+      halt
+    }
+  }
+  set %Dagger #findID
+  set #lTargetID %corpse
+  set #lObjectID %Dagger
+  set #lTargetKind 1
+  event Macro 17 0
+  wait 7
+  Target
+  event Macro 22 0
+  wait 7
+return
