@@ -1,0 +1,209 @@
+<!DOCTYPE profile>
+<profile>
+ <data name="CommandPrefix">0x0</data>
+ <data name="UseObjectsQueue">True</data>
+ <data name="ShowCorpseNames">True</data>
+ <data name="ShowCreatureNames">False</data>
+ <data name="OpenCorpses">False</data>
+ <data name="OpenCorpsesRange">0x2</data>
+ <data name="ShowMobileHits">True</data>
+ <data name="PositionInTitle">True</data>
+ <data name="ForceResolution">True</data>
+ <data name="GameWindowWidth">0x480</data>
+ <data name="GameWindowHeight">0x320</data>
+ <data name="FilterLight">True</data>
+ <data name="FilterMusic">False</data>
+ <data name="FilterBardsMusic">False</data>
+ <data name="FilterSound">False</data>
+ <data name="FilterWeather">False</data>
+ <data name="FilterSeason">False</data>
+ <data name="FixedSeason">0x0</data>
+ <data name="FilterDeath">False</data>
+ <data name="FilterRepeatedMessages">False</data>
+ <data name="FilterOthersSpeechColor">False</data>
+ <data name="FilterSnoopingMessages">False</data>
+ <data name="FilterTradeWindow">False</data>
+ <data name="FilterRewardGump">False</data>
+ <data name="HandsBeforePotions">False</data>
+ <data name="HandsBeforeCasting">False</data>
+ <data name="SmartTarget">0x0</data>
+ <data name="SmartTargetRange">False</data>
+ <data name="SmartTargetRangeValue">0xc</data>
+ <data name="HighlightCurrentTarget">True</data>
+ <data name="BlockInvalidHeal">False</data>
+ <data name="ActionDelay">0x1f4</data>
+ <data name="UseObjectsLimit">0xa</data>
+ <data name="TargetShare">0x1</data>
+ <data name="MountSerial">0xffffffff</data>
+ <data name="BladeSerial">0x40130f5c</data>
+ <data name="BoneCutter">True</data>
+ <data name="AutoMount">False</data>
+ <data name="AutoBandage">False</data>
+ <data name="AutoBandageTarget">0x0</data>
+ <data name="AutoBandageScale">False</data>
+ <data name="AutoBandageCount">False</data>
+ <data name="AutoBandageStart">False</data>
+ <data name="AutoBandageStartValue">0x23</data>
+ <data name="AutoBandageDelay">0x9c4</data>
+ <data name="AutoBandageFormula">False</data>
+ <data name="AutoBandageHidden">False</data>
+ <data name="OpenDoors">True</data>
+ <data name="UseDoors">True</data>
+ <data name="SpellsColor">True</data>
+ <data name="SpellsMode">0x2</data>
+ <data name="SpellsTargetShare">0x0</data>
+ <data name="OpenDoorsMode">0x0</data>
+ <data name="OpenCorpsesMode">0x0</data>
+ <data name="ShowMobileFlags">True</data>
+ <data name="StateHighlightMode">0x3</data>
+ <data name="StaticFields">True</data>
+ <data name="CountStealthSteps">True</data>
+ <data name="FriendsListOnly">False</data>
+ <data name="FriendsParty">True</data>
+ <data name="MoveConflictingItems">False</data>
+ <data name="CustomCaption">True</data>
+ <data name="CustomCaptionMode">0x1</data>
+ <data name="CustomCaptionText">UO - $name $statusbar H:$hits / S:$stam / M:$mana / BandTimer: $bandagetimer  $criminaltimer /   %ss %bp %mr %ns %ga %sa %gi %gm %cntr-9 %bandage %lesser-explo %g-heal %total-mana %invis  %total-mana  %cure %refresh %life-boost  %mana-boost  %great-refil</data>
+ <data name="WarnCounters">True</data>
+ <data name="WarnCountersValue">0x5</data>
+ <data name="HighlightReagents">True</data>
+ <data name="DisplayCountersName">False</data>
+ <data name="CaptionUseNotoHue">True</data>
+ <data name="CaptionUseNotoHue">True</data>
+ <data name="DisplayCountersImage">True</data>
+ <data name="FilterKarmaMessages">False</data>
+ <data name="FilterFameMessages">False</data>
+ <data name="PreventDismount">False</data>
+ <data name="PreventAttackFriends">True</data>
+ <data name="AutoSearchContainers">True</data>
+ <data name="AutoAcceptParty">True</data>
+ <data name="StaticFieldsMode">0x1</data>
+ <counters>
+  <counter format="ss" name="Spiders' Silk" enabled="True" color="0x0" graphic="0xf8d" image="True"/>
+  <counter format="bp" name="Black Pearl" enabled="True" color="0x0" graphic="0xf7a" image="True"/>
+  <counter format="mr" name="Mandrake Root" enabled="True" color="0x0" graphic="0xf86" image="True"/>
+  <counter format="ns" name="Nightshade" enabled="True" color="0x0" graphic="0xf88" image="True"/>
+  <counter format="ga" name="Garlic" enabled="True" color="0x0" graphic="0xf84" image="True"/>
+  <counter format="sa" name="Sulfurous Ash" enabled="True" color="0x0" graphic="0xf8c" image="True"/>
+  <counter format="gi" name="Ginseng" enabled="True" color="0x0" graphic="0xf85" image="True"/>
+  <counter format="gm" name="Blood Moss" enabled="True" color="0x0" graphic="0xf7b" image="True"/>
+  <counter format="cntr-9" name="arrow" enabled="True" color="0x0" graphic="0xf3f" image="True"/>
+  <counter format="bandage" name="clean bandage" enabled="True" color="0x0" graphic="0xe21" image="True"/>
+  <counter format="lesser-explo" name="Lesser Exposion" enabled="True" color="0x0" graphic="0xf02" image="True"/>
+  <counter format="g-heal" name="Great Heal" enabled="True" color="0x99" graphic="0xf0e" image="True"/>
+  <counter format="life-boost" name="Life boot" enabled="True" color="0x26" graphic="0xf82" image="True"/>
+  <counter format="mana-boost" name="Mana Boost" enabled="True" color="0x532" graphic="0xf82" image="True"/>
+  <counter format="total-mana" name="Total Mana" enabled="True" color="0x480" graphic="0xf0e" image="True"/>
+  <counter format="invis" name="Invis" enabled="True" color="0x1" graphic="0xf0e" image="True"/>
+  <counter format="cure" name="Cure" enabled="True" color="0x8f" graphic="0xf0e" image="True"/>
+  <counter format="refresh" name="Refresh" enabled="True" color="0x22" graphic="0xf0e" image="True"/>
+  <counter format="great-refil" name="Great Refilling" enabled="True" color="0x17f" graphic="0xf82" image="True"/>
+  <counter format="iron" name="iron" enabled="True" color="0x0" graphic="0x1bef" image="True"/>
+  <counter format="cparts" name="cparts" enabled="True" color="0x0" graphic="0x104f" image="True"/>
+ </counters>
+ <scavenger enabled="True">
+  <scavenge enabled="True" color="0xf2" graphic="0x19b9"/>
+  <scavenge enabled="True" color="0xf2" graphic="0x19b7"/>
+ </scavenger>
+ <autosearchexemptions/>
+ <objects>
+  <obj name="animal">0xcd77d</obj>
+  <obj name="wep">0x4005ba83</obj>
+ </objects>
+ <hotkeys>
+  <hotkey key="0x7b" action="macro.play" pass="True" param="zzTMP"/>
+  <hotkey key="0x74" action="macro.play" pass="True" param="castParalizeField"/>
+  <hotkey key="0x24d" action="macro.play" pass="False" param="skillMeditation"/>
+  <hotkey key="0x248" action="macro.play" pass="False" param="skillHidingStealth"/>
+  <hotkey key="0x70" action="macro.play" pass="False" param="equipBow"/>
+  <hotkey key="0x71" action="macro.play" pass="False" param="equipWeaponShield"/>
+  <hotkey key="0x78" action="macro.play" pass="False" param="pvpEscapeParalize"/>
+  <hotkey key="0x77" action="macro.play" pass="False" param="zztmp3"/>
+  <hotkey key="0x31" action="macro.play" pass="False" param="attackClosestHostile"/>
+  <hotkey key="0x32" action="macro.play" pass="False" param="attackNextHostile"/>
+  <hotkey key="0xc0" action="macro.play" pass="False" param="pvpTargetLast"/>
+  <hotkey key="0x254" action="macro.play" pass="False" param="skillAnimalTaming"/>
+  <hotkey key="0x13" action="macro.play" pass="False" param="pvpFuga"/>
+  <hotkey key="0x2d" action="macro.play" pass="False" param="zzGoHome"/>
+  <hotkey key="0x252" action="macro.play" pass="False" param="skillTracking"/>
+  <hotkey key="0x22" action="main.ping" pass="False"/>
+ </hotkeys>
+ <macros>
+  <macro loop="True" name="zzTMP" interrupt="True">usetype 0x14ed;pause 2500;</macro>
+  <macro loop="False" name="castParalizeField" interrupt="True">headmsg "Target Paralyze Field" 0xff1;cast "Paralyze Field";waitingfortarget 500;</macro>
+  <macro loop="False" name="skillMeditation" interrupt="False">headmsg "Meditation" 0xff1;warmode 'off';useskill 'Meditation';</macro>
+  <macro loop="False" name="skillHidingStealth" interrupt="True">warmode 'off';useskill 'Hiding';clearjournal;@clearlist 'counter';@createlist 'counter';while not @injournal 'You have hidden';pushlist 'counter' 'abc';if list 'counter' == 1;headmsg "Hiding alert 1" 0xff1;endif;if list 'counter' == 2;headmsg "Hiding alert  2" 0xff1;endif;if list 'counter' == 3;headmsg "Hiding NOW" 0xff1;endif;pause 1000;endwhile;@clearlist 'counter';clearjournal;while not @injournal 'You have been revealed';clearjournal;useskill 'Stealth';waitforjournal 'You begin to move' 4000;pushlist 'counter' 'abc';if list 'counter' == 1;headmsg "Stealth active" 0xff1;endif;if @injournal 'You must use the hiding';break;endif;endwhile;</macro>
+  <macro loop="False" name="equipBow" interrupt="True">headmsg "Equip Bow + Bandage" 0xff1;bandageself;pause 600;warmode 'on';if not listexists 'WepList';createlist 'WepList';endif;@clearlist 'WepList';@pushlist 'WepList' 0x13b1 //bow;//;for 0 to 'WepList';if @findtype 'WepList[]' 'any' 'backpack';@unsetalias 'WEP';@setalias 'WEP' 'found';if not @findlayer 'self' 2;equipitem 'WEP' 2;endif;endif;endfor;attack 'last';</macro>
+  <macro loop="False" name="equipWeaponShield" interrupt="True">headmsg "Equip Weap-Shil + Band" 0xff1;bandageself;pause 600;warmode 'on';if not listexists 'WepList';createlist 'WepList';endif;@clearlist 'WepList';@pushlist 'WepList' 0x1b7b //metal shield;@pushlist 'WepList' 0x1400 //kiss;@pushlist 'WepList' 0x1b76 //heatet shield;@pushlist 'WepList' 0x13fe //katana;@pushlist 'WepList' 0x143f //Helbard;@pushlist 'WepList' 0x13b9 //vivking;@pushlist 'WepList' 0xf4e //bardiche;@pushlist 'WepList' 0xf4e //bardiche;//;for 0 to 'WepList';if @findtype 'WepList[]' 'any' 'backpack';@unsetalias 'WEP';@setalias 'WEP' 'found';if not @findlayer 'self' 2;equipitem 'WEP' 2;endif;endif;endfor;attack 'last';//@Getenemy 'murderer' 'Enemy' 'criminal' 'gray' 'closest';//if @findobject 'enemy';//  autotargetobject! 'enemy';//  attack! 'enemy';//endif;//@clearusequeue;//@cancelautotarget;</macro>
+  <macro loop="False" name="pvpEscapeParalize" interrupt="False">headmsg "Escape Paralize" 0xff1;if @findtype 0xf02 'any' 'self';cast 'Magic Arrow';waitfortarget 2000;target 'found';else;if mana &lt;= 90;usetype 0xf0e 1152 //potion;endif;cast 'Dispel';waitfortarget 8000;target 'self';endif;//equipitem 'found' 2;//findtype 0x13b1 'any' 'self';</macro>
+  <macro loop="True" name="zztmp2" interrupt="True">useskill 'Peacemaking';pause 250;</macro>
+  <macro loop="True" name="zztmp3" interrupt="True">@usetype '0x1ebc';@automenu! 'Tinkering' 'Parts' '' 'clock parts';clearjournal;if counter 'cparts' > 150;organizer 'cparts';pause 1000;endif;if counter 'iron' &lt; 30;organizer 'iron';pause 1000;endif;if skill 'Tinkering' >= 70;stop;endif;waitforjournal 'in your pack' 4000;</macro>
+  <macro loop="False" name="attackClosestHostile" interrupt="True">headmsg "Attack closest hostile" 0xff1;getenemy 'murderer' 'enemy' 'criminal' 'gray' 'closest';if @findobject 'enemy';autotargetobject! 'enemy';attack! 'enemy';endif;@clearusequeue;@cancelautotarget;</macro>
+  <macro loop="False" name="attackNextHostile" interrupt="True">headmsg "Attack next hostile" 0xff1;getenemy 'murderer' 'enemy' 'criminal' 'gray' 'next';if @findobject 'enemy';autotargetobject! 'enemy';attack! 'enemy';endif;@clearusequeue;@cancelautotarget;</macro>
+  <macro loop="False" name="pvpTargetLast" interrupt="True">target! 'last';</macro>
+  <macro loop="True" name="skillAnimalTaming" interrupt="True">if not @findobject 'animal';headmsg "Skill Animal Taming" 0xff1;warmode 'off';promptalias 'animal';endif;autotargetobject 'animal';usetype! 0xeb2 389;clearjournal;for 120;if @injournal 'falhou' or @injournal 'too far';break;endif;if @injournal 'linha de visao';break;endif;if  @injournal 'mestre' or @injournal 'belong';stop;endif;pause 100;endfor;</macro>
+  <macro loop="False" name="pvpFuga" interrupt="True">headmsg "FUGA" 0xff1;usetype 0xf0e 1;msg '.recall 1 1';pause 500;bandageself;</macro>
+  <macro loop="False" name="zzGoHome" interrupt="True">headmsg "Go Home" 0xff1;msg '.recall 1 1';pause 500;bandageself;</macro>
+  <macro loop="False" name="skillTracking" interrupt="True">headmsg "Skill Traking" 0xff1;useskill 'Tracking';</macro>
+ </macros>
+ <spellgrid>
+  <grid y="800" name="Grid-1" enabled="True" locked="True" x="50"/>
+ </spellgrid>
+ <organizer>
+  <group loop="False" name="regs" target="0x4003d343" stack="False" complete="False" source="0x4007ba6c">
+   <item graphic="0xf86" amount="0x0"/>
+   <item graphic="0xf8c" amount="0x0"/>
+   <item graphic="0xf78" amount="0x0"/>
+   <item graphic="0xf88" amount="0x0"/>
+   <item graphic="0xf7a" amount="0x0"/>
+   <item graphic="0xf84" amount="0x0"/>
+   <item graphic="0xf85" amount="0x0"/>
+   <item graphic="0xf7b" amount="0x0"/>
+   <item graphic="0xf87" amount="0x0"/>
+   <item graphic="0xf8d" amount="0x0"/>
+   <item graphic="0xf89" amount="0x0"/>
+   <item graphic="0xf91" amount="0x0"/>
+  </group>
+  <group loop="False" name="ores" target="0x4007ba6c" stack="False" complete="False" source="0x40036ec8">
+   <item graphic="0x19b9" amount="0x0"/>
+   <item graphic="0x19ba" amount="0x0"/>
+   <item graphic="0xf0f" amount="0x0"/>
+   <item graphic="0xf10" amount="0x0"/>
+   <item graphic="0xf16" amount="0x0"/>
+   <item graphic="0xf15" amount="0x0"/>
+   <item graphic="0xf18" amount="0x0"/>
+   <item graphic="0xf11" amount="0x0"/>
+   <item graphic="0xf25" amount="0x0"/>
+  </group>
+  <group loop="False" name="GET-regs" target="0x4007ba6c" stack="False" complete="False" source="0x4003d343">
+   <item graphic="0xf7a" amount="0x96"/>
+   <item graphic="0xf7b" amount="0x96"/>
+   <item graphic="0xf85" amount="0x64"/>
+   <item graphic="0xf8d" amount="0x64"/>
+   <item graphic="0xf86" amount="0x96"/>
+   <item graphic="0xf84" amount="0x64"/>
+   <item graphic="0xf88" amount="0x64"/>
+   <item graphic="0xf8c" amount="0x64"/>
+  </group>
+  <group loop="False" name="cparts" target="0x40066526" stack="False" complete="False" source="0x40036ec8">
+   <item graphic="0x104f" amount="0x0"/>
+  </group>
+  <group loop="False" name="iron" target="0x40036ec8" stack="False" complete="False" source="0x40066526">
+   <item graphic="0x1bef" amount="0x3e8"/>
+  </group>
+ </organizer>
+ <autoloot>
+  <enabled>True</enabled>
+  <container>0x40036ec8</container>
+  <guards>False</guards>
+ </autoloot>
+ <vendors>
+  <buystate enabled="False" list="Buy-1"/>
+  <sellstate enabled="True" list="tinker"/>
+  <shoppinglist name="Buy-1" limit="999" complete="False" type="Buy"/>
+  <shoppinglist name="tinker" limit="999" complete="False" type="Sell">
+   <item graphic="0x1053" amount="50"/>
+   <item graphic="0x104f" amount="100"/>
+  </shoppinglist>
+ </vendors>
+</profile>
