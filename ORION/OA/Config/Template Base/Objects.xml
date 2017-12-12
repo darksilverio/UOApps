@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data version="0" size="9" dressbag="0x40036EC8">
+    <object name="corpse" id="0x40051798"/>
+    <object name="lootpack" id="0x40036EC8"/>
+    <object name="lootItem" id="0x40051796"/>
+    <object name="emptycontainer" id="0x4002A45E"/>
+    <object name="receiver" id="0x40036EC8"/>
+    <object name="animalTame" id="0x000D52D6"/>
+    <object name="harpTame" id="0x00036ECB"/>
+    <object name="follow" id="0x0003AC19"/>
+    <object name="model" id="0x400E5C9B"/>
+</data>

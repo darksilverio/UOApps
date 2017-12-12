@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data version="0" size="4">
+    <findlist name="bandage">
+        <item graphic="0x0E21" color="0x0000" comment="clean bandages"/>
+    </findlist>
+    <findlist name="AutoLoot">
+        <item graphic="0x0EED" color="0x0000" comment="gold coin"/>
+        <item graphic="0x0F3F" color="0x0000" comment="arrows"/>
+        <item graphic="0x1406" color="0x0231" comment="Magic Silver War Mace"/>
+        <item graphic="0x1F31" color="0x084D" comment="Power Scroll"/>
+        <item graphic="0x0E40" color="0x0A23" comment="Paragon Chest"/>
+        <item graphic="0x13FE" color="0x0021" comment="Magic Blood Katana"/>
+        <item graphic="0x14EB" color="0x0000" comment="treasure map"/>
+        <item graphic="0x0F26" color="0x0000" comment="diamonds"/>
+        <item graphic="0x0F0F" color="0x0000" comment="star sapphires"/>
+        <item graphic="0x0F13" color="0x0000" comment="rubies"/>
+        <item graphic="0x0F10" color="0x0000" comment="emeralds"/>
+        <item graphic="0x0E76" color="0x0000" comment="bag"/>
+        <item graphic="0x1F31" color="0x005B" comment="Recipe Scroll"/>
+        <item graphic="0x1078" color="0x0902" comment="couro wyrm"/>
+        <item graphic="0x0F82" color="0x0000" comment="Dragon's Blood"/>
+        <item graphic="0x0F80" color="0x0000" comment="Daemon Bones"/>
+        <item graphic="0x0E21" color="0x0000" comment="clean bandages"/>
+        <item graphic="0x0F82" color="0x0026" comment="Great Life Boost"/>
+        <item graphic="0x0F0E" color="0x0001" comment="Invisibility"/>
+        <item graphic="0x1F5F" color="0x0000" comment="Flamestrike"/>
+        <item graphic="0x0F0E" color="0x0022" comment="Refresh"/>
+        <item graphic="0x0F82" color="0x017F" comment="Great Refilling"/>
+    </findlist>
+    <findlist name="AutoLootTest">
+        <item graphic="0x0EED" color="0x0000" comment="gold coin"/>
+    </findlist>
+</data>

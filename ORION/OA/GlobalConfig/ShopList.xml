@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data version="0" show_shopping_progress_bar="true" max_shop_items="0" max_sell_price="0" shop_delay="450" shop_timeout="30">
+    <shoplist name="horses">
+        <shopitem graphic="0x2121" color="0x0000" name="horse" count="0" price="0" comment=""/>
+        <shopitem graphic="0x2120" color="0x0000" name="Horse" count="0" price="0" comment=""/>
+        <shopitem graphic="0x211F" color="0x0000" name="Gray Horse" count="0" price="0" comment=""/>
+        <shopitem graphic="0x2124" color="0x0000" name="Horse" count="0" price="0" comment=""/>
+    </shoplist>
+</data>
