@@ -1,0 +1,217 @@
+
+var miningTools = '0x0E85|0x0E86';
+var miningDelay=16000
+var persist = true;
+var bankweight = 300;
+
+
+var newSpotMsgs='Try mining elsewhere|There is nothing here|That is too far|You have no line of sight|You cannot mine so close'
+var sameSpotMsgs='You put'
+var persistSpotMsgs='You loosen some rocks but fail'
+var toolUsageMsg='Where do you want to use'
+var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver'
+
+
+// DONT CHANGE VARS
+var posToMine = 0
+var timeout=-1000;
+
+function Autostart(){
+
+	Orion.OptionAlwaysRun(false);
+
+
+}
+
+
+function Mining(){
+
+	while(!Player.Dead()){
+	
+		
+		if( Orion.InJournal(newSpotMsgs) ){
+	
+			SetForMining();
+			Dig();
+		}
+		if( Orion.InJournal(garbageOreMsg))
+		{
+			SetForMining();
+			Dig();
+		}
+		if( Orion.InJournal(sameSpotMsgs) ){
+	
+			Dig();
+		}
+		if( Orion.InJournal(persistSpotMsgs) ){
+			if(!persist)
+				SetForMining();
+				
+			Dig();
+		}
+		if(Orion.Now() - timeout > miningDelay ){
+		
+			Orion.Print(23, 'Time out: ' + (Orion.Now() - timeout ) );
+			SetForMining();
+			Dig();
+		}
+		if(Player.Weight() >= bankweight && bankweight > 0)
+		{
+		
+		
+		}
+		
+		
+		Orion.Wait(100);	
+	}
+
+}
+
+function SetForMining(){
+
+	posToMine++;
+	if( posToMine > 7 ){
+		posToMine = 0;
+		Walk();
+	}
+	
+	if(Player.Y() > 482)
+		GoMineRandSpot();
+}
+
+function Dig(){
+
+	timeout = Orion.Now();
+	
+	
+	var tool = Orion.FindType(miningTools, '-1', self, 'item|first', '-1', '-1');
+      
+      if(tool.length == 0)
+	      tool =  Orion.FindType(miningTools, '-1', backpack, 'item|first', '-1', '-1');
+
+     if (tool.length == 0){
+     	Orion.Print(23, 'NO MINING TOOL. MACRO ABORTED');
+     	Orion.Terminate('Mining')
+     	}
+     	
+     	var spot = GetRelativeSpots();
+     	
+ 	Orion.Print('0x0482', ' ');
+ 	Orion.Print(12, ' ');
+ 	Orion.Print(12, ' ');
+     	Orion.CancelTarget();
+     	Orion.ClearJournal();
+     	Orion.WaitTargetTileRelative('mine', spot.x , spot.y, 0);
+     	Orion.UseObject(tool[0]);
+	Orion.WaitJournal(toolUsageMsg, Orion.Now(), Orion.Now() + 5000, 'sys', -1, -1);
+}
+
+function Walk(){
+
+	var nOfSteps = Orion.Random(3, 6);
+	var newDir =  Orion.Random(0, 8);
+	
+	for(var i = 0; i <= nOfSteps; i++ ){
+		Orion.Step(newDir, true);
+		Orion.Wait(500);
+	}
+}
+
+
+
+function GetRelativeSpots(){
+
+	var spotsXY={x:0, y:0 };
+
+	if(posToMine == 0){
+		spotsXY.x = 0;
+		spotsXY.y = -1;
+	}
+	if(posToMine == 1){
+		spotsXY.x = +1 ;
+		spotsXY.y = -1;
+	}
+	if(posToMine == 2){
+		spotsXY.x = +1 ;
+		spotsXY.y = 0;
+	}
+	if(posToMine == 3){
+		spotsXY.x = +1 ;
+		spotsXY.y = +1;
+	}
+	if(posToMine == 4){
+		spotsXY.x = 0;
+		spotsXY.y = +1;
+	}
+	if(posToMine == 5){
+		spotsXY.x = -1 ;
+		spotsXY.y = +1;
+	}
+	if(posToMine == 6){
+		spotsXY.x = -1 ;
+		spotsXY.y = 0;
+	}
+	if(posToMine == 7){
+		spotsXY.x = -1 ;
+		spotsXY.y = -1;
+	}
+
+	if(Player.Direction()  !=  posToMine){
+		Orion.Step(posToMine, false);
+	}
+		
+	return spotsXY;
+}
+
+
+function MineToBank(){
+	
+	Orion.OptionAlwaysRun(true);
+	PathFinder(2558,502);
+	PathFinder(2528,502);
+	PathFinder(2529,542);
+	PathFinder(2512,545);
+	Orion.OptionAlwaysRun(false);
+}
+
+function BankToMine(){
+
+	
+	
+	Orion.OptionAlwaysRun(true);
+	PathFinder(2529,542);
+	PathFinder(2529,542);
+	PathFinder(2528,502);
+	PathFinder(2558,502);
+	
+	GoMineRandSpot();
+	
+	Orion.OptionAlwaysRun(false);
+}
+
+function GoMineRandSpot(){
+
+	var randStopt =  Orion.Random(0, 5);
+	
+	if(randStopt == 0)
+		PathFinder(2574, 477);
+	if(randStopt == 1)
+		PathFinder(2574, 454);
+	if(randStopt == 2)
+		PathFinder(2592, 461);
+	if(randStopt == 3)
+		PathFinder(2586, 445);
+	if(randStopt == 4)
+		PathFinder(2573, 433);
+}
+	
+		
+
+function PathFinder(x, y){
+
+	var destination = false;
+	while(destination == false){
+		destination = Orion.WalkTo(x, y, -1, 2);
+		Orion.Wait(100);
+	}
+}
