@@ -2,7 +2,11 @@
 var miningTools = '0x0E85|0x0E86';
 var miningDelay=16000
 var persist = true;
-var bankweight = 300;
+var bankweight = 330;
+//var bagBankSerial=0x400F88D5  //BELZEBOSS
+var bagBankSerial=0x4006D740   //AMIGO
+var oresType='0x19B7|0x19BA|0x19B8|0x19B9|0x0F0F|0x0F10|0x0F16|0x0F15|0x0F11|0x0F26|0x0F18'
+var moveitemdelay=1500
 
 
 var newSpotMsgs='Try mining elsewhere|There is nothing here|That is too far|You have no line of sight|You cannot mine so close'
@@ -57,11 +61,12 @@ function Mining(){
 		}
 		if(Player.Weight() >= bankweight && bankweight > 0)
 		{
-		
-		
+				MineToBank();
+				Orion.Say('banker bank');		
+				Orion.Wait(1000);	
+				OreToBank();
+				BankToMine();		
 		}
-		
-		
 		Orion.Wait(100);	
 	}
 
@@ -176,8 +181,6 @@ function MineToBank(){
 
 function BankToMine(){
 
-	
-	
 	Orion.OptionAlwaysRun(true);
 	PathFinder(2529,542);
 	PathFinder(2529,542);
@@ -203,6 +206,16 @@ function GoMineRandSpot(){
 		PathFinder(2586, 445);
 	if(randStopt == 4)
 		PathFinder(2573, 433);
+}
+
+function OreToBank(){
+
+	var ores = Orion.FindType(oresType, '-1', backpack);
+
+	for(var i = 0; i < ores.length; i++){
+		Orion.MoveItem(ores[i], 0, bagBankSerial);
+		Orion.Wait(moveitemdelay);
+	}
 }
 	
 		
