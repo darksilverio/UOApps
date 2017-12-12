@@ -1,0 +1,130 @@
+<html>
+<head>
+	<title>Injection Help System: Type</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  Type <a target="_blank" class=item href="IndexType.htm">&#149;</a></h1>
+		<br><br>Тема: <a class=topic href="HelpTopicGlobals.htm">Символы</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsObjHandling.htm">ObjHandling</a>, 
+		<a class=keyword href="HelpKeywordsSymbol.htm">Symbol</a>, 
+		<a class=keyword href="HelpKeywordsTypeHandling.htm">TypeHandling</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<h3 align="center">О конструкции мира Ultima Online</h3>
+		<p>Мир UO состоит из двух типов - обьекты и статики. Статики это как бы фоновое изображение, которое записывается у вас на
+		компьютере, это мир состоящий из земли, воды, скал, деревьев, городских зданий. Эта часть (почти) неизменна на всех шардах
+		Ultima Online.</p>
+		<p><a class=item href="HelpItemObject.htm">Обьекты</a> - это всё что создано трудами администрации и игроков. Это подвижные обьекты типа оружия, ресурсов,
+		ящиков, дверей а так же дополнения типа домов игроков, разнообразных украшений и т.п. Легко проверить динамик то что вы
+		видите или статик, если введёте команду <a class=item href="HelpItemHide.htm">Hide</a> и прицелом покажете на обьект. Если он исчезнет из виду
+		то это динамик, если же нет или вообще прицел не нажимается - то статик.</p>
+		<p></p>
+		<p>Все обьекты в Ультиме имеют &l(Type,тип) обозначающийся обычно четырёхзначным шестнадцатеричным числом вида 0x1234.
+		Тип так же называется graphic (изображение). Это связано с тем что тип совпадает с номером рисунка в базе Ультимы.</p>
+		<h3 align="center">Типы, создание и хранение</h3>
+		<p>Игроку не требуется знать номера всех типов мира, но у него обычно есть несколько избранных типов с которыми он имеет
+		дело. Чтобы запомнить их номера для дальнейшего использования существует закладка Object Types в окне Injection. Например тип
+		руды можно запомнить под именем <b>ore</b>. В дальнейшем под словом <b>тип</b> и будем
+		подразумевать его номер или имя в закладке Object Types.</p>
+		<p><u>Чтобы обратиться к обьекту по типу</u> можно указать прямо его номер например 0x1234 (0 - ноль, x - икс латинская), либо
+		его имя если он добавлен в закладку Object Types.</p>
+		<p>Добавить именованый тип можно так же специальной командой <a class=item href="HelpItemAddType.htm">AddType</a>. Дополнительная информация о типе обьекта
+		доступна с помощью команды <a class=item href="HelpItemInfo.htm">Info</a>.</p>
+		<p>На шардах распространено использование покрашеных в разные цвета обьектов. Тем не менее они имеют один и тот же тип.
+		Чтобы &quot;на глаз&quot; сравнить типы двух обьектов мысленно покрасьте оба в серый цвет. Если они выглядят одинаково то и
+		тип одинаковый. Точно узнать вы это можете с помощью команды <a class=item href="HelpItemInfo.htm">Info</a>.</p>
+		<h3 align="center">Встроеные типы Injection (указатели типов)</h3>
+		<p>Типы некоторых обьектов найболее вероятно могут понадобится игроку запоминаются Injection автоматически и они доступны
+		под специальными системными именами:</p>
+		<table width="100%" border="1" cellspacing="0" cellpadding="0">
+		<tr class="hdr">
+		<th>Указатель</th>
+		<th>Описание содержимого</th>
+		</tr>
+		<tr class="odd">
+		<td>lastobject</td>
+		<td>Тип последнего использованного (двойным щелчком мыши) обьекта</td>
+		</tr>
+		<tr class="even">
+		<td>lasttarget</td>
+		<td>Тип последнего обьекта, на который был наведён прицел (одинарный щелчок мыши в режиме прицеливания). Помните, что
+		макрос <b>Target Next</b> клиента не оказывает влияния на lasttarget в Injection.</td>
+		</tr>
+		<tr class="odd">
+		<td>lastequipgraphic</td>
+		<td>Тип последнего обьекта, который был перемещён командами <a class=item href="HelpItemEquip.htm">Equip</a>, <a class=item href="HelpItemEquipT.htm">EquipT</a>, <a class=item href="HelpItemUnequip.htm">Unequip</a> </td>
+		</tr>
+		</table>
+		<p>Если у вас включена опция Permit Vars Loopback (разрешение обратной связи к переменным) то в числе прочего команды
+		использующие обьекты будут менять значение вышеперечисленных переменных, иначе они будут меняться только от действий
+		клиента.</p>
+		<h3 align="center">Совместимость с EasyUO</h3>
+		<p>Injection может использовать литералы изиуо для укзания типов, например: <b><a class=item href="HelpItemUseType.htm">UseType</a> NPF</b><br>
+		Таким образом совместное использование EasyUO с Injection позволяет использовать лучшие стороны обоих программных
+		продуктов. Пример обращения к Injection из EasyUO: <b>msg $,equipt Rhand #findtype $</b><br>
+		Обратная связь может осуществляться с помощью журнала, команды <a class=item href="HelpItemEasyObject.htm">EasyObject</a>, нескольких команд скриптов. В отличае от
+		Injection программа EasyUO не настроена сотрудничать и прямой связи не существует.</p>
+		<h3 align="center">Использование модификаторов тип&#151;&gt;обьект</h3>
+		<p>Черезвычайно гибким и полезным инструментом может оказаться для макросника средство по автопреобразованию типа в
+		обьект. Выглядит это как односимвользый модификатор слитно написаный с типом, в результате которого связка считается
+		командами Injection обьектом. Так как большинство команд работают с обьектами это позволяет уменьшить
+		количество и размер скриптов. Пример: <b><a class=item href="HelpItemGrab.htm">Grab</a> 0 ~POF</b> будет работать как &quot;поднять кучку золота с пола и положить в
+		бекпак&quot; (POF - <a class=item href="HelpItemType.htm">Type</a> золотых монет в нотации EasyUO).</p>
+		<table width="100%" border="1" cellspacing="0" cellpadding="0">
+		<tr class="hdr">
+		<th colspan="2">Символ</th>
+		<th>Синтакс</th>
+		<th>Описание преобразования</th>
+		<th>Получение того же обьекта в указателе finditem</th>
+		<th>Пример</th>
+		</tr>
+		<tr class="odd">
+		<td>_</td>
+		<td>подчерк</td>
+		<td> _<a class=item href="HelpItemType.htm">Type</a> </td>
+		<td>Ищет по типу на чаре, в бекпаке, подсумках</td>
+		<td><a class=item href="HelpItemFindType.htm">FindType</a> <a class=item href="HelpItemType.htm">Type</a> -1 my</td>
+		<td><a class=item href="HelpItemClick.htm">Click</a> _POF</td>
+		</tr>
+		<tr class="even">
+		<td>^</td>
+		<td>крышка</td>
+		<td>^<a class=item href="HelpItemType.htm">Type</a> </td>
+		<td>Ищет в бекпаке без подсумок</td>
+		<td><a class=item href="HelpItemFindType.htm">FindType</a> <a class=item href="HelpItemType.htm">Type</a> -1 backpack</td>
+		<td><a class=item href="HelpItemClick.htm">Click</a> ^POF</td>
+		</tr>
+		<tr class="odd">
+		<td>~</td>
+		<td>тильда</td>
+		<td>~<a class=item href="HelpItemType.htm">Type</a> </td>
+		<td>Ищет на земле в некотором радиусе (см. <a class=item href="HelpItemSet.htm">Set</a> finddist)</td>
+		<td><a class=item href="HelpItemFindType.htm">FindType</a> <a class=item href="HelpItemType.htm">Type</a> -1 ground</td>
+		<td><a class=item href="HelpItemGrab.htm">Grab</a> 0 ~POF</td>
+		</tr>
+		<tr class="even">
+		<td>&lt;</td>
+		<td>меньше</td>
+		<td>&lt;<a class=item href="HelpItemType.htm">Type</a> </td>
+		<td>Ищет по типу в последнем открытом контейнере</td>
+		<td><a class=item href="HelpItemFindType.htm">FindType</a> <a class=item href="HelpItemType.htm">Type</a> -1 lastcontainer</td>
+		<td><a class=item href="HelpItemGrab.htm">Grab</a> 0 &lt;POF</td>
+		</tr>
+		<tr class="odd">
+		<td>.</td>
+		<td>точка</td>
+		<td><a class=item href="HelpItemObject.htm">Object</a>.<a class=item href="HelpItemType.htm">Type</a> </td>
+		<td>Ищет по типу <a class=item href="HelpItemType.htm">Type</a> в указанном <a class=item href="HelpItemObject.htm">контейнере</a>.</td>
+		<td><a class=item href="HelpItemFindType.htm">FindType</a> <a class=item href="HelpItemType.htm">Type</a> -1 <a class=item href="HelpItemObject.htm">Object</a> </td>
+		<td><a class=item href="HelpItemMoveItem.htm">MoveItem</a> lastcorpse.gold</td>
+		</tr>
+		</table>
+		<h3 align="center">Резюме</h3>
+		<p><a class=item href="HelpItemType.htm">Тип</a> - описывает обьекты одинакового вида. К ней можно обратиться с помощью номера типа в шестнадцатеричном
+		(0x...) и десятичном форматах, по имени добавленого в список обьекта, через указатели типов.</p>
+	</p>
+</body>
+</html>

@@ -1,0 +1,315 @@
+        ##################################### INICIO DA CONFIGURACAO  ###########################################
+	#########################################################################################################
+	#########################################################################################################
+	var runamina='.recall 1,2' # MENSAGEM PARA RUNA DA MINA
+ 	var runaguardar='.recall 1,1' #MENSAGEM PARA RUNA DE GUARDAR
+        var limitN=813       #LIMITE N DA MINA
+	var limitS=829       #LIMITE S DA MINA
+	var limitE=2337      #LIMITE E DA MINA
+	var limitW=2315      #LIMITE W DA MINA
+	var coordcasax=2181  #COORNEDADA X PARA ACESSO AO BANCO
+        var coordcasay=838   #COORDENADA Y PARA ACESSO AO BANCO
+        var passos= 3        #QUANTIDADE DE TILES PARA ANDAR APOS MINERAR EM VOLTA
+        var volta=6          #NUMERO TILES PARA ANDAR APOS ULTRAPASSAR ALGUM LIMITE
+        var PesoLimite=80    #PESO LIMITE PARA IR GUARDAR
+
+sub mining()
+        DIM Ore[20] #0 jogar no chao, 1 ficar com o ore
+	Ore[1]=0  #ceramic
+	Ore[2]=1  #iron
+	Ore[3]=0  #rusty
+	Ore[4]=0  #old copper
+	Ore[5]=0  #dull copper	
+	Ore[6]=0  #copper
+	Ore[7]=0  #bronze
+	Ore[8]=0  #shadow	
+	Ore[9]=0  #agapite
+	Ore[10]=0 #rose
+	Ore[11]=0 #silver
+	Ore[12]=0 #valorite
+	Ore[13]=1 #verite
+	Ore[14]=1 #gold
+	Ore[15]=1 #blood
+	Ore[16]=1 #black
+	Ore[17]=1 #myth
+	Ore[18]=1 #adamantium
+	Ore[19]=1 #order
+	Ore[20]=1  #chaos
+	############################################ FINAL DA CONFIGURACAO ######################################
+	#########################################################################################################
+	#########################################################################################################
+	var i,j #aux para jogar ores no chao
+	var tentativas=10 
+	var auxposicao
+	var andar
+	var dir
+	var x,y
+	var tentativasfeitas
+	var recall0x,recall0y
+	var recallcasax,recallcasay
+	var n,p
+	DIM OreJournal[20]
+	OreJournal[1]='Ceramic'
+	OreJournal[2]='Iron Ore'
+	OreJournal[3]='Rusty Ore'
+	OreJournal[4]='Old Copper Ore'
+	OreJournal[5]='Dull Copper Ore'
+	OreJournal[6]='Copper Ore'
+	OreJournal[7]='Bronze Ore'
+	OreJournal[8]='Shadow Ore'
+	OreJournal[9]='Agapite Ore'
+	OreJournal[10]='Rose Ore'
+	OreJournal[11]='Silver Ore'
+	OreJournal[12]='Valorite Ore'
+	OreJournal[13]='Verite Ore'
+	OreJournal[14]='Gold Ore'
+	OreJournal[15]='Bloodrock Ore'
+	OreJournal[16]='Blackrock Ore'
+	OreJournal[17]='Mytheril Ore'
+	OreJournal[18]='Adamantium Ore'
+	OreJournal[19]='Order Ore'
+	OreJournal[20]='Chaos Ore'
+	DIM CorOre[20]
+	CorOre[1]='0x00F2'
+	CorOre[2]='0x0000'
+	CorOre[3]='0x0750'
+	CorOre[4]='0x0590'
+	CorOre[5]='0x060A'
+	CorOre[6]='0x0641'
+	CorOre[7]='0x06D6'
+	CorOre[8]='0x0770'
+	CorOre[9]='0x0400'
+	CorOre[10]='0x0665'
+	CorOre[11]='0x0231'
+	CorOre[12]='0x0515'
+	CorOre[13]='0x07D1'
+	CorOre[14]='0x045E'
+	CorOre[15]='0x04C2'
+	CorOre[16]='0x0455'
+	CorOre[17]='0x052D'
+	CorOre[18]='0x07A1'
+	CorOre[19]='0x0750'
+	CorOre[20]='0x024F'
+	DIM TypeOre[4]
+	TypeOre[1]='0x19B7'
+	TypeOre[2]='0x19BA'
+	TypeOre[3]='0x19B8'
+	TypeOre[4]='0x19B9'
+	DIM Pedra[7]
+	Pedra[1]='0x0F26' ; diamond
+	Pedra[2]='0x0F18' ; tourmaline
+	Pedra[3]='0x0F13' ; ruby
+	Pedra[4]='0x0F0F' ; star
+	Pedra[5]='0x0F15' ; citrine
+	Pedra[6]='0x0F16' ; amethyst
+	Pedra[7]='0x0F10' ; emerald
+	WHILE TRUE
+		for x= -2 to 2
+			for y= -2 to 2				
+				mineradenovo:
+				if uo.weight>PesoLimite then
+		            if uo.mana<70 then
+						while not uo.mana>=70
+							uo.deletejournal()
+							uo.useskill('Meditation')
+							repeat
+								wait(10)
+							until uo.injournal('Voce perdeu sua') or uo.mana>=70 or uo.injournal('You sto')
+						Wend
+					endif
+					recall0x=uo.getX('self')
+					recall0y=uo.getY('self')
+					uo.msg(runaguardar)
+					while recall0x==uo.getX('self') or recall0y==uo.getY('self')
+						wait(100)
+					wend
+					repeat
+						walker(coordcasax,coordcasay) 
+						wait(1000)
+					until uo.getx('self')==coordcasax and uo.gety('self')==coordcasay
+					uo.msg('banker bank')
+					uo.deletejournal()
+					repeat
+						wait(10)
+					until uo.injournal('stones')
+					wait(1000)
+					for n=1 to 4
+						guardadenovo:
+						uo.findtype(TypeOre[n],'-1','backpack')
+						if uo.findcount('finditem')> 0 then
+							uo.moveitem('finditem','0','lastcontainer')
+							wait(3000)
+							goto guardadenovo
+						endif
+					next
+					for p=1 to 7
+						uo.findtype(Pedra[p],'-1','backpack')
+						if uo.findcount('finditem')>0 then
+							wait(3000)
+						uo.moveitem('finditem','0','lastcontainer')
+					endif
+				next
+				recallcasax=uo.getX('self')
+				recallcasay=uo.getY('self')
+				uo.msg(runamina)
+				while recallcasax==uo.getX('self') or recallcasay==uo.getY('self')
+					wait(100)
+				wend
+				walker(recall0x,recall0y)
+	        endif
+				if tentativasfeitas==tentativas then
+				   tentativasfeitas=0
+                                 endif
+				uo.deletejournal()
+				uo.waittargettile('#0x400', str(uo.GetX() + x), str(uo.GetY() + y), STR(UO.GetZ()))
+				uo.usetype('0x0E85') #
+				repeat
+					wait(10)
+				until uo.injournal('Voce pos|Tente miner|Voce nao|Nao ha|You cann|Ther|You lo|O alvo|You p|Try|That|You have|target canc') 
+				if uo.injournal('You lo') and (tentativasfeitas<tentativas) then 
+					tentativasfeitas=tentativasfeitas+1
+                                        goto mineradenovo
+				endif
+				if uo.injournal('You put') then
+					for i= 1 to 20
+						if (Ore[i]==0) and uo.injournal(OreJournal[i]) then
+							for j=1 to 4
+								uo.findtype(TypeOre[j],CorOre[i],'backpack') 
+								if uo.findcount()>0 then
+									uo.moveitem('finditem','0','ground')
+									goto nexttile
+								endif
+							next
+                                                endif
+                                                if (Ore[i]==1) and uo.injournal(OreJournal[i]) then
+                                                   goto mineradenovo
+                                                endif
+					next
+                endif
+				nexttile:
+			next
+		next
+		walk()
+	wend
+endsub
+
+
+sub walker(x,y)
+dim key[8]
+key[0] = '383933'
+key[1] = '383739'
+key[2] = '394034'
+key[3] = '373840'
+key[4] = '403735'
+key[5] = '403937'
+key[6] = '373836'
+key[7] = '394038'
+var myX,myY,t=0,d,d2,z,m=0,mydir
+repeat
+ myX=uo.getX();
+ myY=uo.getY();
+ if x==myX then
+  if y>myY then
+    uo.Press(35)
+  endif
+  if y<myY then
+    uo.Press(33)
+  endif
+ else
+  if x<myX then
+   if y==myY then
+    uo.Press(36)
+   else
+    if y<myY then
+     uo.Press(38)
+    endif
+    if y>myY then
+     uo.Press(37)
+    endif
+   endif
+  endif
+  if x>myX then
+   if y==myY then
+    uo.Press(34)
+   else
+    if y<myY then
+     uo.Press(39)
+    endif
+    if y>myY then
+     uo.Press(40)
+    endif
+   endif
+  endif
+ endif
+ if uo.getx()==myX and uo.gety()==myY then
+  if t==4 then
+   t=0
+   mydir=uo.getdir()
+   d=val(MID(key[mydir],0,2))
+   d2=val(MID(key[mydir],2,2))
+   for z=1 to 4
+    uo.press(d)
+   next
+   if uo.getx()==myX and uo.gety()==myY then
+    for z=1 to 3
+     uo.press(d2)
+    next
+   endif
+  else
+   t=t+1
+  endif
+ endif
+ wait(70)
+endif
+until (num(x-uo.getx())<=1 and num(y-uo.gety())<=2) or (num(x-uo.getx())<=2 and num(y-uo.gety())<=1)
+end sub
+
+Sub num(X)
+if X>0 then
+return X
+else
+return (-X)
+end if
+end sub
+
+sub walk()
+   var cl,lastdir,py=UO.GetY(),px=UO.GetX(),d ,t
+   dim DIR[8]
+   DIR[0] = 33
+   DIR[1] = 39
+   DIR[2] = 34
+   DIR[3] = 40
+   DIR[4] = 35
+   DIR[5] = 37
+   DIR[6] = 36
+   DIR[7] = 38
+   repeat
+      t=passos
+      d=UO.Random(8)
+      py=UO.GetY()
+      px=UO.GetX()
+      while t>0
+         if uo.getdir()<>d then
+               uo.press(DIR[d])
+            endif
+            wait(35)
+            uo.press(DIR[d])
+            t=t-1
+         if  (UO.GetX() < limitW) or (UO.GetX() > limitfix(limitE)) or (UO.GetY() < limitN) or (UO.GetY() > limitfix(limitS)) then
+            if uo.getdir()>3 then
+               d=uo.getdir()-4
+            else
+               d=uo.getdir()+4
+            endif
+            t=volta
+            endif
+      wend
+   until (px <> UO.GetX()) or (py <> UO.GetY())   
+endsub
+
+sub limitfix(x)
+   if x==0 then
+      return 10000
+   endif
+   return x
+endsub

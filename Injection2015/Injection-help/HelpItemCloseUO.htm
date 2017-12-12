@@ -1,0 +1,34 @@
+<html>
+<head>
+	<title>Injection Help System: CloseUO</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  CloseUO <a target="_blank" class=item href="IndexCloseUO.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">CloseUO</font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">CloseUO</font>()
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicSystemOps.htm">Системные</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsSystem.htm">System</a>, 
+		<a class=keyword href="HelpKeywordsUtility.htm">Utility</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>Закрыть окно клиента Ultima Online.
+		<br>void uo.CloseUO()</p>
+		<hr>
+		Вызов из скрипта:
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent"><br>
+		sub CheckAlive(target) #Проверяет жив ли чар и цель, присмерти одного из проверяемых - закрываем клиент<br>
+		&nbsp; &nbspif not uo.<a class=item href="HelpItemDead.htm">Dead</a>() || (uo.<a class=item href="HelpItemIsNPC.htm">IsNPC</a>(target) && not uo.<a class=item href="HelpItemDead.htm">Dead</a>(target)) then<br>
+		&nbsp; &nbsp; &nbsp; uo.CloseUO()<br>
+		&nbsp; &nbspendif<br>
+		end sub<br>
+		</div>
+	</p>
+</body>
+</html>

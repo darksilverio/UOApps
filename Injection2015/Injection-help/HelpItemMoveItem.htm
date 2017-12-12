@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>Injection Help System: MoveItem</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  MoveItem <a target="_blank" class=item href="IndexMoveItem.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">MoveItem</font> <font class="param"><a class=item href="HelpItemObject.htm">serial</a> [count <a class=item href="HelpItemObject.htm">container</a> x y z]</font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">MoveItem</font>(<font class="param"><a class=item href="HelpItemObject.htm">serial</a>, [count, <a class=item href="HelpItemObject.htm">container</a>, x, y, z]</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicObjDo.htm">Работа с объектами</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsObjHandling.htm">ObjHandling</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsUtility.htm">Utility</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>Перемещает <a class=item href="HelpItemObject.htm">обьект</a>. Может работать и как <a class=item href="HelpItemGrab.htm">Grab</a>, и как <a class=item href="HelpItemDrop.htm">Drop</a>. Не требует использования прицелов, в следствие
+		чего повышается надёжность макроса.</p>
+		<p>Количество quantity если 0 или не указано означает всю стопку.</p>
+		<p>Третий параметр может быть либо словом ground (выкладывать на землю) либо обьектом <a class=item href="HelpItemObject.htm">контейнером</a> (выкладывать
+		в контейнер). На земле или в контейнере находился обьект до этого не важно.<br>
+		Координаты означают абсолютные или относительные мировые, если контейнер указан как ground. Если контейнер это обьект, то
+		координаты это точное место в нём. Не указаные координаты считаются нулевыми.<br>
+		Контейнером по умолчанию является backpack (ранец персонажа).</p>
+		<p>Нельзя задавать контейнер, не указав количество.</p>
+	</p>
+</body>
+</html>

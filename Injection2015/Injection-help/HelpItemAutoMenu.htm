@@ -1,0 +1,30 @@
+<html>
+<head>
+	<title>Injection Help System: AutoMenu</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  AutoMenu <a target="_blank" class=item href="IndexAutoMenu.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">AutoMenu</font> <font class="param"><a class=item href="HelpItemprompt.htm">prompt</a> <a class=item href="HelpItemchoice.htm">choice</a></font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">AutoMenu</font>(<font class="param"><a class=item href="HelpItemprompt.htm">prompt</a>, <a class=item href="HelpItemchoice.htm">choice</a></font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicCraftMenu.htm">Меню крафта</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsCraftMenu.htm">CraftMenu</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsWaitSystem.htm">WaitSystem</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p><img align="right" src="craftmenu.jpg"> Команды <a class=item href="HelpItemWaitMenu.htm">WaitMenu</a> и <a class=item href="HelpItemAutoMenu.htm">AutoMenu</a> используются для автоматического выбора в
+		специальном меню крафта, согласно предоставленых параметров <a class=item href="HelpItemPrompt.htm">Prompt</a> и <a class=item href="HelpItemChoice.htm">Choice</a>.</p>
+		<p>Каждое использование команды <a class=item href="HelpItemAutoMenu.htm">AutoMenu</a> добавляет в специальный список очередной выбор в меню, после чего он
+		остаётся активным всё время, до задания команды <a class=item href="HelpItemCancelMenu.htm">CancelMenu</a>. Список текущих пар <a class=item href="HelpItemPrompt.htm">Prompt</a>/<a class=item href="HelpItemChoice.htm">Choice</a> выводится на экран. В
+		случае если сервер пошлёт подходящее к <a class=item href="HelpItemPrompt.htm">Prompt</a> меню, Injection сделает выбор <a class=item href="HelpItemChoice.htm">Choice</a> и будет продолжать ожидать список
+		выборов. Вы не можете применить эту команду если вам требуется сделать разные выборы в меню с одинаковыми названиями
+		<a class=item href="HelpItemPrompt.htm">Prompt</a>, в таком случае используется команда <a class=item href="HelpItemWaitMenu.htm">WaitMenu</a> </p>
+	</p>
+</body>
+</html>

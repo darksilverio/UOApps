@@ -1,0 +1,34 @@
+<html>
+<head>
+	<title>Injection Help System: CanChangeName</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  CanChangeName <a target="_blank" class=item href="IndexCanChangeName.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: Только из скрипта.
+		<br>Из скрипта: <font class="function">Function</font> UO.<font class="cmd">CanChangeName</font>(<font class="param"><a class=item href="HelpItemObject.htm">serial</a></font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicScripts.htm">Команды скриптов</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsObjHandling.htm">ObjHandling</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsFunction.htm">Function</a>
+		<hr>
+		<p>Возвращает указатель на возможность изменения имени указанного персонажа.
+		<br>Актуально применять для скриптов, которые изменяют имя живности. Для корректной работы необходимо использовать в
+		связке с uo.<a class=item href="HelpItemGetStatus.htm">GetStatus</a>(<a class=item href="HelpItemObject.htm">serial</a>)
+		<br>Number uo.CanChangeName([String/Number] <a class=item href="HelpItemObject.htm">serial</a>)</p>
+		<hr>
+		Вызов из скрипта:
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent"><br>
+		sub ChangePetName(serial, newname) #Изменить имя указанному зверю (персонажу)<br>
+		&nbsp; &nbspuo.<a class=item href="HelpItemGetStatus.htm">GetStatus</a>(serial) #Запрос статуса (в этом пакете приходит флаг возможности изменения имени)<br>
+		&nbsp; &nbspwait(100) #Задержка на получение пакета от сервера<br>
+		&nbsp; &nbspuo.<a class=item href="HelpItemRename.htm">Rename</a>(serial, neewname) #Вызываем функцию для смены имени<br>
+		end sub<br>
+		</div>
+	</p>
+</body>
+</html>

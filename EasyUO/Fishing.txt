@@ -1,0 +1,348 @@
+; ==--== INICIO ==--==
+initevents
+; =====================================================================
+; Macro de Fishing
+; Distribuição: Gratúita
+; Em cima do bau virado para o Sul
+; Adaptação do macro: Tiecun para o DMS - Shard
+; ========================CONFIGURAÇÕES INICIAIS - Variáveis=====================
+
+Set %Pole XHF
+Set %Peixe EQD_FQD_DQD_GQD_XVH_HTD
+Set %id_bau DAZLLMD ;id do baú do seu barco
+Set %Tentativa 4
+Set %Comando 1
+Set %ComandoX 1
+Set %msg Forward
+
+Set %cnt 0
+
+Set #ltargetid 0
+Set #ltargetz 0
+Set #ltargetkind 2
+wait 3s
+
+; ========================CONFIGURAÇÕES INICIAIS - Variáveis=====================
+
+loop:
+Set %cnt %cnt + 1
+gosub %cnt
+
+if %cnt > 10
+{
+Set %cnt 0
+goto Move
+}
+
+Set %Chance 0
+goto Fish
+
+
+
+; ====================FISH====================
+Fish:
+
+
+Set %Chance %Chance + 1
+if %Chance > %Tentativa
+{
+goto loop
+}
+
+gosub pole
+
+if #weight > 300
+{
+gosub Guardar
+}
+
+Set #SCNT 0
+
+jornal:
+if #SCNT > 10
+{
+goto Fish
+}
+
+deletejournal
+scanjournal
+
+if you_can't in #journal
+{
+goto loop
+}
+
+if nao_ha in #journal
+{
+goto Fish
+}
+
+if see in #journal
+{
+goto loop
+}
+
+if voce_pescou in #journal
+{
+goto loop
+}
+
+if nao_a_peixe in #journal
+{
+goto loop
+}
+
+if pull in #journal
+{
+goto Fish
+}
+if Tente in #journal
+{
+goto Fish
+}
+
+if too in #journal
+{
+goto loop
+}
+
+goto jornal
+
+; ====================MOVE====================
+Move:
+
+if %Comando = 1
+{
+msg Raise Anchor$
+wait 2s
+msg Forward$
+}
+if %Comando = 2
+{
+msg Raise Anchor$
+wait 2s
+msg Left$
+}
+if %Comando = 3
+{
+msg Raise Anchor$
+wait 2s
+msg Back$
+}
+if %Comando = 4
+{
+msg Raise Anchor$
+wait 2s
+msg Right$
+}
+
+Set %ComandoX %ComandoX + 1
+
+IF %ComandoX > 6
+{
+Set %ComandoX 1
+Set %Comando %Comando + 1
+
+IF %Comando > 4
+{
+Set %Comando 1
+}
+}
+
+wait 6s
+msg Drop Anchor$
+goto loop
+
+
+sub 1
+set #ltargetx #charposx
+set #ltargety #charposy + 3
+return
+
+sub 2
+set #ltargetx #charposx + 1
+set #ltargety #charposy + 3
+return
+
+sub 3
+set #ltargetx #charposx + 2
+set #ltargety #charposy + 3
+return
+
+sub 4
+set #ltargetx #charposx + 3
+set #ltargety #charposy + 3
+return
+
+sub 5
+set #ltargetx #charposx - 1
+set #ltargety #charposy + 3
+return
+
+sub 6
+set #ltargetx #charposx - 2
+set #ltargety #charposy + 3
+return
+
+sub 7
+set #ltargetx #charposx - 3
+set #ltargety #charposy + 3
+return
+
+;----------
+
+sub 8
+set #ltargetx #charposx
+set #ltargety #charposy - 3
+return
+
+sub 9
+set #ltargetx #charposx + 1
+set #ltargety #charposy - 3
+return
+
+sub 10
+set #ltargetx #charposx + 2
+set #ltargety #charposy - 3
+return
+
+sub 11
+set #ltargetx #charposx + 3
+set #ltargety #charposy - 3
+return
+
+sub 12
+set #ltargetx #charposx - 1
+set #ltargety #charposy - 3
+return
+
+sub 13
+set #ltargetx #charposx - 2
+set #ltargety #charposy - 3
+return
+
+sub 14
+set #ltargetx #charposx - 3
+set #ltargety #charposy - 3
+return
+
+;---------
+
+sub 15
+set #ltargetx #charposx
+set #ltargety #charposy - 4
+return
+
+sub 16
+set #ltargetx #charposx + 1
+set #ltargety #charposy - 4
+return
+
+sub 17
+set #ltargetx #charposx + 2
+set #ltargety #charposy - 4
+return
+
+sub 18
+set #ltargetx #charposx + 3
+set #ltargety #charposy - 4
+return
+
+sub 19
+set #ltargetx #charposx - 1
+set #ltargety #charposy - 4
+return
+
+sub 20
+set #ltargetx #charposx - 2
+set #ltargety #charposy - 4
+return
+
+sub 21
+set #ltargetx #charposx - 3
+set #ltargety #charposy - 4
+return
+
+;---------
+
+sub 22
+set #ltargetx #charposx
+set #ltargety #charposy + 4
+return
+
+sub 23
+set #ltargetx #charposx + 1
+set #ltargety #charposy + 4
+return
+
+sub 24
+set #ltargetx #charposx + 2
+set #ltargety #charposy + 4
+return
+
+sub 25
+set #ltargetx #charposx + 3
+set #ltargety #charposy + 4
+return
+
+sub 26
+set #ltargetx #charposx - 1
+set #ltargety #charposy + 4
+return
+
+sub 27
+set #ltargetx #charposx - 2
+set #ltargety #charposy + 4
+return
+
+sub 28
+set #ltargetx #charposx - 3
+set #ltargety #charposy + 4
+return
+
+
+sub pole
+finditem %Pole
+if #findkind = 0
+{
+set #LObjectID #FindID
+event macro 17 0
+target
+event macro 25 0
+event macro 22 0
+return
+}
+
+if #findkind = 1
+{
+ignoreitem #FindID
+gosub pole
+return
+}
+
+if #findkind = -1
+{
+ignoreitem reset
+event sysmessage Pole nao encontrado
+wait 3s
+return
+}
+
+sub Guardar
+
+finditem %Peixe C_ , #BackPackID
+{
+repeat
+finditem %Peixe C_ , #BACKPACKID
+{
+exevent drag #findid #findstack
+wait 2s
+exevent dropc %id_bau
+ignoreitem #findid
+}
+until #weight =< 35   ;coloque o peso inicial ou que você gostaria que ele retornasse o macro
+}
+
+return
+
+; ==--== FIM ==--==

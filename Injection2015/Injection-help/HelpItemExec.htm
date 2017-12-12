@@ -1,0 +1,59 @@
+<html>
+<head>
+	<title>Injection Help System: Exec</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  Exec <a target="_blank" class=item href="IndexExec.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">Exec</font> <font class="param"><a class=item href="HelpItemname.htm">name</a></font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">Exec</font>(<font class="param"><a class=item href="HelpItemname.htm">name</a></font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicSystemOps.htm">Системные</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsSystem.htm">System</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>В загруженом файле скрипта запускает на выполнение функцию <font class="param">name</font>. Аналогично кнопке <b>Start</b>
+		в закладке Scripts.
+		<br>Вызвать функцию можно с парамтрами. Для этого необходимо перечислить их вслед за названием, через разделитель #, а
+		пробелы должны быть заменены на $, которые при обработке заменяются на пробелы.
+		<br>Пример хоткея, кастующего стрелку в laststatus с минимальным значением маны 13: exec CastSpell#7#laststatus#13
+		<br>Скрипт:
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent"><br>
+		sub InitSpells(spells) #Инициализация названий заклинаний<br>
+		&nbsp; &nbsp#Перечислить все доступные залинания<br>
+		&nbsp; &nbspspells[1] = 'Clumsy'<br>
+		&nbsp; &nbsp...<br>
+		&nbsp; &nbspspells[7] = 'Magic Arrow'<br>
+		&nbsp; &nbsp...<br>
+		end sub<br>
+		<br>
+		sub CastSpell(SpellIndex, target, MinMana)<br>
+		&nbsp; &nbspif SpellIndex &gt;= 1 && SpellIndex &lt;= 64 then #Если корректный индекс заклинания<br>
+		&nbsp; &nbsp; &nbsp; if uo.mana &lt; MinMana then #Если маны меньше минимума - выпьем банку<br>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbspuo.<a class=item href="HelpItemUseType.htm">UseType</a>('ManaType', 'ManaColor') #Тип и цвет банок маны забит в закладке Types<br>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp<a class=item href="HelpItemWait.htm">Wait</a>(300) #Подождем когда выпьется банка (подкорректировать в зависимости от пинга)<br>
+		&nbsp; &nbsp; &nbsp; endif<br>
+		<br>
+		&nbsp; &nbsp; &nbsp; if uo.mana &lt; MinMana then #Ману пили, но не выпили...<br>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbspreturn #Тут больше нечего делать, выходим<br>
+		&nbsp; &nbsp; &nbsp; endif<br>
+		<br>
+		&nbsp; &nbsp; &nbsp; dim spells[65] #Объявим указатель на заклинания<br>
+		&nbsp; &nbsp; &nbsp; InitSpells(spells) #Заполним массив с названиями заклинаний<br>
+		<br>
+		&nbsp; &nbsp; &nbsp; uo.<a class=item href="HelpItemCast.htm">Cast</a>(spells[SpellIndex], target) #Кастуем указанное заклинание в указанную цель<br>
+		&nbsp; &nbspendif<br>
+		end sub<br>
+		</div>
+		
+		<hr>Загрузить файл можно кнопкой Load, отредактировать/просмотреть кнопкой Edit.
+		<br>Или функцией __LoadSC#FilePath
+		<br>В пути к файлу FilePath все пробелы должны быть заменены на $. При обработке все $ заменяются на пробелы.</p>
+	</p>
+</body>
+</html>

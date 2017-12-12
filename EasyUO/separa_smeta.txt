@@ -1,0 +1,123 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;Desenvolvido por Marquim
+
+;Distribui&#231;&#227;o Gratuita
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+initevents
+
+set %Backpack #backpackid
+
+set %ore EWJ_DWJ_GWJ
+
+Set %Hammer TLH_OLH
+
+; Abrir Paperdoll
+
+event macro 8 1
+
+wait 3s
+
+contpos 762 0
+
+wait 1s
+
+; Abrir Backpack
+
+Event Macro 8 7
+
+wait 3s
+
+set %Backpack #CONTID
+
+contpos 765 480
+
+wait 1s
+
+hammer:
+
+finditem %Hammer
+
+if #findkind = 0
+
+{
+
+set #LObjectID #FindID
+
+event macro 17 0
+
+target
+
+event macro 22 0
+
+event macro 23 0
+
+click 67 441 0
+
+goto mover
+
+}
+
+mover:
+
+finditem %ore C_ , %Backpack
+
+if #findkind = 0
+
+{
+
+event drag #findid
+
+wait 1s
+
+msg 1$
+
+wait 1s
+
+click 859 557 p
+
+wait 1s
+
+goto mover
+
+}
+
+else
+
+{
+
+goto smeltar
+
+}
+
+smeltar:
+
+finditem TVJ C_ , %Backpack
+
+if #findkind = 0
+
+{
+
+set #LObjectID #FindID
+
+event macro 17 0
+
+wait 1s
+
+goto smeltar
+
+}
+
+else
+
+{
+
+msg Nenhum Minerio encontrado!$
+
+wait 4s
+
+goto smeltar
+
+}

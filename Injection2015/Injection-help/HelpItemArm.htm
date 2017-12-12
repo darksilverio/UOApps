@@ -1,0 +1,39 @@
+<html>
+<head>
+	<title>Injection Help System: Arm</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  Arm <a target="_blank" class=item href="IndexArm.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">Arm</font> <font class="param"><a class=item href="HelpItemname.htm">name</a></font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">Arm</font>(<font class="param"><a class=item href="HelpItemname.htm">name</a></font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicEquipment.htm">Одеяние</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsEquipment.htm">Equipment</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>Снимает всё оружие, потом вооружается набором my_name, запомненым предварительно командой <a class=item href="HelpItemSetArm.htm">SetArm</a>. Набор оружия
+		содержит конкретные вещи, и при потере вещи набора инжект всё равно будет пытаться её надеть, что может париводить к
+		ошибкам клиента. Рекомендуется выставить задержку между одеванием отдельных вещей командой <a class=item href="HelpItemSetDressSpeed.htm">SetDressSpeed</a>.</p>
+		<hr width=100% size=1>
+		<h3 align="center">Пример использования команд arm и disarm</h3>
+		Пример ждёт безоружным пока не пнут, после чего одевает то оружие что было надето при запуске скрипта. <br>
+		</p><br>
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent"><br>
+		sub test()<br>
+		uo.<a class=item href="HelpItemSetArm.htm">SetArm</a>("default")<br>
+		uo.<a class=item href="HelpItemDisarm.htm">Disarm</a>()<br>
+		while uo.<a class=item href="HelpItemGetHP.htm">GetHP</a>()==uo.<a class=item href="HelpItemGetMaxHP.htm">GetMaxHP</a>()<br>
+		&nbsp; &nbspwait(50)<br>
+		wend<br>
+		uo.<a class=item href="HelpItemArm.htm">Arm</a>("default")<br>
+		end sub<br>
+		</div>
+	</p>
+</body>
+</html>

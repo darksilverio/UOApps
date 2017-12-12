@@ -1,0 +1,43 @@
+<html>
+<head>
+	<title>Injection Help System: Target</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  Target <a target="_blank" class=item href="IndexTarget.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">Target</font> <font class="param">target_key tile [target_type <a class=item href="HelpItemtype.htm">type</a> x y z]</font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">Target</font>(<font class="param">target_key, tile, [target_type, <a class=item href="HelpItemtype.htm">type</a>, x, y, z]</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicTargeting.htm">Прицелы</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsObjHandling.htm">ObjHandling</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsTargeting.htm">Targeting</a>, 
+		<a class=keyword href="HelpKeywordsTileHandling.htm">TileHandling</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>Реккомендуется не использовать эту команду тем кто не в курсе, что он делает.</p>
+		<p>Создаёт и посылает на сервер пакет прицела согласно заданым параметрам. Не отменяет прицела в клиенте. Если вы отменили
+		вручную прицел в клиенте после команды <a class=item href="HelpItemTarget.htm">Target</a> то создали десинхронизацию, на которую возможна реакция в спектре от
+		сообщения о ошибке и отметки в логе на сервере до бана аккаунта.</p>
+		<p> Первый параметр это уникальный нормер прицела. Для магии он один, скилов другой, предметов третий, четвёртый и так далее.
+		Узнать его можно с помощью особого указателя lasttargetkey, см. <a class=item href="HelpItemObject.htm">Object</a>. Он показывает какой номер был у последнего прицела,
+		использованого клиентом.</p>
+		<p> Второй парамер указывает где взять основной параметр пакета прицела - серийный номер <a class=item href="HelpItemObject.htm">обьекта</a> на который нужно
+		навести прицел. <font class="param">lasttile</font> указывает взять последний использованый в клиенте; <a class=item href="HelpItemObject.htm">Object</a> указывает взять
+		серийный номер указаного обьекта, <font class="param">ground</font> указывает что прицелом есть статический обьект (земля,
+		деревья, вода и т.п.).</p>
+		<p> Третий параметр, ttype (0 или 1) указывает должен ли сервер считать это прицелом на статик (укажите 1 если вы писали в
+		предыдущем параметре ground иначе 0)</p>
+		<p> Следующий параметр, если он указан, является типом вещи если прицел обьектный, или тайлом если прицел статический.</p>
+		<p> Далее идут, если указаны, координаты вещи в сумке (обычно не требуется, берётся из данных о обьекте) если прицел
+		обьектный, и координаты тайла в мире если прицел статический</p>
+		<p>По возможности следует не использовать команду <a class=item href="HelpItemTarget.htm">Target</a>, заменяя её на команду <a class=item href="HelpItemWaitTargetObject.htm">WaitTargetObject</a> для обьектов и
+		<a class=item href="HelpItemWaitTargetTile.htm">WaitTargetTile</a> для статики.</p>
+		<p>Данные для команды <a class=item href="HelpItemTarget.htm">Target</a> можно получить правильно применяя команды <a class=item href="HelpItemInfo.htm">Info</a> и <a class=item href="HelpItemInfoTile.htm">InfoTile</a>.</p>
+	</p>
+</body>
+</html>

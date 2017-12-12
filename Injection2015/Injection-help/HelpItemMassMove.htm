@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>Injection Help System: MassMove</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  MassMove <a target="_blank" class=item href="IndexMassMove.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">MassMove</font> <font class="param">delay [maxitems <a class=item href="HelpItemcolor.htm">color</a>]</font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">MassMove</font>(<font class="param">delay, [maxitems, <a class=item href="HelpItemcolor.htm">color</a>]</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicObjDo.htm">Работа с объектами</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsObjHandling.htm">ObjHandling</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsUtility.htm">Utility</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>Позволяет продублировать перемещение одного эталонного предмета со многими того же типа. Используется для быстрого
+		перемещения и сортировки предметов. Для перемещения ищутся предметы того же типа что и эталонный в том же контейнере, и
+		ложатся в точно то же место куда был положен эталонный. Задержка между перемещениями <font class="param">delay</font> мс
+		(1000 мс = 1 сек). Можно установить предел количества переброщеных предметов <font class="param">maxitems</font>. Если
+		установлен параметр <a class=item href="HelpItemColor.htm">Color</a> то при перебрасывании будет учтён так же цвет эталона.</p>
+		<p>Для использования сперва введите команду <a class=item href="HelpItemMassMove.htm">MassMove</a> с параметрами, потом переместите один эталонный предмет
+		вручную.</p>
+		<p>Для шардов в которых цена предмета задаётся в момент когда предмет ложится в сумку вендору (например AoP, Wolfpack),
+		можно использовать команду <a class=item href="HelpItemMassPriceMove.htm">MassPriceMove</a>.</p>
+	</p>
+</body>
+</html>

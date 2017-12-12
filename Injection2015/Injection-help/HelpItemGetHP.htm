@@ -1,0 +1,39 @@
+<html>
+<head>
+	<title>Injection Help System: GetHP</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  GetHP <a target="_blank" class=item href="IndexGetHP.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: Только из скрипта.
+		<br>Из скрипта: <font class="function">Function</font> UO.<font class="cmd">GetHP</font>(<font class="param">[<a class=item href="HelpItemObject.htm">serial</a>]</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicScripts.htm">Команды скриптов</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsObjHandling.htm">ObjHandling</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsFunction.htm">Function</a>
+		<hr>
+		<p>Возвращает параметр <a class=item href="HelpItemObject.htm">обьекта</a> (по умолчанию - персонажа игрока) - здоровье персонажа. Для другого персонажа
+		кроме игрока обычно не имеет смысла абсолютное значение здоровья, так как выражается в абстрактных единицах, важно только
+		отношение к максимальному здоровью <a class=item href="HelpItemGetMaxHP.htm">GetMaxHP</a>.
+		</p>
+		<hr width=100% size=1>
+		<h3 align="center">Пример использования команд arm и disarm</h3>
+		Пример ждёт безоружным пока не пнут, после чего одевает то оружие что было надето при запуске скрипта. <br>
+		<br>
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent"><br>
+		sub test()<br>
+		uo.<a class=item href="HelpItemSetArm.htm">SetArm</a>("default")<br>
+		uo.<a class=item href="HelpItemDisarm.htm">Disarm</a>()<br>
+		while uo.<a class=item href="HelpItemGetHP.htm">GetHP</a>()==uo.<a class=item href="HelpItemGetMaxHP.htm">GetMaxHP</a>()<br>
+		&nbsp; &nbspwait(50)<br>
+		wend<br>
+		uo.<a class=item href="HelpItemArm.htm">Arm</a>("default")<br>
+		end sub<br>
+		</div>
+	</p>
+</body>
+</html>

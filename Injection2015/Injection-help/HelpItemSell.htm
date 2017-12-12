@@ -1,0 +1,35 @@
+<html>
+<head>
+	<title>Injection Help System: Sell</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  Sell <a target="_blank" class=item href="IndexSell.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">Sell</font> <font class="param">list [<a class=item href="HelpItemname.htm">name</a>]</font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">Sell</font>(<font class="param">list, [<a class=item href="HelpItemname.htm">name</a>]</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicShopping.htm">Покупка и продажа</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsBuySell.htm">BuySell</a>, 
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>К имени вендора <font class="param">vendorname</font> дописывает ключевое слово продажи из файла injection.xml (обычно это
+		<b>sell</b>) и произносит эту фразу,
+		 после чего продаёт в меню продажи, которое покажет вендор, вещи согласно списку <font class="param">listname</font>.</p>
+		<p>Посмотреть, отредактировать и создать новый список можно нажав кнопку <b>Buy/sell</b> закладки
+		 Main или воспользовавшись командой ,shop</p>
+		<p>В случае необходимости можно включить задержку перед продажей командой <a class=item href="HelpItemSet.htm">Set</a> <font class="param">buydelay</font></p>
+		<p>Чтобы изменить фразу buy для своего сервера найдите в injection.xml:</p>
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent">server name=&quot;My Server Name&quot;<br>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ...<br>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sell=&quot;sell&quot;<br>
+		&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ....<br>
+		</div>
+		<p>и замените &quot;sell&quot; на подходящее для вашего шарда.</p>
+	</p>
+</body>
+</html>

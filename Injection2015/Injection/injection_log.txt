@@ -1,0 +1,36 @@
+Log open.
+**Warning: Your prefarable codepage is 1252
+TInjection::Init
+YokoInjection 1508.09 beta HoRLAn
+Encryption=None (Ignition)
+ClientVersion=0
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]
+**Warning: [no object of speech]

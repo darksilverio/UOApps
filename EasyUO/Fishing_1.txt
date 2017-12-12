@@ -1,0 +1,847 @@
+; ============================================================
+; Macro : Fishing Avançado DMS
+; Autor : Shirkit
+; Macro de Distribuição gratuita
+; ============================================================
+; Você está livre para distribuir o macro, mas se for fazer
+; uma modificação no macro, faça para você mesmo e NÃO
+; COMPARTILHE a versão modificada. Caso tenha sugestão/correção,
+; mande um email para 'shi.rkit@gmail.com' (ou por algum outro
+; meio de me contactar que você já conheça) que terei o prazer
+; de conversar com você e fazer a modificação e lançar uma
+; versão oficial, com devidos agradecimentos.
+; ============================================================
+; Aradeço ao T o r K e ao Seifer Almasy por ter me dado
+; dado bastante feedback e ao Flanstron e Mugiwara por dar
+; uma mão nos códigos.
+; ============================================================
+; Versão: 1.8
+; Data: 07/10/2009
+; ====================== REQUESITOS ==========================
+; 1. Estar dentro de um barco
+; 2. Ter uma vara de pescar
+; 3. Um bau no chao se voce quiser guardar os itens
+; 4. Espaço suficiente para navegar e longe de outros barcos
+initevents
+;========== Variáveis que podem ser modificadas ==========
+Set %Velocidade 80 ; Isso aqui afeta diretamente a velocidade do seu macro
+; Quanto maior o número, mais rápido vai ser, mas mais processador utiliza
+; Padrão: 30 | Recomendado: 50 | Máximo Sugerido: 100
+Set %Tentativa 6 ;Número de Tentativas em um mesmo Tile | Padrão: 6
+Set %Tempo 8 ;Tempo em segundos para tentar de novo | Padrão: 7
+Set %Vara XHF_KDF ;ID da Vara | Padrão: XHF
+;========== Mensagens que aparecem no Journal ==========
+Set %ERRO1 you_can't
+Set %ERRO2 close_to_yourself
+Set %ERRO3 voce_nao_tem_linha_de_visao
+Set %ERRO4 o_alvo_esta_muito_distante
+Set %ERRO5 nao_ha_peixes_aqui
+Set %ERRO6 too_far_away
+Set %ERRO7 tente_pescar_na_agua
+Set %FALHA1 Voce_nao_pescou_nada_de_util
+;========== Variáveis que NÃO DEVEM ser modificadas ==========
+Set %PeixeNormal 0
+Set %PeixeHighPeculiar 0
+Set %PeixeTrulyRare 0
+Set %PeixeWondrous 0
+Set %PeixePrized 0
+Set %Mapas 0
+Set %SOS 0
+Set %HoraInicial #TIME / 10000
+Set %MinutoInicial ( #TIME - ( %HoraInicial * 10000 ) ) / 100
+Set #LTARGETID 0
+Set #LTARGETZ 0
+Set #LTARGETKIND 2
+Set %Versao v1.8
+Set %Data 07/10/2009
+Set %Comando 1
+Set %ComandoX 1
+Set %Ativo #TRUE
+Set %X -3
+Set %Y -2
+Set %Chance 1
+Set %Atualizar #FALSE
+Set %Guardar #FALSE
+Set %Guarde #FALSE
+Set %Reconectador #FALSE
+Set %EstadoGuardar Nada
+ChooseSkill Fish
+Set %Skill #SKILL / 10
+;========== Início do Bloco Principal ==========
+LinesPerCycle %Velocidade
+if #EUOVER <> 1_50_00
+{
+display Sua versão do EasyUO é imcompatível com o macro. Por favor, baixe uma versão mais nova!
+halt
+}
+Set #SysMSGCol 40
+gosub CriaMenu
+Menu Get Check_PeixeNormal
+set %PegaPeixeNormal #menuRes
+Menu Get Check_PeixeEspecial
+set %PegaPeixeEspecial #menuRes
+Menu Get Check_Mapas
+set %PegaMapas #menuRes
+Menu Get Check_SOS
+set %PegaSOS #menuRes
+If %Reconectador = #True
+GoSub ConfiguraReconectar
+gosub Barco
+if %Guardar = #TRUE
+{
+gosub Bag
+}
+gosub NovoAlvo
+while %Ativo = #TRUE
+{
+if %Chance > %Tentativa
+{
+gosub NovoAlvo
+}
+gosub Vara ; Chama o Journal Internamente
+if %Atualizar = #TRUE
+{
+gosub AtualizaMenu
+}
+if #MENUBUTTON = Button_Parar
+{
+gosub Parar
+Set %Ativo #FALSE
+}
+}
+Event SysMessage Macro terminado! Confira as estatisticas
+halt
+;========== Sub Cria Menu ==========
+sub CriaMenu
+Menu Clear
+Menu Window Title Char: #CHARNAME | Shard: #SHARD
+Menu Window Color black
+Menu Window Size 360 330
+Menu Font Align center
+Menu Font BGColor black
+Menu Font Color white
+Menu Font Name Verdana
+Menu Font Size 9
+Menu Font Transparent #TRUE
+Menu Text Text_Tempo 5 5 Status Tempo
+Menu Text Text_Hora 5 20 - Hora Atual: %HoraInicial h %MinutoInicial m
+Menu Text Text_Inicio 5 35 - Inicio: %HoraInicial h %MinutoInicial m
+Menu Text Text_Total 5 50 - Total no Macro: 0 h 0 m
+Menu Text Text_Skill 5 80 Skill: %skill %
+Menu Text Text_Peso 5 110 Peso: #WEIGHT #MAXWEIGHT
+Menu Text Text_Coletados 200 5 Itens Coletados
+Menu Text Text_Peixes 200 20 - Peixes
+Menu Text Text_PeixeNormal 205 35 + Normais = %PeixeNormal
+Menu Text Text_PeixeHighPeculiar 205 50 + High Peculiar = %PeixeHighPeculiar
+Menu Text Text_PeixeTrulyRare 205 65 + Truly Rare = %PeixeTrulyRare
+Menu Text Text_PeixeWondrous 205 80 + Wondrous = %PeixeWondrous
+Menu Text Text_PeixePrized 205 95 + Prized = %PeixePrized
+Menu Text Text_Tesouros 200 135 - Tesouros
+Menu Text Text_Mapas 205 150 + Mapas = %Mapas
+Menu Text Text_SOS 205 165 + SOS = %SOS
+Menu Text Text_Rodape 5 290 Macro Fishing Avançado DMS -|- Autor: Shirkit
+Menu Text Text_Rodape 5 310 Lançamento: %Data -|- %Versao
+Menu Font Color red
+Menu Button Button_Guardar_Desativado 220 195 100 20 Desativado!
+Menu Button Button_Reconectador_Desativado 220 220 100 20 Desativado!
+Menu Font Color white
+Menu Text Text_Guardar 5 195 Guardar os itens em alguma Bag?
+Menu Text Text_Reconectador 5 220 Reconectar automaticamente?
+Menu Button Button_Iniciar 20 250 100 25 Iniciar Macro
+Menu Button Button_Parar 180 250 100 25 Parar Macro
+Set #MENUBUTTON N/A
+Menu Show 0 0
+Menu HideEUO
+wait 1s
+gosub ChecaMenu
+return
+;========== Sub Checa Menu ==========
+sub ChecaMenu
+while #TRUE
+{
+if #MENUBUTTON = Button_Guardar_Desativado
+{
+Menu Font BGColor teal
+Menu Delete Button_Guardar_Desativado
+Menu Button Button_Guardar_Ativado 220 195 100 20 Ativado!
+Set #MENUBUTTON N/A
+Menu Font BGColor black
+Menu Check Check_PeixeNormal 5 135 12 12 #FALSE Teste
+Menu Check Check_PeixeEspecial 5 150 12 12 #TRUE
+Menu Check Check_Mapas 5 165 12 12 #TRUE
+Menu Check Check_SOS 5 180 12 12 #TRUE
+Menu Text Text_Check_PeixeNormal 20 135 Pegar Peixes Normais
+Menu Text Text_Check_PeixeEspecial 20 150 Pegar Peixes Especias
+Menu Text Text_Check_SOS 20 165 Pegar SOS
+Menu Text Text_Check_Mapas 20 180 Pegar Mapas
+Set %Guardar #TRUE
+}
+if #MENUBUTTON = Button_Guardar_Ativado
+{
+Menu Font Color red
+Menu Delete Button_Guardar_Ativado
+Menu Button Button_Guardar_Desativado 220 195 100 20 Desativado!
+Set #MENUBUTTON N/A
+Menu Font Color white
+Menu Delete Check_PeixeNormal
+Menu Delete Check_PeixeEspecial
+Menu Delete Check_Mapas
+Menu Delete Check_SOS
+Menu Delete Text_Check_PeixeNormal
+Menu Delete Text_Check_PeixeEspecial
+Menu Delete Text_Check_SOS
+Menu Delete Text_Check_Mapas
+Set %Guardar #FALSE
+}
+If #MenuButton = Button_Reconectador_Desativado
+{
+Menu Font BGColor teal
+Menu Delete Button_Reconectador_Desativado
+Menu Button Button_Reconectador_Ativado 220 220 100 20 Ativado!
+Set #MENUBUTTON N/A
+Menu Font BGColor black
+Set %Reconectador #True
+}
+If #MenuButton = Button_Reconectador_Ativado
+{
+Menu Font Color Red
+Menu Delete Button_Reconectador_Ativado
+Menu Button Button_Reconectador_Desativado 220 220 100 20 Desativado!
+Set #MENUBUTTON N/A
+Menu Font color white
+Set %Reconectador #False
+}
+if #MENUBUTTON = Button_Iniciar
+{
+Set #MENUBUTTON N/A
+return
+}
+}
+return
+;========== Sub Atualiza Menu ==========
+sub AtualizaMenu
+Set %Hora #TIME / 10000
+Set %Minuto ( #TIME - ( %Hora * 10000 ) ) / 100
+Set %MaisHora 0
+Menu Set Text_Tempo Status Tempo
+Menu Set Text_Hora - Hora Atual: %Hora h %Minuto m
+Set %TempoMinuto %Minuto - %MinutoInicial
+if %TempoMinuto < 0
+{
+Set %MaisHora 1
+Set %TempoMinuto %TempoMinuto + 60
+}
+Set %TempoHora ( %Hora - %HoraInicial ) + %MaisHora
+while %TempoHora < 0
+{
+Set %TempoHora %TempoHora + 24
+}
+Menu Set Text_Total - Total no Macro: %TempoHora h %TempoMinuto m
+Menu Set Text_Skill Skill: %Skill %
+Menu Set Text_Peso Peso: #WEIGHT #MAXWEIGHT
+Menu Set Text_Coletados Itens Coletados
+Menu Set Text_Peixes - Peixes
+Menu Set Text_PeixeNormal + Normais = %PeixeNormal
+Menu Set Text_PeixeHighPeculiar + High Peculiar = %PeixeHighPeculiar
+Menu Set Text_PeixeTrulyRare + Truly Rare = %PeixeTrulyRare
+Menu Set Text_PeixeWondrous + Wondrous = %PeixeWondrous
+Menu Set Text_PeixePrized + Prized = %PeixePrized
+Menu Set Text_Tesouros - Tesouros
+Menu Set Text_Mapas + Mapas = %Mapas
+Menu Set Text_SOS + SOS = %SOS
+Set %Atualizar #FALSE
+return
+;========== Sub Vara ==========
+sub Vara
+gosub Save
+finditem %Vara
+if #FINDKIND = 0
+{
+set #LObjectID #FindID
+set #LTargetKind 3
+event macro 17 0
+target
+event macro 25 0
+event macro 22 0
+Set %Chance %Chance + 1
+gosub Journal
+}
+else
+{
+if #FindKind = 1
+{
+ignoreitem #FindID
+gosub Vara
+return
+}
+else
+{
+if #FindKind = -1
+{
+ignoreitem reset
+event sysmessage Vara Nao Encontrada!
+wait 3s
+}
+}
+}
+return
+;========== Sub Novo Alvo ==========
+sub NovoAlvo
+gosub Save
+Set %Chance 1
+Set #LTARGETX #CHARPOSX + %X
+Set #LTARGETY #CHARPOSY + %Y
+Set #LTARGETZ - 5
+Set %X %X + 1
+if %X > 3
+{
+Set %Y %Y - 1
+Set %X -3
+if %Y < -6
+{
+Set %Y -2
+Gosub Mover
+}
+}
+return
+;========== Sub Mover ==========
+sub Mover
+gosub Save
+; if %Guardar = #TRUE
+; {
+; if %Guarde = #TRUE
+; {
+; gosub Guardar
+; Set %Guarde #FALSE
+; }
+; }
+msg Raise Anchor$
+wait 5
+if %Comando = 1
+{
+msg Forward$
+}
+if %Comando = 2
+{
+msg Left$
+}
+if %Comando = 3
+{
+msg Back$
+}
+if %Comando = 4
+{
+msg Right$
+}
+Set %ComandoX %ComandoX + 1 ; %ComandoX é a quantidade de vezes que o barco se deslocou em um mesmo sentido
+IF %ComandoX > 6
+{
+Set %ComandoX 1
+Set %Comando %Comando + 1
+IF %Comando > 4 ; %Comando é o sentido que o barco deve se mover
+{
+Set %Comando 1
+; Set %Guarde #TRUE
+}
+}
+wait 8s
+msg Drop Anchor$
+gosub NovoAlvo
+return
+;========== Sub Journal ==========
+sub Journal
+gosub Reconectador
+Set %NoJournal #TRUE
+Set #SCNT 0
+Set %TempoGuardar #Scnt + 2
+while %NoJournal = #TRUE
+{
+if #SCNT > %Tempo
+{
+Set %NoJournal #FALSE
+}
+ScanJournal %Jornal
+if World_save in #JOURNAL
+{
+Event Sysmessage Save Detectado, pausando macro por 30 segundos
+wait 30s
+}
+if %ERRO1 in #JOURNAL || %ERRO2 in #JOURNAL || %ERRO3 in #JOURNAL || %ERRO4 in #JOURNAL || %ERRO5 in #JOURNAL || %ERRO6 in #JOURNAL || %ERRO7 in #JOURNAL
+{
+Set %Chance %Tentativa + 1
+Set %NoJournal #FALSE
+}
+if %FALHA1 in #JOURNAL
+{
+Set %Chance %Chance + 1
+Set %NoJournal #FALSE
+}
+if %TempoGuardar <= #Scnt
+{
+GoSub GuardarNovo
+Set %TempoGuardar #Scnt + 2
+}
+if voce_pescou in #JOURNAL
+{
+if voce_pescou_um_fish in #JOURNAL
+{
+Set %PeixeNormal %PeixeNormal + 1
+}
+if Truly_Rare_Fish in #JOURNAL
+{
+Set %PeixeTrulyRare %PeixeTrulyRare + 1
+}
+if Highly_Peculiar_Fish in #JOURNAL
+{
+Set %PeixeHighPeculiar %PeixeHighPeculiar + 1
+}
+if Prized_Fish in #JOURNAL
+{
+Set %PeixePrized %PeixePrized + 1
+}
+if Wondrous_Fish in #JOURNAL
+{
+Set %PeixeWondrous %PeixeWondrous + 1
+}
+if Tattered_Treasure_Map in #JOURNAL
+{
+Set %Mapas %Mapas + 1
+}
+if Message_in_a_Bottle in #JOURNAL
+{
+Set %SOS %SOS + 1
+}
+Set %Atualizar #TRUE
+Set %NoJournal #FALSE
+}
+if #JINDEX > %Jornal
+{
+Set %Jornal %Jornal + 1
+}
+}
+if %EstadoGuardar = Drag
+GoSub GuardarNovo
+return
+;========== Sub Barco ==========
+sub Barco
+Set %X1 0 ;Tiller Man
+Set %Y1 0
+Set %X2 0 ;Hatch
+Set %Y2 0
+FindItem JNX_ENX_ONX_HNX G_15
+if #FINDKIND = 1
+{
+Set %X1 #FINDX ;Tiller Man
+Set %Y1 #FINDY
+}
+FindItem ZNX_UVX_ZUX_LWX G_15
+if #FINDKIND = 1
+{
+Set %X2 #FINDX ;Hatch
+Set %Y2 #FINDY
+}
+if ( ( %X1 <> 0 ) && ( %X2 <> 0 ) )
+{
+Msg Raise Anchor$
+if ( ( %Y1 = %Y2 ) && ( %X1 < %X2 ) )
+{
+Msg Stop$
+}
+else
+{
+if ( ( %Y1 = %Y2 ) && ( %X1 > %X2 ) ) ; Redireciona a posição do barco para East
+{
+Msg Turn Around$
+}
+else
+{
+if ( ( %X1 = %X2 ) && ( %Y1 < %Y2 ) )
+{
+Msg Turn Left$
+}
+else
+{
+Msg Turn Right$
+}
+}
+}
+wait 1s
+FindItem JNX_ENX_ONX_HNX G_15
+if #FINDKIND = 1
+{
+Set %X1 #FINDX ;Tiller Man
+Set %Y1 #FINDY
+}
+; É Nescessário pegar as coordenadas dos itens de novo para achar a média correta
+FindItem ZNX_UVX_ZUX_LWX G_15
+if #FINDKIND = 1
+{
+Set %X2 #FINDX ;Hatch
+Set %Y2 #FINDY
+}
+if ( #CHARPOSY = %Y1 ) ; Calcula o Y que o Char deve ficar
+{
+Set %YChar #CHARPOSY - 1
+}
+else
+{
+if ( #CHARPOSY > %Y1 )
+{
+Set %YChar #CHARPOSY - 2
+}
+else
+{
+Set %YChar #CHARPOSY
+}
+}
+Set %XChar ( ( ( %X2 - %X1 ) / 2 ) + %X1 ) ; Calcula o X que o char deve ficar
+Move %XChar %YChar 0 8s
+}
+else
+{
+Event SysMessage Erro inesperado ao tentar virar o barco automaticamente.
+wait 2s
+Event SysMessage Por favor, ajuste ele virado para East.
+wait 2s
+Event SysMessage E agora va para o lado mais norte possivel do barco.
+wait 2s
+Event SysMessage Voce tem 20 segundos.
+wait 20s
+}
+return
+;========== Sub Bag ==========
+sub Bag
+Event SysMessage Selecione o Container que voce deseja guardar os peixes (Preferencialmente um que esteja no chao do barco)
+Set #TargCurs 1
+While #TargCurs = 1
+{
+wait 5
+}
+Set %BagID #LTargetID
+return
+;======== Sub GuardarNovo ========
+sub GuardarNovo
+FindItem X
+if %PegaPeixeNormal = #True && %EstadoGuardar = Nada
+{
+FindItem DQD_FQD_GQD_EQD G_2
+if #FindCol = 0 && #FindCNT > 0
+{
+ExEvent Drag #FindID #FindStack
+Set %EstadoGuardar Drag
+return
+}
+}
+if %PEGAPEIXEESPECIAL = #True && %EstadoGuardar = Nada
+{
+FindItem EQD G_2
+if #FindCol <> 0 && #FindCNT > 0
+{
+ExEvent Drag #FindID #FindStack
+Set %EstadoGuardar Drag
+return
+}
+}
+if %PegaMapas = #True && %EstadoGuardar = Nada
+{
+FindItem SVH G_2
+if #FINDCNT > 0
+{
+ExEvent Drag #FindID #FindStack
+Set %EstadoGuardar Drag
+return
+}
+}
+if %PegaSOS = #True && %EstadoGuardar = Nada
+{
+FindItem HTD G_2
+if #FINDCNT > 0
+{
+ExEvent Drag #FindID #FindStack
+Set %EstadoGuardar Drag
+return
+}
+}
+IgnoreItem #FindID
+; Só entra aqui se não tiver dado nenhum FindItem
+if %EstadoGuardar = Drag && #FindCNT = 0
+{
+ExEvent Dropc %BagID
+Set %EstadoGuardar Nada
+}
+return
+;========== Sub Guardar ==========
+sub Guardar
+LinesPerCycle 5
+gosub Save
+Event SysMessage Guardando Itens
+Menu Get Check_PeixeNormal
+if #MENURES = #TRUE
+{
+while #TRUE
+{
+FindItem DQD_FQD_GQD_EQD G_2
+if ( #FINDCOL = 0 ) && ( #FINDCNT > 0 )
+{
+ExEvent Drag #FINDID #FINDSTACK
+wait 20
+ExEvent Dropc %BagID
+}
+else
+{
+break
+}
+wait 20
+IgnoreItem #FINDID
+}
+}
+gosub Save
+Menu Get Check_PeixeEspecial
+if #MENURES = #TRUE
+{
+while #TRUE
+{
+FindItem EQD G_2
+if ( #FINDCOL <> 0 )
+{
+ExEvent Drag #FINDID #FINDSTACK
+wait 20
+ExEvent Dropc %BagID
+}
+else
+{
+break
+}
+wait 20
+IgnoreItem #FINDID
+}
+}
+gosub Save
+Menu Get Check_Mapas
+if #MENURES = #TRUE
+{
+while #TRUE
+{
+FindItem SVH G_2
+if #FINDCNT > 0
+{
+ExEvent Drag #FINDID #FINDSTACK
+wait 20
+ExEvent Dropc %BagID
+}
+else
+{
+break
+}
+wait 20
+IgnoreItem #FINDID
+}
+}
+gosub Save
+Menu Get Check_SOS
+if #MENURES = #TRUE
+{
+while #TRUE
+{
+FindItem HTD G_2
+if #FINDCNT > 0
+{
+ExEvent Drag #FINDID #FINDSTACK
+wait 20
+ExEvent Dropc %BagID
+}
+else
+{
+break
+}
+wait 20
+IgnoreItem #FINDID
+}
+}
+Event SysMessage Retornando.
+LinesPerCycle %Velocidade
+return
+;========== Sub Parar ==========
+sub Parar
+Event SysMessage Parando o macro.
+if %Guardar = #TRUE
+{
+gosub Guardar
+}
+return
+;========== Sub Save ==========
+sub Save
+while #TRUE
+{
+ScanJournal %Jornal
+if World_save in #JOURNAL
+{
+Event SysMessage Save Detectado, Pausando Macro por 30 segundos
+wait 30s
+}
+if %Jornal < #JINDEX
+{
+Set %Jornal %Jornal + 1
+}
+else
+{
+break
+}
+}
+return
+; ========== Configura Reconectar ==========
+Sub ConfiguraReconectar
+;=======================Menu para digitar sua senha========================
+Menu Clear
+Menu Window Color white
+Menu Font BGColor white
+Menu Window Size 245 120
+Menu Window Title Reconnect Macro by Mugiwara
+Menu Show 200 200
+Menu Text 1 20 20 Digite sua Senha:
+Menu Edit 2 20 40 200
+Menu Font BGColor BtnFace
+Menu Button 3 130 70 90 25 OK
+Set #MenuButton 0
+N1:
+if #MenuButton = closed
+{
+GoSub ConfigReconectador
+return
+}
+if #MenuButton <> 3
+goto N1
+Menu Get 2
+Set %Senha #MenuRes
+Menu Get 1
+;====================Menu para digitar sua contrasenha=====================
+menu Clear
+menu Window Size 245 120
+menu Window Title Reconnect Macro by Mugiwara
+menu Show 200 200
+menu Text 1 20 20 Digite sua Contrasenha:
+menu Font BGColor White
+menu Edit 2 20 40 200
+menu Font BGColor BtnFace
+menu Button 3 130 70 90 25 OK
+set #MenuButton 0
+N2:
+if #MenuButton = closed
+{
+GoSub ConfigReconectador
+return
+}
+if #MenuButton <> 3
+goto N2
+menu Get 2
+set %ContraSenha #MenuRes
+menu Get 1
+Menu Window Color black
+;menu Hide
+menu Clear
+Menu Clear
+Menu Window Title Char: #CHARNAME | Shard: #SHARD
+Menu Window Color black
+Menu Window Size 360 330
+Menu Font Align center
+Menu Font BGColor black
+Menu Font Color white
+Menu Font Name Verdana
+Menu Font Size 9
+Menu Font Transparent #TRUE
+Menu Text Text_Tempo 5 5 Status Tempo
+Menu Text Text_Hora 5 20 - Hora Atual: %HoraInicial h %MinutoInicial m
+Menu Text Text_Inicio 5 35 - Inicio: %HoraInicial h %MinutoInicial m
+Menu Text Text_Total 5 50 - Total no Macro: 0 h 0 m
+Menu Text Text_Skill 5 80 Skill: %skill %
+Menu Text Text_Peso 5 110 Peso: #WEIGHT #MAXWEIGHT
+Menu Text Text_Coletados 200 5 Itens Coletados
+Menu Text Text_Peixes 200 20 - Peixes
+Menu Text Text_PeixeNormal 205 35 + Normais = %PeixeNormal
+Menu Text Text_PeixeHighPeculiar 205 50 + High Peculiar = %PeixeHighPeculiar
+Menu Text Text_PeixeTrulyRare 205 65 + Truly Rare = %PeixeTrulyRare
+Menu Text Text_PeixeWondrous 205 80 + Wondrous = %PeixeWondrous
+Menu Text Text_PeixePrized 205 95 + Prized = %PeixePrized
+Menu Text Text_Tesouros 200 135 - Tesouros
+Menu Text Text_Mapas 205 150 + Mapas = %Mapas
+Menu Text Text_SOS 205 165 + SOS = %SOS
+Menu Text Text_Rodape 5 290 Macro Fishing Avançado DMS -|- Autor: Shirkit
+Menu Text Text_Rodape 5 310 Lançamento: %Data -|- %Versao
+If %Guardar = #True
+{
+Menu Font BGColor teal
+Menu Button Button_Guardar_Desativado 220 195 100 20 Ativado!
+Menu Font BGColor black
+}
+Else
+{
+Menu Font Color red
+Menu Button Button_Guardar_Desativado 220 195 100 20 Desativado!
+Menu Font Color white
+}
+If %Reconectador = #True
+{
+Menu Font BGColor teal
+Menu Button Button_Reconectador_Ativado 220 220 100 20 Ativado!
+Menu Font BGColor black
+}
+Else
+{
+Menu Font Color red
+Menu Button Button_Reconectador_Desativado 220 220 100 20 Desativado!
+Menu Font Color white
+}
+Menu Text Text_Guardar 5 195 Guardar os itens em alguma Bag?
+Menu Text Text_Reconectador 5 220 Reconectar automaticamente?
+Menu Button Button_Iniciar 20 250 100 25 Iniciar Macro
+Menu Button Button_Parar 180 250 100 25 Parar Macro
+Set #MENUBUTTON N/A
+Menu Show 0 0
+Menu HideEUO
+Return
+; ========== Sub Reconectador ==========
+Sub Reconectador
+If %Reconectar = #TRUE
+{
+;******Gump de Conection Lost******
+if #contname = waiting_gump && #contsize = %GCLSize
+{
+key ENTER
+wait 4s
+while #cliLogged <> 1 && #contname <> generic_gump && #contsize <> %GCSSize
+{
+;******Tela de Waiting ou de Erros de conexão******
+set %tempo1 #time
+while #contname = waiting_gump && #contsize = %TWESize && #cliLogged = 0
+{
+if #time - %tempo1 > 5
+key ENTER
+if #time - %tempo1 > 10
+click 318 351 dmc
+}
+;******Tela de Senha******
+if #contname = MainMenu_gump && #contsize = %TSESize && #cliLogged = 0
+{
+for %contador 1 16
+{
+key BACK
+}
+msg %senha
+key ENTER
+}
+;******Tela de Servidores******
+if #contname = normal_gump && #contsize = %TSVSize && #cliLogged = 0
+key ENTER
+;******Tela de Login (Escolha de Char)******
+if #contname = Login_gump && #contsize = %TLOSize && #cliLogged = 0
+key ENTER
+;******Gump de Contrasenha******
+if #contname = generic_gump && #contsize = %GCSSize
+{
+msg %contrasenha
+click 456 314 dmc
+}
+}
+}
+}
+return

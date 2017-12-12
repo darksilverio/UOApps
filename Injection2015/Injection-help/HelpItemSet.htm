@@ -1,0 +1,84 @@
+<html>
+<head>
+	<title>Injection Help System: Set</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  Set <a target="_blank" class=item href="IndexSet.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">Set</font> <font class="param">variable value</font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">Set</font>(<font class="param">variable, value</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicSystemOps.htm">Системные</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsSystem.htm">System</a>, 
+		<a class=keyword href="HelpKeywordsUtility.htm">Utility</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>В команде изменяются множество настроек Injection. Посмотреть какие настройки знает ваша версия вы можете набрав <a class=item href="HelpItemSet.htm">Set</a>
+		без параметров. С одним параметром (<font class="param">variable</font>) команда выдаёт текущее значение<font
+		class="param">variable</font>. С двумя параметрами (<font class="param">variable</font>,<font class="param">value</font>) значение
+		<font class="param">variable</font> устанавливается в <font class="param">value</font>.<br>
+		Список <font class="param">variable</font>:</p>
+		<ul>
+		<li><b>distance</b> - дистанция использования предметов</li>
+		<li><b>lasttarget</b> - последний <a class=item href="HelpItem.htm"></a>(Object,обьект) на который был наведён прицел</li>
+		<li><b>prefix</b> - командный префикс (по умолчанию запятая ,)</li>
+		<li><b>bankhack</b> - автоприменение <a class=item href="HelpItemBoxHack.htm">BoxHack</a> к банковому контейнеру</li>
+		<li><b>finddistance</b> - дистанция поиска на земле</li>
+		<li><b>gumpunicode</b> - переключает использование unicode в гампах</li>
+		<li><b>maxsell</b> - максимальное количество вещей на продажу за один раз</li>
+		<li><b>buydelay</b> - задержка перед покупкой, мс</li>
+		<li><b>injectecho</b> - добавляет сообщения Injection в журнал</li>
+		<li><b>season</b> - см. <a class=item href="HelpItemSetSeason.htm">SetSeason</a></li>
+		<li><b>dressspeed</b> - см. <a class=item href="HelpItemSetDressSpeed.htm">SetDressSpeed</a></li>
+		<li><b>grabdelay</b> - задержка в мс при перемещении предметов используя комманды Injection</li>
+		<li><b>statlinelen</b> - длина линий здоровья/маны/стамины в заголовке окна</li>
+		<li><b>concolor</b> - цвет сообщений Injection</li>
+		<li><b>quiet</b> - отключение всех сообщений Injection</li>
+		<li><b>gdislower</b> - включение специального замедлителя, мс, понижающего использование CPU клиентом</li>
+		<li><b>soundecho</b> - отображение звуков в журнале</li>
+		<li><b>animecho</b> - отображение анимации в журнале</li>
+		<li><b>norbcheck</b> - отключение проверки идентичности гампа в командах рунбуков (<a class=topic
+		href="HelpTopicRunebook.htm">Рунбуки</a>)</li>
+		<li><b>norbcalc</b> - отключение вычислений ID кноки на основе номера в командах рунбуков (<a class=topic
+		href="HelpTopicRunebook.htm">Рунбуки</a>). В включеном состоянии просто полагается ID=номер.</li>
+		<li><b>nogump</b> - отключение обработки гампов. Если у вас при появлении большого гампа постоянно чтото слетает попробуйте
+		єту опцию.</li>
+		<li><b>blocktargets</b> - блокирование системы прицелов клиента. полезно при использовании в макросах команды <a class=item href="HelpItemTarget.htm">Target</a></li>
+		<li><b>blockstop</b> - остановка движения при первом запрете от сервера</li>
+		<li><b>transmain</b> - устанавливает прозрачность окна Injection</li>
+		<li><b>topmain</b> - устанавливает окну Injection свойство "поверх окон"</li>
+		<li><b>statsdisplaypercent</b> - отображать в заголовке характеристики персонажа в % соотношении или в реальных значениях</li>
+		<li><b>staminapatch</b> - изменение состояния галочки Stamina Patch</li>
+		<li><b>fpspatch</b> - изменение состояния галочки FPS Patch</li>
+		<li><b>corpsesautoopen</b> - изменение состояния галочки Corpses Autoopen</li>
+		<li><b>undead</b> - изменение состояния галочки Undead</li>
+		<li><b>passhotkeys</b> - изменение состояния галочки Pass Hotkeys</li>
+		<li><b>trackworlitems</b> - изменение состояния галочки Track Worl Items</li>
+		<li><b>verboselogging</b> - изменение состояния галочки Verbose Logging</li>
+		<li><b>verbosemenu</b> - изменение состояния галочки Verbose Menu</li>
+		<li><b>destroyservermenus</b> - изменение состояния галочки Destroy Server Menus</li>
+		<li><b>stealthcounter</b> - изменение состояния галочки Stealth Counter</li>
+		<li><b>smoothwalk</b> - изменение состояния галочки Smooth Walk</li>
+		<li><b>permitvarsloopback</b> - изменение состояния галочки Permit Vars Loopback</li>
+		<li><b>gamewindowsize</b> - изменение состояния галочки Game Window Size</li>
+		<li><b>autostart</b> - изменение состояния галочки Autostart</li>
+		<li><b>statusbarsfix</b> - изменение состояния галочки Statusbars Fix</li>
+		<li><b>inversebuylist</b> - изменение состояния галочки Inverse Buylist</li>
+		<li><b>gamewindowsizex</b> - указать ширину игрового окна</li>
+		<li><b>gamewindowsizey</b> - указать высоту игрового окна</li>
+		<li><b>pfnomap</b> - изменение алгоритма вычисления поиска пути</li>
+		<li><b>sbgreen</b> - отображение статусбара в цветном заголовке УО в стиле ассиста</li>
+		<li><b>corpsetimer</b> - установить время в мс для ожидания открытия трупов при использовании функции Corpses Autoopen, но
+		несоблюдении ее требований (труп слишком далеко)</li>
+		<li><b>autoparty</b> - автоматические действия с пати: 1 - принять; 2 - отклонить; иное значение - на выбор пользователя</li>
+		<li><b>displaysepar</b> - вкл/выкл отображение разделителей (белых полосок) в цветном заголовке</li>
+		<li><b>displayuo</b> - вкл/выкл отображение значка УО в цветном заголовке</li>
+		</ul>
+	</p>
+</body>
+</html>

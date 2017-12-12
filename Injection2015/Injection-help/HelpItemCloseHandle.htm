@@ -1,0 +1,35 @@
+<html>
+<head>
+	<title>Injection Help System: CloseHandle</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  CloseHandle <a target="_blank" class=item href="IndexCloseHandle.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: Только из скрипта.
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">CloseHandle</font>()
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Доступно только из модуля <a class=item href="HelpItemScript.htm">Script.dll</a>
+		<br><br>Тема: <a class=topic href="HelpTopicScripts.htm">Команды скриптов</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsSystem.htm">System</a>, 
+		<a class=keyword href="HelpKeywordsUtility.htm">Utility</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>Закрыть окно клиента Ultima Online.
+		<br>Работает аналогично uo.<a class=item href="HelpItemCloseUO.htm">CloseUO</a>() но игнорирует дисконнекты.
+		<br>void uo.CloseHandle()</p>
+		<hr>
+		Вызов из скрипта:
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent"><br>
+		sub CheckConnection() #Проверяет соединение с сервером<br>
+		&nbsp; &nbspif not uo.<a class=item href="HelpItemIsOnline.htm">IsOnline</a>() then #Если нет соединения - закрываем клиент (uo.<a class=item href="HelpItemCloseUO.htm">CloseUO</a>() ни к чему не приведет в данном случае)<br>
+		&nbsp; &nbsp; &nbsp; uo.CloseHandle()<br>
+		&nbsp; &nbspendif<br>
+		end sub<br>
+		</div>
+	</p>
+</body>
+</html>

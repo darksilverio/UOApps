@@ -1,0 +1,42 @@
+<html>
+<head>
+	<title>Injection Help System: FindType</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  FindType <a target="_blank" class=item href="IndexFindType.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">FindType</font> <font class="param"><a class=item href="HelpItemtype.htm">type</a> [<a class=item href="HelpItemcolor.htm">color</a> <a class=item href="HelpItemObject.htm">container</a>, distance]</font>
+		<br>Из скрипта: <font class="function">Function</font> UO.<font class="cmd">FindType</font>(<font class="param"><a class=item href="HelpItemtype.htm">type</a>, [<a class=item href="HelpItemcolor.htm">color</a>, <a class=item href="HelpItemObject.htm">container</a>, distance, notoriety, nearest]</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicObjDo.htm">Работа с объектами</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsObjHandling.htm">ObjHandling</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsFunction.htm">Function</a>
+		<hr>
+		<p>Ищет обьект указаного <a class=item href="HelpItemType.htm">типа</a> и <a class=item href="HelpItemColor.htm">цвета</a> в указаном контейнере и помещает найденый обьект в системный
+		указатель <b>finditem</b>.</p>
+		<ul>
+		<li>Есди <a class=item href="HelpItemType.htm">тип</a> указан <font class="param">-1</font> или <font class="param">0xffff</font> то ищутся обьекты любого типа.</li>
+		<li>Если <a class=item href="HelpItemColor.htm">цвет</a> не укзаан, указан <font class="param">-1</font> или <font class="param">0xffff</font> то ищутся обьекты любого
+		цвета.</li>
+		<li>
+		Если контейнер
+		<ul>
+		<li> <a class=item href="HelpItemObject.htm">Object</a> указан, то ищется в контейнере.</li>
+		<li> не указан, указан <font class="param">-1</font> или <font class="param">0xffff</font>, или указан ошибочно то ищутся обьекты в
+		бекпаке персонажа.</li>
+		<li> указан <font class="param">ground</font> или <font class="param">1</font> то обьект ищется на земле, в радиусе устанавливаемом
+		 <a class=item href="HelpItemSet.htm">Set</a> <font class="param">finddistance</font>.</li>
+		<li> Если указан <font class="param">my</font> или <font class="param">2</font> то ищется в бекпаке и всех подсумках.</li>
+		</ul></li></ul>
+		<p>Нельзя указывать контейнер для поиска не указав <a class=item href="HelpItemColor.htm">цвет</a>.</p>
+		<p>В скрипте можно проверить количество найденых вещей функцией <a class=item href="HelpItemFindCount.htm">FindCount</a>. Обычно чтобы взять новый обьект, текущий
+		обьект (finditem) игнорируется командой <a class=item href="HelpItemIgnore.htm">Ignore</a> и поиск командой <a class=item href="HelpItemFindType.htm">FindType</a> повторяется.</p>
+		<p>Команда привлекается так же для разрешения преобразований тип-обьект в указателях <a class=item href="HelpItemObject.htm">обьектов</a></p>
+	</p>
+</body>
+</html>

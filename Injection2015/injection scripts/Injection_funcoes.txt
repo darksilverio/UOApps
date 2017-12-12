@@ -1,0 +1,436 @@
+; 8.02.002 - Lista de Funções do UO pelo Injection ; {
+
+	# Falas e Prints #
+
+# UO.Say(texto) = ação
+; ; Simula a digitação de um texto.
+; ; No jogo acontece o mesmo que se você estivesse digitando e por fim apertando a tecla "Enter".
+
+# UO.Msg(texto) = ação
+; ; Envia uma fala in-game.
+; ; Diferencia do "UO.Say(texto)" por não simular a digitação e não escrever em nenhum local, somente envia a mensagem.
+
+# UO.Print(texto) = ação
+; ; Envia um texto no mesmo local que os avisos, respostas de skill e chat global.
+; ; Este texto não pode conter acentuações, pois serão subtituídas por '  '.
+
+# UO.CharPrint(color,texto) = ação
+; ; Envia um texto no mesmo local que uma fala de seu personagem, porém somente para seu client.
+; ; Esta mensagem utiliza um parametro de cor, que torna mais interessante seu uso ao invés do "UO.Print(texto)" e somente você poderá visualizá-la.
+
+# UO.TextPrint(texto) = ação
+; ; Escreve um texto que será apresentado na janela Text.
+; ; O local que ele apresenta o texto é o mesmo onde aparecem informações de comandos que servem somente para ler informações.
+; ; Seu uso é muito válido para informar o player de forma a manter um histórico dos avisos.
+
+# UO.TextOpen() = ação
+; ; Abre a janela Text.
+; ; O conteudo não é limpo neste caso.
+
+# UO.TextClear() = ação
+; ; Limpa o texto da janela Text.
+
+# UO.TextClose() = ação
+; ; Fecha a janela Text.
+
+
+	# Journal #
+
+# UO.DeleteJournal() = ação
+; ; Apaga o Journal para o Injection.
+; ; Mantém a visualização do Journal do client.
+
+# UO.InJournal(texto) = número
+; ; Verifica se o texto está presente no Journal.
+; ; Informa em qual linha do Journal do Injection este texto aparece.
+; ; Caso haja mais de 1 vez o mesmo texto ele retorna o primeiro encontrado.
+; ; Atenção! Somente para este comando a linha do Journal é acrescida de 1, por 0 ser o retorno desta função no caso de não encontrar o texto.
+
+# UO.JournalSerial(número) = serial
+; ; Retorna o número de série de quem enviou a mensagem do Journal na linha informada.
+; ; Se for mensagem do servidor o resultado desta função será '0xFFFFFFFF'.
+
+# UO.SetJournalLine(número,texto) = ação
+; ; Altera o conteúdo da linha do Journal informada.
+; ; O conteudo anterior é apagado para dar lugar ao novo conteudo.
+
+# UO.Journal(número) = texto
+; ; Retorna o texto presente na linha do Journal informada.
+
+# UO.JournalColor(número) = color
+; ; Retorna a cor do texto presenta na linha do Journal informada.
+
+# UO.JournalTimer(número) = número - # Pega o valor de tempo em décimos de segundo (10ds = 1s) do momento em que a mensagem do Journal da posição informada apareceu
+; ; Retorna o tempo em décimos de segundo (10ds = 1s) o tempo decorrido deste que a mensagem da linha do Jornal informada foi recebida.
+
+
+	# Status #
+
+# UO.Dead() = lógico
+; ; Informa se o personagem está morto.
+
+# UO.Poisoned(serial) - lógico
+; ; Informa se o personagem, do serial informado, está envenenado.
+; ; Se não for digitado o serial a função entende o serial do seu personagem como padrão.
+
+# UO.GetHP(serial) = número
+; ; Retorna o valor de vida proporcional do personagem, do serial informado, em relação ao máximo de vida que ele possa possuir.
+; ; Este comando tem um funcionamento estranho, onde em alguns casos de tentar verificar a vida de um player ele entendia a vida máxima como 100 e as menores que o máximo entre 0 e 50, portanto eu sugiro utilizá-la juntamente com a abaixo.
+
+# UO.GetMaxHP(serial) = número
+; ; Retorna o valor máximo de vida que o personagem, do serial informado, pode atingir.
+; ; Este comando tem um funcionamento estranho, onde em alguns casos de tentar verificar a vida máxima de um player ele entendia a vida máxima como 100 quando a mesma estava no limite e quando fosse menor o valor de máximo passava a ser 50.
+
+# UO.Hidden() = lógico
+; ; Informa se o personagem está escondido (invisível).
+
+# UO.GetX(serial) = número
+; ; Retorna a posição X do objeto, personagem ou outro, do serial informado, no mundo.
+; ; A posição X corresponde a quantidade de tiles (quadrados do jogo) o personagem está distante da borda Oeste (W) do mundo, ou seja, a posição no sentido Oeste (W) a Leste (E).
+
+# UO.GetY(serial) = número
+; ; Retorna a posição Y do objeto, personagem ou outro, do serial informado, no mundo.
+; ; A posição Y corresponde a quantidade de tiles (quadrados do jogo) o personagem está distante da borda Norte (N) do mundo, ou seja, a posição no sentido Norte (N) a Sul (S).
+
+# UO.GetZ(serial) = número
+; ; Retorna a posição Z do objeto, personagem ou outro, do serial informado, no mundo.
+; ; A posição Z corresponde a altura o personagem se encontra em relação ao refencial de posição, que é o trono do Lord British do Castelo de Britain.
+
+# UO.GetStatus(serial) = ação
+; ; Apresenta algumas informações do personagem, do serial informado, na tela.
+; ; Este comando não funciona em todas as vezes por algum motivo interno do Injection.
+
+# UO.GetNotoriety(serial) = número
+; ; Retorna um número relacionado ao que o personagem, do serial informado, é com relação à você.
+; ; Os possíveis valores são:
+; ; 1 = Inocente		[cor padrão = azul		]
+; ; 2 = Amigo			[cor padrão = verde		]
+; ; 3 = Neutro			[cor padrão = cinza		]
+; ; 4 = Criminoso		[cor padrão = cinza		]
+; ; 5 = Inimigo			[cor padrão = laranja	]
+; ; 6 = Assassino		[cor padrão = vermelha	]
+; ; 7 = Membro da Staff	[cor padrão = branca	]
+; ; -1= Desconhecido
+
+# UO.SkillVal(skill,opção) = número
+; ; Retorna o valor de skill que o personagem possui.
+; ; Os valores vão de 0 = 0,0% até 1000 = 100,0%.
+; ; A opção (opcional) traz diferentes informações sobre estes valores, conforme as possibilidades abaixo:
+; ; 0 = Retorna o valor da skill da forma com que ele é apresentado na janela de skills.
+; ; 1 = Retorna o valor real da skill, como se tivesse ativado a opção "Show Real" na janela de skills. (este é o valor certo!)
+; ; 2 = Retorna a diferença entre o valor real e o valor na forma normal da skill.
+; ; 3 = Retorna o status da skill, informando se ela está marcada para aumentar, diminuir ou manter o valor atual.
+
+# UO.GetDir() = número
+; ; Retorna a direção a qual o personagem está direcinoado.
+; ; Seguindo a lista abaixo:
+; ; 0 = Norte
+; ; 1 = Nordeste
+; ; 2 = Leste
+; ; 3 = Sudeste
+; ; 4 = Sul
+; ; 5 = Sudoeste
+; ; 6 = Oeste
+; ; 7 = Noroeste
+
+# UO.WarMode() = lógico
+; ; Informe se o personagem está em modo de guerra.
+
+# UO.WarMode(lógico) = ação
+; ; Altera o mode de guerra do personagem, desligando-o com o valor lógico 0 ou ligando-o com 1.
+
+# UO.GetName(serial) = texto
+; ; Retorna o nome do objeto, personagem ou outro, do serial informado.
+
+# UO.GetInfo(texto) = texto
+; ; Retorna uma informação do seu client de acordo com o texto, verifique as opções abaixo:
+; ; 'character'	= Nome do personagem logado
+; ; 'shard'		= Nome do shard onde está logado
+; ; 'path'		= Caminho da pasta do injection
+
+
+	# Objetos #
+
+# UO.FindType(type,color,serial) = ação
+; ; Procura um item, personagem ou outro, com o tipo e cor informados, no container, do seria informado.
+; ; Armazena o número de série no objeto 'finditem' e da quantidade de tipos encontrados.
+; ; Para não informar o type ou color insire '-1' ou '0xFFFF' neste parametro.
+
+# UO.FindMan(número) = ação
+; ; Procura por personagens humanos (não NPCs) com a notoriedade igual ao número informado.
+; ; Armazena o número de série no objeto 'finditem' e da quantidade de tipos encontrados.
+
+# UO.FindCount() = número
+; ; Retorna a quantidade de resultados encontrados na última execussão do comando "UO.FindType()" ou "UO.FindMan()"
+; ; No caso de itens os itens agrupados são contados como 1 e não pela quantidade no montante.
+
+# UO.GetQuantity(serial) = número 
+; ; Retorna a quantidade de itens amontoados no montante, com serial informado.
+; ; ATENÇÃO! Itens que não sejam amontoáveis tem retorno de 0 nesta função, portanto verifique a existência deste 1 item de outra forma!
+
+# UO.Count(type,color) = número
+; ; Retorna a quantidade total, considerando todos os itens de um monte, de itens, do tipo e cor informados, na mochila do personagem.
+; ; A cor do item é uma informação opcional a ser inserida.
+; ; Atenção! Não utilize '-1' ou '0xFFFF', pois a cor neste comando é opcional e ele não retornará o desejado com este parametro.
+
+# UO.ContainerOf(serial) = serial
+; ; Retorna o número de série do container onde o objeto, do serial informado, se encontra.
+
+# UO.Click(serial) = ação
+; ; Clica 1 vez no objeto, personagem ou outro, do serial informado.
+
+# UO.UseType(type,color) = ação
+; ; Usa um item, do tipo e cor informados, da mochila do personagem se existir.
+; ; A cor do item é uma informação opcional a ser inserida.
+; ; Atenção! Não utilize '-1' ou '0xFFFF', pois a cor neste comando é opcional e ele não retornará o desejado com este parametro.
+
+# UO.UseObject(serial) = ação
+; ; Usa o objeto, personagem ou outro, do serial informado.
+
+# UO.AddObject(texto,serial) = ação
+; ; Adiciona um objeto à lista de objetos do Injection com o nome informado.
+; ; O serial é uma informação opcional.
+; ; Caso não seja inserido um serial o Injection irá solicitar ao jogador que selecione o que deseja adicionar como objeto.
+
+# UO.AddType(texto) = ação
+; ; Adiciona um type à lista de tipos do Injection com o nome informado, solicitando que o jogador selecione o que deseja o tipo que desejar.
+
+# UO.GetSerial(objeto) = serial
+; ; Retorna o número de série do objeto informado.
+
+# UO.GetGraphic(serial) = type
+; ; Retorna o type do item, personagem ou outro, do serial informado.
+
+# UO.GetColor(serial) = color
+; ; Retorna o color do item, personagem ou outro, do serial informado.
+
+# UO.Ignore(serial) = ação
+; ; Ignora o item, personagem ou outro, do serial informado, em buscas.
+
+# UO.IgnoreReset() = ação
+; ; Remove todos os números de série marcados como ignorados, permitindo que as buscas os encontrem novamente.
+
+# UO.Attack(serial) = ação
+; ; Ataca o item, personagem ou outro, do serial informado.
+
+# UO.GetDistance(serial) = número
+; ; retorna a distância, em tiles (quadrados), entre o personagem e o item, personagem ou outro, do serial informado.
+
+# UO.Drop(número,x,y,z,serial) = ação
+; ; Derruba a quantidade informada do item, do serial informado, na posição do mundo informada.
+
+# UO.DropHere(serial) = ação
+; ; Derruba a quantidade total do item, do serial informado, na posição atual do personagem.
+
+# UO.Grab(número,serial) = ação
+; ; Pega a quantidade informada do item, do serial informado, e guarda na mochila do personagem.
+
+# UO.MoveItem(serial,número,serial) = ação
+; ; Move o item, do primeiro serial informado, na quantidade informada para um container, do segundo serial informado.
+
+
+	# Equipamento #
+
+# UO.ObjAtLayer(layer) = serial
+; ; Retorna o número de série do item equipado na camada informada.
+
+# UO.GetLayer(serial) = layer
+; ; Retorna a camada do item, do serial informado.
+
+# UO.Unequip(layer) = ação
+; ; Remove o item da camada informada.
+
+# UO.Equip(layer,serial) = ação
+; ; Equipa na camada informada o item, do serial informado.
+
+
+	# Alvos e Menus #
+
+# UO.WaitMenu(prompt,option,prompt,option,...) = ação
+; ; Espera um menu com o título informado e acessa a opção informada automaticamente.
+; ; Esta função permite parametros multiplos, sendo lidos em pares de título e opção.
+
+# UO.WaitTargetSelf() = ação
+; ; Prepara o Injection para ao receber uma ação que envolva um alvo este ser automaticamente direcionado para o próprio personagem.
+
+# UO.WaitTargetTile(tile,x,y,z) = ação
+; ; Prepara o Injection para ao receber uma ação que envolva um alvo este ser automaticamente direcionado para o chão e posições informados.
+
+# UO.WaitTargetLast() = ação
+; ; Prepara o Injection para ao receber uma ação que envolva um alvo este ser automaticamente direcionado para o alvo da última ação.
+
+# UO.WaitTargetObject(serial) = ação
+; ; Prepara o Injection para ao receber uma ação que envolva um alvo este ser automaticamente direcionado para o alvo, do serial informado.
+
+# UO.LClick(x,y) = ação
+; ; Clica na posição da tela informada.
+; ; Note que os valores de "x" e "y" são da sua tela e não do mundo, e são medidos em pixels.
+; ; Os limites dos valores é equivalente ao seu valor de resolução no formato "x" por "y", como em 800 x 600, onde "x" se limita a 800 e "y" se limita a 600.
+; ; A contagem destes valores se dá da esquerda para a direita para o valor de "x" e de cima para baixo para o valor de "y".
+
+# UO.RClick(x,y) = ação
+; ; O mesmo que "UO.LClick()", mas para o botão direito do mouse.
+
+# UO.DClick(x,y) = ação
+; ; O mesmo que "UO.LClick()", mas como duplo click.
+
+# UO.Waiting() = lógico
+; ; Informa se algum alvo está sendo aguardado para direcionamento automático.
+
+# UO.WaitingMenu() = lógico
+; ; Informa se algum menu está sendo aguardado para acesso de título e opção automático.
+
+# UO.CancelTarget() = ação
+; ; Cancela o alvo que estava preparado para ser direcionado automaticamente.
+
+# UO.CancelMenu() = ação
+; ; Cancela o menu que estava preparado para ser acessado automaticamente.
+
+# UO.Targeting() = lógico
+; ; Informe se o cursos atual está aguardando um alvo ser selecionado.
+
+
+	# Compra e Venda #
+
+# UO.Buy(list) = ação
+; ; Utiliza a lista de compras informada.
+
+# UO.Sell(list) = ação
+; ; Utiliza a lista de vendas informada.
+
+# UO.Shop() = ação
+; ; Abre a janela de configuração de listas de compra e venda do Injection.
+
+
+	# Outros #
+
+# UO.FontColor(color) = ação
+; ; Altera a cor da fala do personagem para a cor informada.
+
+# UO.SetSeason(número) = ação
+; ; Altera a visualização de estação do ano de acordo com o número informado, seguindo a seguinte lista de opções:
+; ; 0 = estação atual
+; ; 1 = primavera
+; ; 2 = verão
+; ; 3 = outono
+; ; 4 = inverno
+; ; 5 = desolation (a visão de um morto)
+
+# UO.Launch(path,texto) = ação
+; ; Executa o programa do caminho informado.
+; ; Este programa permite o uso de parametros opcionais, da mesma forma que se utilizaria em um atalho do windows com o uso do caractere "-".
+
+# UO.SetGlobal(global,texto) = ação
+; ; Altera o valor da variável global informada para o texto informado.
+
+# UO.GetGlobal(global) = texto
+; ; Retorna o texto armazenado na variável global informada.
+
+# UO.Timer() = número
+; ; Retorna o valor de tempo em décimos de segundo (10ds = 1s) desde a abertura do Injection.
+
+# UO.Time() = número
+; ; Retorna um número equivalente a hora atual no formato HHMMSS (hora, minuto e segundo com 2 digitos cada).
+
+# UO.Date() = número
+; ; Retorna um número equivalente a data atual no formato YYMMDD (ano, mes e dia com 2 digitos cada)
+
+# UO.Random(número) = número
+; ; Retorna um número aleatório menor que o informado.
+
+# UO.Press(keycode) = ação
+; ; Simula o apertar de uma tecla do seu teclado no client do UO, que tenha referencia ao código informado.
+
+# UO.BandageSelf() = ação
+; ; Utiliza uma Bandage qualquer de sua mochila no seu personagem, caso haja alguma.
+
+# UO.Exec(texto) = ação
+; ; Executa o comando informado no formato de texto, equivalente a um comando utilizado em hotkeys.
+
+# UO.UseSkill(skill) = ação
+; ; Utiliza a skill informada
+
+# UO.Set(variavel,número/texto) = ação
+; ; Altera a informação da variável interna do Injection informada para o número ou texto informado.
+
+# UO.LastGump(info) = número/texto/serial/lógico
+; ; Retorna informação do último gump aberto de acordo com a informação solicitada, verifique a lista de opções:
+; ; 'replyed'		= Verifica se o último gump foi respondido.
+; ; 'text',número	= Retorna o texto do último gump na posição informada.
+; ; 'serial'		= Retorna o número de série do gump.
+; ; 'x'				= Retorna a posição horizontal do gump em pixels a partir da esquerda.
+; ; 'y'				= Retorna a posição vertical do gump em pixels a partir de cima.
+; ; 'command',número= Utiliza um comando do gump, como um click em um botão.
+
+# UO.Cast(magia,serial) = ação
+; ; Utiliza a magia informada no item, personagem ou outro, do serial informado.
+
+# UO.Recall(serial,número) = ação
+; ; Utiliza a magia 'Recall' pelo runebook, do serial informado, na runa da posição informada.
+
+# UO.CloseUO() = ação
+; ; Fecha o seu client.
+
+# UO.PlayWav(path) = ação
+; ; Executa o arquivo sonoro com formato ".wav" do caminho informado.
+
+# UO.Snap(format,path) = ação
+; ; Tira uma foto da tela (print screen) e salva no formato informado ("bmp" ou "jpg") e no caminho informado.
+
+;		; }
+; 8.02.003 - Lista de Funções do Injection ; {
+
+	# Funções Internas de Conversão e Extração de Informação #
+
+# Wait(número) = ação
+; ; Espera o tempo informado em milisegundos(1000ms = 1s)
+
+# Str(número) = texto
+; ; Retorna o número inforamdo em formato de texto.
+
+# Val(texto) = número
+; ; Retorna o texto informado em formato numérico.
+
+# Len(texto) = número
+; ; Retorna a quantidade de caracteres do texto informado.
+
+# Left(texto,número) = texto
+; ; Retorna a parte esquerda do texto informado com a quantidade de caracteres informado.
+
+# Right(texto,numero) = texto
+; ; Retorna a parte direita do texto informado com a quantidade de caracteres informado.
+
+# Mid(texto,número,número) = texto
+; ; Retorna a parte do texto informado a partir da posição informado (primeiro número) com quantidade de caracteres informado (segundo número).
+
+# Int(número) = número
+; ; Retorna somente a parte inteira do número informado, eliminando casas decimais.
+
+# Hex2Int(texto) = numero
+; ; Retorna um número decimal equivalente ao texto informado no padrão de número hexadecimal "0x????????", como em números de série, types e colors.
+
+# Int2Hex(número) = texto
+; ; Retorna um texto no padrão de número hexadecimal "0x????????", como em números de série, types e colors, equivalente ao número decimal informado.
+
+
+	# Arquivos #
+
+# variavel.open() = ação
+; ; Abre o arquivo da variavel informada.
+
+# variavel.create() = ação
+; ; Cria/Limpa o arquivo da variavel informada.
+
+# safe call variavel.writeln(texto) = ação
+; ; Escreve o texto informado e pula a linha no arquivo da variavel informada
+
+# safe call variavel.readString() = texto
+; ; Retorna um texto do arquivo da variavel informada até um espaço, mudar a linha ou o fim do arquivo, o que vier primeiro.
+
+# safe call <variavel.readNumber() = número
+; ; Retorna um número do arquivo da variavel informada até um espaço, mudar a linha ou o fim do arquivo, o que vier primeiro.
+
+# variavel.close() ; - ação
+; ; Fecha/Libera o arquivo da variavel informada
+
+;		; }

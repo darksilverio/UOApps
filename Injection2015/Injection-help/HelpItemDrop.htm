@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>Injection Help System: Drop</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  Drop <a target="_blank" class=item href="IndexDrop.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">Drop</font> <font class="param">[count x y z <a class=item href="HelpItemObject.htm">serial</a>]</font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">Drop</font>(<font class="param">[count, x, y, z, <a class=item href="HelpItemObject.htm">serial</a>]</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicObjDo.htm">Работа с объектами</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsObjHandling.htm">ObjHandling</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsUtility.htm">Utility</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>Выкладывает <a class=item href="HelpItemObject.htm">обьект</a> в количестве <font class="param">quantity</font> на землю в место, указаное координатами
+		X,Y,Z</p>
+		<p>Если вы не указали обьект, будет предложено выбрать его прицелом.<br>
+		Не указаные координаты считаются нулевыми.<br>
+		Можно использовать относительные координаты для <font class="param">X,Y,Z</font>. 0 означает &quot;текущее значение&quot;.<br>
+		Не указаное или нулевое количество означает &quot;всё что есть&quot;<br>
+		Таким образом <a class=item href="HelpItemDrop.htm">Drop</a> 0 0 0 <a class=item href="HelpItemobject.htm">object</a> выложит <a class=item href="HelpItemObject.htm">вещь</a> под ноги.<br>
+		Нельзя указывать параметры не по порядку. Не указывать можно последние в списке. Если вы скажем хотите указать Y но не
+		указать X и Z то напишите вместо X ноль, например ,drop 0 0 -2</p>
+	</p>
+</body>
+</html>

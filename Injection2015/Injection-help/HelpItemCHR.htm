@@ -1,0 +1,33 @@
+<html>
+<head>
+	<title>Injection Help System: CHR</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  CHR <a target="_blank" class=item href="IndexCHR.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: Только из скрипта.
+		<br>Из скрипта: <font class="function">Function</font> <font class="cmd">CHR</font>(<font class="param">index</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Доступно только из модуля <a class=item href="HelpItemScript.htm">Script.dll</a>
+		<br><br>Тема: <a class=topic href="HelpTopicScripts.htm">Команды скриптов</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsUtility.htm">Utility</a>, 
+		<a class=keyword href="HelpKeywordsFunction.htm">Function</a>
+		<hr>
+		<p>Необходима для отправки сообщения для нажатия Esc в клиенте (другого применения я не нашел)
+		<br>String CHR(Number index)</p>
+		<hr>
+		Вызов из скрипта:
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent"><br>
+		sub CancelClientTarget()<br>
+		&nbsp; &nbsp#Очистим консоль от текста (в результате выполнения uo.<a class=item href="HelpItemSay.htm">Say</a> текст из консоли может отправиться на сервер)<br>
+		&nbsp; &nbspuo.<a class=item href="HelpItemConsolePrint.htm">ConsolePrint</a>('')<br>
+		&nbsp; &nbspuo.<a class=item href="HelpItemSay.htm">Say</a>(CHR(27)) #Эмуляция нажатия Esc в окне УО<br>
+		end sub<br>
+		</div>
+	</p>
+</body>
+</html>

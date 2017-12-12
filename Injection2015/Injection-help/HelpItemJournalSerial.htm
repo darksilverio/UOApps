@@ -1,0 +1,33 @@
+<html>
+<head>
+	<title>Injection Help System: JournalSerial</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  JournalSerial <a target="_blank" class=item href="IndexJournalSerial.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: Только из скрипта.
+		<br>Из скрипта: <font class="function">Function</font> UO.<font class="cmd">JournalSerial</font>(<font class="param">index</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicScripts.htm">Команды скриптов</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsJournal.htm">Journal</a>, 
+		<a class=keyword href="HelpKeywordsObjHandling.htm">ObjHandling</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsFunction.htm">Function</a>
+		<hr>
+		<p>Возвращает сериал <a class=item href="HelpItemObject.htm">обьекта</a> связаного со строкой журнала номер <font class="param">number</font>. Обычно это
+		обьект, который произнёс данную строку. Системные сообщения имеют обычно сериал 0x01010101. Для чтения данной строки
+		используется <a class=item href="HelpItemJournal.htm">Journal</a>.</p>
+		<p>Так как функция <font class=item>Injournal</font> возвращает номер строки в журнале +1, то можно воспользоваться например
+		подобной комбинацией:
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent">var name = UO.<a class=item href="HelpItemGetName.htm">GetName</a>(UO.<a class=item href="HelpItemJournalSerial.htm">JournalSerial</a>(UO.<a class=item href="HelpItemInJournal.htm">InJournal</a>("хавчик") - 1))<br>
+		if name <> '' then<br>
+		&nbspuo.print(name + ', хочешь кушать? :)')<br>
+		...<br>
+		</div>
+		</p>
+	</p>
+</body>
+</html>

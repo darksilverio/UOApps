@@ -1,0 +1,77 @@
+<html>
+<head>
+	<title>Injection Help System: InfoGump</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  InfoGump <a target="_blank" class=item href="IndexInfoGump.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">InfoGump</font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">InfoGump</font>()
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicGumpDo.htm">Обработка гампов</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsGumpControl.htm">GumpControl</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsSystem.htm">System</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>Выводит информацию о последнем гампе (gump). Гампы это меню шарда собираемые из кнопок, чекбоксов, текстовых полей,
+		картинок и других элементов. Одним из примеров гампов являются рунбуки (runebooks) и крафтовые меню некоторых шардов.<br>
+		Пример информации о гампе:</p>
+		<pre>
+		_____infogump_______
+		serial    0x01723e4c
+		gumpid    0x0093959b
+		X    0
+		Y    0
+		2009    packet size
+		0    reply packet size
+		Buttons: ________
+		 page 1
+		    1 [  900] image=0x09A9 at 55:10
+		    2 [  800] image=0x09A9 at 230:10
+		    3 [  800] image=0x08BC at 320:8
+		    4 [    1] image=0x099D at 142:200
+		    5 [  601] image=0x0845 at 56:62
+		 page 2
+		    6 [  601] image=0x08BB at 50:8
+		    7 [  501] image=0x093A at 85:15
+		    8 [  601] image=0x0846 at 50:64
+		    9 [   81] image=0x0985 at 62:124
+		   10 [    2] image=0x08DF at 65:150
+		   11 [    3] image=0x08F3 at 135:150
+		Checks&Radios: __
+		Entryes: ________
+		All commands: ____
+		    1] page 0
+		    2] gumppic 0   0 2220
+		    3] page 1
+		    4] button   55  10 2472 2473 1 0 900
+		    5] text     85  12    0    0
+		    6] button  230  10 2472 2473 1 0 800
+		    7] text    260  12    0    6
+		...
+		   52] button   65 150 2271 2271 1 0    2
+		   53] button  135 150 2291 2291 1 0    3
+		Text: ____________
+		    0] Rename Book
+		    1] Charges:
+		    2] Max charges:
+		    3] 4
+		    4] 10
+		    5] Set Default
+		    6] Recharge
+		    7] brit
+		    8] brit
+		    9] brit
+		   10] Drop Rune
+		</pre>
+		<p>Самым важным разделом является раздел кнопок Buttons. Идентификатор кнопки указан в квадратных скобках. Image - рисунок
+		кнопки в ненажатом состоянии (можно использовать InsideUO чтобы его увидеть). Далее пишутся координаты кнопки на гампе.</p>
+		<p>В первой секции указаны основные параметры гампа - его serial и gumpid, координаты начала гампа на экране.</p>
+	</p>
+</body>
+</html>

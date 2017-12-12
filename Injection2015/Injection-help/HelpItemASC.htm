@@ -1,0 +1,34 @@
+<html>
+<head>
+	<title>Injection Help System: ASC</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  ASC <a target="_blank" class=item href="IndexASC.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: Только из скрипта.
+		<br>Из скрипта: <font class="function">Function</font> <font class="cmd">ASC</font>(<font class="param">text, default</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Доступно только из модуля <a class=item href="HelpItemScript.htm">Script.dll</a>
+		<br><br>Тема: <a class=topic href="HelpTopicScripts.htm">Команды скриптов</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsUtility.htm">Utility</a>, 
+		<a class=keyword href="HelpKeywordsFunction.htm">Function</a>
+		<hr>
+		<p>Конвертирует строку text в число, при невозможности конвертирования указанного текста - возвращает значение default
+		<br>Number ASC(String text, Number default)</p>
+		<hr>
+		Вызов из скрипта:
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent"><br>
+		sub IncGlobalValue(ident) #Увеличивает значение указанной глобальной переменной на 1<br>
+		&nbsp; &nbspvar temp = uo.<a class=item href="HelpItemGetGlobal.htm">GetGlobal</a>(ident) #Получим значение из глобальной переменной (не инициализированное может вернуть N/A)<br>
+		&nbsp; &nbspvar value = ASC(temp, 0) + 1 #Используем ASC на значение из глобальной переменной и прибавляем 1 к результату<br>
+		&nbsp; &nbspuo.<a class=item href="HelpItemSetGlobal.htm">SetGlobal</a>(ident, str(value)) #Записываем значение обратно в глобальную переменную<br>
+		&nbsp; &nbspreturn value #Возвращаем результат Number (если необходимо использовать его в вызывающей функции)<br>
+		end sub<br>
+		</div>
+	</p>
+</body>
+</html>

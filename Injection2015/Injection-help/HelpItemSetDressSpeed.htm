@@ -1,0 +1,30 @@
+<html>
+<head>
+	<title>Injection Help System: SetDressSpeed</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  SetDressSpeed <a target="_blank" class=item href="IndexSetDressSpeed.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">SetDressSpeed</font> <font class="param">delay</font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">SetDressSpeed</font>(<font class="param">delay</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicEquipment.htm">Одеяние</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsEquipment.htm">Equipment</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsSystem.htm">System</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>Устанавливает задержку между перетаскиванием отдельных вещей в <font class="param">delay_ms</font> милисекунд
+		  (1/1000 секунды). Помните, что на платформе однопоточного инжекта с вашей стороны
+		  это выглядит как лаг. Например, команда <a class=item href="HelpItemdress.htm" tppabs="HelpItemdress">dress</a> для 8 вещей
+		  набора сперва снимает с вас одежду (допустим тоже 8 вещей), потом одевает 8
+		  вещей, итого примерно 16 задержек. При number=175 у вас всё &quot;повисает&quot;
+		  примерно на 3 секунды. Если же задержка не стоит то в статистике переодевание
+		  выглядит сходно со спидхаком.</p>
+	</p>
+</body>
+</html>

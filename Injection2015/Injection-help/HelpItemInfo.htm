@@ -1,0 +1,41 @@
+<html>
+<head>
+	<title>Injection Help System: Info</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  Info <a target="_blank" class=item href="IndexInfo.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">Info</font> <font class="param">[<a class=item href="HelpItemObject.htm">serial</a>]</font>
+		<br>Из скрипта: <font class="void">void</font> UO.<font class="cmd">Info</font>(<font class="param">[<a class=item href="HelpItemObject.htm">serial</a>]</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicObjDo.htm">Работа с объектами</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsObjHandling.htm">ObjHandling</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsSystem.htm">System</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<p>Выводит информацию о <a class=item href="HelpItemObject.htm">обьекте</a>. Если <a class=item href="HelpItemObject.htm">Object</a> не задано то предлагает выбрать его прицелом.</p>
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent">ID=0x010DFAD4 Type=0x0124 Name=a pack llama [tamed]<br>
+		Quantity: 0  Colour: 0x0000  Layer: 0  Has: 0<br>
+		X=374 Y=1439 Z=2 C=0xFFFFFFFF F=0x00<br>
+		</div>
+		<p>где:</p>
+		<ul>
+		<li> ID - сериал <a class=item href="HelpItemObject.htm">обьекта</a></li>
+		<li> Type - <a class=item href="HelpItemType.htm">тип</a></li>
+		<li> Name - имя обьекта, если сервер его посылал</li>
+		<li> Quantity - количество в стопке</li>
+		<li> Colour - <a class=item href="HelpItemColor.htm">цвет</a> обьекта</li>
+		<li> Layer - <a class=item href="HelpItemLayer.htm">слой</a> обьекта</li>
+		<li> Has - обьект персонаж тащит с собой</li>
+		<li> X,Y,Z - координаты обьекта в мире или в сумке</li>
+		<li> C - сериал контейнера, в котором находится обьект. Если 0xFFFFFFFF то обьект на земле.</li>
+		<li> F - дополнительные цифрошифрованые параметры (отравлен, спрятан)</li>
+		</ul>
+	</p>
+</body>
+</html>

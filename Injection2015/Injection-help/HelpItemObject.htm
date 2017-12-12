@@ -1,0 +1,172 @@
+<html>
+<head>
+	<title>Injection Help System: Object</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  Object <a target="_blank" class=item href="IndexObject.htm">&#149;</a></h1>
+		<br><br>Тема: <a class=topic href="HelpTopicGlobals.htm">Символы</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsSymbol.htm">Symbol</a>, 
+		<a class=keyword href="HelpKeywordsVoid.htm">Void</a>
+		<hr>
+		<h3 align="center">О конструкции мира Ultima Online</h3>
+		<p>Мир UO состоит из двух типов - обьекты и статики. Статики это как бы фоновое изображение, которое записывается у вас на
+		компьютере, это мир состоящий из земли, воды, скал, деревьев, городских зданий. Эта часть (почти) неизменна на всех шардах
+		Ultima Online.</p>
+		<p><a class=item href="HelpItemObject.htm">Обьекты</a> - это всё что создано трудами администрации и игроков.
+		Это подвижные обьекты типа оружия, ресурсов, ящиков, дверей а так же дополнения типа домов игроков, разнообразных украшений
+		и т.п. Легко проверить динамик то что вы видите или статик, если введёте команду <a class=item href="HelpItemHide.htm">Hide</a> и прицелом покажете на обьект. Если он
+		исчезнет из виду то это динамик, если же нет или вообще прицел не нажимается - то статик.</p>
+		<p>Каждый обьект в игровом мире имеет уникальный номер, по которому вы можете сказать серверу, и сервер может сказать вам,
+		что конкретно имеется в виду. Номер представляется обычно в виде длинного (8 знаков) шестнадцатеричноко числа вида
+		0x4010AF44. Не запрещено использовать десятичное число, например 1074835268 но это весьма экзотично.</p>
+		<h3 align="center">Обьекты, создание и хранение</h3>
+		<p>Игроку не требуется знать все обьекты мира, но у него обычно есть несколько избранных обьектов с которыми он имеет дело.
+		Чтобы запомнить такие обьекты для дальнейшего использования существует закладка Objects в окне Injection. Например серийный
+		номер любимого крисса можно запомнить под именем <b>mycryss</b>. В дальнейшем под словом <b>обьект</b> и будем
+		подразумевать его серийный номер или имя в закладке Objects.</p>
+		<p><u>Чтобы обратиться к обьекту</u> можно указать прямо его номер например 0x12345678 (0 - ноль, x - икс латинская), либо его
+		имя если он добавлен в закладку Objects.</p>
+		<p>Добавить именованый обьект можно так же специальной командой <a class=item href="HelpItemAddObject.htm">AddObject</a>. Дополнительная информация о обьекте
+		доступна с помощью команды <a class=item href="HelpItemInfo.htm">Info</a>.</p>
+		<p>Так как вещи, складывающиеся в стопки, например руда, имеют обыкновение менять свой серийный номер после некоторых
+		действий над ними (так как сервер создаёт новые обьекты того же <a class=item href="HelpItemType.htm">типа</a> например при разделении стопки на части) то нет
+		смысла запоминать номера таких стопок под именами. Скорее всего скоро стопка поменяет номер и сервер никогда больше не
+		использует его. Для работы с изменяющимися номерами используют <a class=item href="HelpItemType.htm">типы</a> обьектов.</p>
+		<h3 align="center">Встроеные обьекты Injection (указатели)</h3>
+		<p>Есть некоторые обьекты которые легко узнать и часто используются всеми игроками, например бекпак (рюкзак персонажа).
+		Такие обьекты запоминаются Injection автоматически и они доступны под специальными системными именами:</p>
+		<table width="100%" border="1" cellspacing="0" cellpadding="0">
+		<tr class="hdr">
+		<th>Указатель</th>
+		<th>Описание содержимого</th>
+		</tr>
+		<tr class="odd">
+		<td>lastobject</td>
+		<td>Последний использованый (двойным щелчком мыши) обьект</td>
+		</tr>
+		<tr class="even">
+		<td>lasttarget</td>
+		<td>Последний обьект, на который был наведён прицел (одинарный щелчок мыши в режиме прицеливания). Помните, что макрос
+		<b>Target Next</b> клиента не оказывает влияния на lasttarget в Injection.</td>
+		</tr>
+		<tr class="odd">
+		<td>backpack</td>
+		<td>Текущий бекпак вашего персонажа</td>
+		</tr>
+		<tr class="even">
+		<td>lastcontainer</td>
+		<td>Последний контейнер открытый сервером для вас</td>
+		</tr>
+		<tr class="odd">
+		<td>laststatus</td>
+		<td>Последнее существо, на которое была запрошена информация о здоровье (см. так же <a class=item href="HelpItemGetStatus.htm">GetStatus</a>). Это происходит например
+		если вы используете встроеный в клиент макрос <b>Target Next</b>. При включеных установках внизу закладки Display имя и
+		здоровье существа пишется в консоли, например:<br>
+		<font color="#0066CC" face="Arial"><b>a pack horse 100/100 HP &lt;-17y&gt;</b></font></td>
+		</tr>
+		<tr class="even">
+		<td>lastattack</td>
+		<td>Последнее существо, которое вы атаковали</td>
+		</tr>
+		<tr class="odd">
+		<td>lastequip</td>
+		<td>Последний обьект, который был перемещён командами <a class=item href="HelpItemEquip.htm">Equip</a>, <a class=item href="HelpItemEquipT.htm">EquipT</a>, <a class=item href="HelpItemUnequip.htm">Unequip</a> </td>
+		</tr>
+		<tr class="even">
+		<td>lasthorse</td>
+		<td>Последний обьект, использовав который вы оказались верхом. Может быть это не лошадь но всё же скорее всего это так :)<br>
+		Если вы собрались использовать этот указатель, то не забудьте включить <b>Permit vars loopback</b> на закладке <b>Main</b>
+		иначе долго указатель на лошади не продержится.</td>
+		</tr>
+		<tr class="odd">
+		<td>lastcorpse</td>
+		<td>Последний появившийся в области радиусом два экрана труп.</td>
+		</tr>
+		<tr class="even">
+		<td>finditem</td>
+		<td>Обьект найденый командой <a class=item href="HelpItemFindType.htm">FindType</a>.</td>
+		</tr>
+		<tr class="odd">
+		<td>self</td>
+		<td>Ваш чар (персонаж).</td>
+		</tr>
+		<tr class="even">
+		<td>lasttargetkey</td>
+		<td>Не обьект но приравняный к нему в следствие размера числа. Это число - уникальный номер последнего прицела, который вы
+		послали серверу клиентом. Полезен для экспертов и тех кто пользуется командой <a class=item href="HelpItemTarget.htm">Target</a>.</td>
+		</tr>
+		</table>
+		<p>Если у вас включена опция Permit Vars Loopback (разрешение обратной связи к переменным) то в числе прочего команды
+		использующие обьекты будут менять значение вышеперечисленных переменных, иначе они будут меняться только от действий
+		клиента.</p>
+		<h3 align="center">Совместимость с EasyUO</h3>
+		<p>Injection может использовать литералы изиуо для укзания обьектов, например: <b><a class=item href="HelpItemUseObject.htm">UseObject</a> URQOC</b><br>
+		Таким образом совместное использование EasyUO с Yoko Injection позволяет использовать лучшие стороны обоих программных
+		продуктов. Пример обращения к Injection из EasyUO: <b>msg $,grab 7 #finditem $</b><br>
+		Обратная связь может осуществляться с помощью журнала, команды <a class=item href="HelpItemEasyObject.htm">EasyObject</a>, нескольких команд скриптов. В отличае от
+		Injection программа EasyUO не настроена сотрудничать и прямой связи не существует.</p>
+		<h3 align="center">Использование модификаторов тип&#151;&gt;обьект</h3>
+		<p>Черезвычайно гибким и полезным инструментом может оказаться для макросника средство по автопреобразованию типа в
+		обьект. Выглядит это как односимвользый модификатор слитно написаный с типом, в результате которого связка считается
+		командами Injection обьектом. Так как большинство команд работают с обьектами это позволяет уменьшить количество и размер
+		скриптов. Пример: <b><a class=item href="HelpItemGrab.htm">Grab</a> 0 ~POF</b> будет работать как &quot;поднять кучку золота с пола и положить в бекпак&quot; (POF -
+		<a class=item href="HelpItemType.htm">Type</a> золотых монет в нотации EasyUO).</p>
+		<table width="100%" border="1" cellspacing="0" cellpadding="0">
+		<tr class="hdr">
+		<th colspan="2">Символ</th>
+		<th>Синтакс</th>
+		<th>Описание преобразования</th>
+		<th>Получение того же обьекта в указателе finditem</th>
+		<th>Пример</th>
+		</tr>
+		<tr class="odd">
+		<td>_</td>
+		<td>подчерк</td>
+		<td> _<a class=item href="HelpItemType.htm">Type</a> </td>
+		<td>Ищет по типу на чаре, в бекпаке, подсумках</td>
+		<td><a class=item href="HelpItemFindType.htm">FindType</a> <a class=item href="HelpItemType.htm">Type</a> -1 my</td>
+		<td><a class=item href="HelpItemClick.htm">Click</a> _POF</td>
+		</tr>
+		<tr class="even">
+		<td>^</td>
+		<td>крышка</td>
+		<td>^<a class=item href="HelpItemType.htm">Type</a> </td>
+		<td>Ищет в бекпаке без подсумок</td>
+		<td><a class=item href="HelpItemFindType.htm">FindType</a> <a class=item href="HelpItemType.htm">Type</a> -1 backpack</td>
+		<td><a class=item href="HelpItemClick.htm">Click</a> ^POF</td>
+		</tr>
+		<tr class="odd">
+		<td>~</td>
+		<td>тильда</td>
+		<td>~<a class=item href="HelpItemType.htm">Type</a> </td>
+		<td>Ищет на земле в некотором радиусе (см. <a class=item href="HelpItemSet.htm">Set</a> finddist)</td>
+		<td><a class=item href="HelpItemFindType.htm">FindType</a> <a class=item href="HelpItemType.htm">Type</a> -1 ground</td>
+		<td><a class=item href="HelpItemGrab.htm">Grab</a> 0 ~POF</td>
+		</tr>
+		<tr class="even">
+		<td>&lt;</td>
+		<td>меньше</td>
+		<td>&lt;<a class=item href="HelpItemType.htm">Type</a> </td>
+		<td>Ищет по типу в последнем открытом контейнере</td>
+		<td><a class=item href="HelpItemFindType.htm">FindType</a> <a class=item href="HelpItemType.htm">Type</a> -1 lastcontainer</td>
+		<td><a class=item href="HelpItemGrab.htm">Grab</a> 0 &lt;POF</td>
+		</tr>
+		<tr class="odd">
+		<td>.</td>
+		<td>точка</td>
+		<td><a class=item href="HelpItemObject.htm">Object</a>.<a class=item href="HelpItemType.htm">Type</a> </td>
+		<td>Ищет по типу <a class=item href="HelpItemType.htm">Type</a> в указанном контейнере <a class=item href="HelpItemObject.htm">Object</a>.</td>
+		<td><a class=item href="HelpItemFindType.htm">FindType</a> <a class=item href="HelpItemType.htm">Type</a> -1 <a class=item href="HelpItemObject.htm">Object</a></td>
+		<td><a class=item href="HelpItemMoveItem.htm">MoveItem</a> lastcorpse.gold</td>
+		</tr>
+		</table>
+		<h3 align="center">Резюме</h3>
+		<p><a class=item href="HelpItemObject.htm">Обьект</a> - уникальная игровая динамическая единица хранящаяся на сервере. К ней можно обратиться с помощью
+		серийного номера в шестнадцатеричном (0x...) и десятичном форматах, по имени добавленого в список обьекта, через указатели
+		(если вещь особая), и через модификаторы если известно местонахождение и тип вещи.</p>
+	</p>
+</body>
+</html>

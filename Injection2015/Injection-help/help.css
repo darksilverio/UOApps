@@ -1,0 +1,59 @@
+body {
+	background-color: #E5E5E5;
+	scrollbar-face-color: #DEE3E7;
+	scrollbar-highlight-color: #FFFFFF;
+	scrollbar-shadow-color: #DEE3E7;
+	scrollbar-3dlight-color: #D1D7DC;
+	scrollbar-arrow-color:  #006699;
+	scrollbar-track-color: #EFEFEF;
+	scrollbar-darkshadow-color: #98AAB1;
+}
+h1	{font-family:Verdana; font-size:17px; color:#000000}
+p,font,td
+	{font-family:Verdana; font-size:13px; color:#000000}
+a:link,a:active {text-decoration: none; color : #006699; }
+a:visited {text-decoration: none; color : #336699; }
+a:hover	{text-decoration: underline; color : #DD6900;}
+.item	{font-weight:bold}
+.itemtext	
+	{font-family:Arial; font-size:13px; color:#000033}
+.topic	{font-size:14px; font-weight:bold; color:#0000ff}
+.param	{color:#888888}
+.function{color:#FF4A4A}
+.void	{color:#3737FF}
+.retval	{color:#888888}
+.cmd	{font-weight:bold}
+.keyword
+	{font-style:italic}
+.copy	{font-size:9px; font-style:italic}
+
+.odd	{background-color : #E5EAE5;}
+.even	{background-color : #E5E5EA;}
+.hdr	{background-color : #EFEFE5;}
+.error	{color:#ff0000; font-weight:bold}
+
+.codetitle {
+	margin: 10px 5px 0 5px;
+	padding: 2px 4px;
+	border-width: 1px 1px 0 1px;
+	border-style: solid;
+	border-color: #A9B8C2;
+	color: #333333;
+	background-color: #A9B8C2;
+	font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
+	font-size: 0.7em;
+}
+
+.codecontent {
+	direction: ltr;
+	margin: 0 5px 10px 5px;
+	padding: 5px;
+	border-color: #A9B8C2;
+	border-width: 0 1px 1px 1px;
+	border-style: solid;
+	font-weight: normal;
+	color: #006600;
+	font-size: 0.9em;
+	font-family: Monaco, 'Courier New', monospace;
+	background-color: #FAFAFA;
+}

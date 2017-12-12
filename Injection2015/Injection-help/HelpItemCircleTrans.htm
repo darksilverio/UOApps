@@ -1,0 +1,43 @@
+<html>
+<head>
+	<title>Injection Help System: CircleTrans</title>
+	<meta http-equiv="Content-type" content="text/html; charset=windows-1251">
+	<link type="text/css" rel=stylesheet href="help.css">
+</head>
+<body>
+	<h1>Описание:  CircleTrans <a target="_blank" class=item href="IndexCircleTrans.htm">&#149;</a></h1>
+	<p>Синтакс:
+		<br>Консоль: _<font class="cmd">CircleTrans</font> <font class="param">[state]</font>
+		<br>Из скрипта: <font class="function">Function</font> UO.<font class="cmd">CircleTrans</font>(<font class="param">[state]</font>)
+		<br><br>Введено с версии: &lt;=1501.17
+		<br><br>Тема: <a class=topic href="HelpTopicUtilities.htm">Приложения</a>
+		<br>Ключевые слова:
+		<a class=keyword href="HelpKeywordsCommand.htm">Command</a>, 
+		<a class=keyword href="HelpKeywordsScripting.htm">Scripting</a>, 
+		<a class=keyword href="HelpKeywordsUtility.htm">Utility</a>, 
+		<a class=keyword href="HelpKeywordsFunction.htm">Function</a>
+		<hr>
+		<p>Изменяет состояние галочки в опциях клиента Transparency Circle.
+		<br>При вызове из скрипта:
+		<ul>
+		<li>Number uo.CircleTrans() - возвращает текущее состояние</li>
+		<li>void uo.CircleTrans(Number state)  задает значение для переключения</li>
+		</ul></p>
+		<hr>
+		Вызов из скрипта:
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent"><br>
+		sub ChangeTrans()<br>
+		&nbsp; &nbspuo.CircleTrans(not uo.CircleTrans()) #Переключит состояние<br>
+		end sub<br>
+		</div>
+		<br>
+		<br>
+		Вызов из хоткеев:
+		<div class="codetitle"><b>Code:</b></div><div class="codecontent"><br>
+		circletrans - переключает состояние галочки<br>
+		circletrans value - устанавливает состояние галочки в value (0 - выключена; иное значение - включена)<br>
+		</div>
+		<br>
+	</p>
+</body>
+</html>

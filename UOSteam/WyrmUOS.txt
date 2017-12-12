@@ -1,0 +1,107 @@
+clearjournal
+if not @findobject 'BauMats'
+  headmsg 'Selecione o bau dos materiais do macro'
+  promptalias 'BauMats'
+  useobject 'BauMats'
+else
+  useobject 'BauMats'
+endif
+// Se tiver menos que 40 Couros (pegar 40)
+if @counttype 0x1078 2306 'backpack' <= 40
+  headmsg 'Restockando Couros'
+  movetype 0x1078 'BauMats' 'Backpack' (0 0 0) 2306 40 4
+  pause 500
+endif
+// Fazer Set Wyrm
+if not findtype 0x13c7 2306 'backpack'
+  clearjournal
+  automenu 'Leather' 'Monster Leather Armours' 'Wyrm Leather Armour' 'Wyrm Leather Gorget'
+  usetype 0xf9d 0 'Backpack'
+  waitfortarget 5000
+  targettype! 0x1078 2306 'backpack'
+  while not @injournal 'You put the'
+    if @injournal 'falhou'
+      replay
+    endif
+    if @injournal 'unexpected target info'
+      canceltarget
+      replay
+    endif
+    pause 500
+  endwhile
+endif
+pause 500
+if not findtype 0x13c6 2306 'backpack'
+  clearjournal
+  automenu 'Leather' 'Monster Leather Armours' 'Wyrm Leather Armour' 'Wyrm Leather Gloves'
+  usetype 0xf9d 0 'Backpack'
+  waitfortarget 5000
+  targettype! 0x1078 2306 'backpack'
+  while not @injournal 'You put the'
+    if @injournal 'falhou'
+      replay
+    endif
+    if @injournal 'unexpected target info'
+      canceltarget
+      replay
+    endif
+    pause 500
+  endwhile
+endif
+pause 500
+if not findtype 0x13c5 2306 'backpack'
+  clearjournal
+  automenu 'Leather' 'Monster Leather Armours' 'Wyrm Leather Armour' 'Wyrm Leather Sleeves'
+  usetype 0xf9d 0 'Backpack'
+  waitfortarget 5000
+  targettype! 0x1078 2306 'backpack'
+  while not @injournal 'You put the'
+    if @injournal 'falhou'
+      replay
+    endif
+    if @injournal 'unexpected target info'
+      canceltarget
+      replay
+    endif
+    pause 500
+  endwhile
+endif
+pause 500
+if not findtype 0x13cb 2306 'backpack'
+  clearjournal
+  automenu 'Leather' 'Monster Leather Armours' 'Wyrm Leather Armour' 'Wyrm Leather Legs'
+  usetype 0xf9d 0 'Backpack'
+  waitfortarget 5000
+  targettype! 0x1078 2306 'backpack'
+  while not @injournal 'You put the'
+    if @injournal 'falhou'
+      replay
+    endif
+    if @injournal 'unexpected target info'
+      canceltarget
+      replay
+    endif
+    pause 500
+  endwhile
+endif
+pause 500
+if not findtype 0x13cc 2306 'backpack'
+  clearjournal
+  automenu 'Leather' 'Monster Leather Armours' 'Wyrm Leather Armour' 'Wyrm Leather Tunic'
+  usetype 0xf9d 0 'Backpack'
+  waitfortarget 5000
+  targettype! 0x1078 2306 'backpack'
+  while not @injournal 'You put the'
+    if @injournal 'falhou'
+      replay
+    endif
+    if @injournal 'unexpected target info'
+      canceltarget
+      replay
+    endif
+    pause 500
+  endwhile
+endif
+// Finaliza
+canceltarget
+headmsg 'Set Wyrm Criado!' 28
