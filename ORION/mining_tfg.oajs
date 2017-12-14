@@ -19,38 +19,38 @@ var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shad
 // DONT CHANGE VARS
 var posToMine = 0
 var timeout=-1000;
+var lastGuards = 0;
 
 function Autostart(){
 
 	Orion.OptionAlwaysRun(false);
-
-
+	
+	Orion.Print(61, 'MINING WILL START IN 10 SECONS');
+	Orion.Wait(10000);
+	
+	Orion.Print(61, 'BG Macro: Mining');
+	Orion.Exec('Mining', true);
+	
 }
-
 
 function Mining(){
 
 	while(!Player.Dead()){
-	
 		
-		if( Orion.InJournal(newSpotMsgs) ){
-	
+		if( Orion.InJournal(newSpotMsgs) ){	
 			SetForMining();
 			Dig();
 		}
-		if( Orion.InJournal(garbageOreMsg))
-		{
+		if( Orion.InJournal(garbageOreMsg))	{
 			SetForMining();
 			Dig();
 		}
-		if( Orion.InJournal(sameSpotMsgs) ){
-	
+		if( Orion.InJournal(sameSpotMsgs) ){	
 			Dig();
 		}
 		if( Orion.InJournal(persistSpotMsgs) ){
 			if(!persist)
 				SetForMining();
-				
 			Dig();
 		}
 		if(Orion.Now() - timeout > miningDelay ){
@@ -69,7 +69,6 @@ function Mining(){
 		}
 		Orion.Wait(100);	
 	}
-
 }
 
 function SetForMining(){
@@ -101,14 +100,21 @@ function Dig(){
      	
      	var spot = GetRelativeSpots();
      	
- 	Orion.Print('0x0482', ' ');
- 	Orion.Print(12, ' ');
- 	Orion.Print(12, ' ');
-     	Orion.CancelTarget();
-     	Orion.ClearJournal();
-     	Orion.WaitTargetTileRelative('mine', spot.x , spot.y, 0);
-     	Orion.UseObject(tool[0]);
-	Orion.WaitJournal(toolUsageMsg, Orion.Now(), Orion.Now() + 5000, 'sys', -1, -1);
+     	if (Orion.ValidateTargetTile('mine', Player.X() + spot.x , Player.Y() + spot.y ))
+     	{
+ 		Orion.Print(12, ' ');
+ 		Orion.Print(12, ' ');
+ 		Orion.Print(12, ' ');
+ 		CallGuards();
+     		Orion.CancelTarget();
+     		Orion.ClearJournal();
+     		Orion.WaitTargetTileRelative('mine', spot.x , spot.y, 0);
+     		Orion.UseObject(tool[0]);
+		Orion.WaitJournal(toolUsageMsg, Orion.Now(), Orion.Now() + 5000, 'sys', -1, -1);
+     	}
+	else{
+		Orion.Print(45, 'Spot not is not minable');
+	}
 }
 
 function Walk(){
@@ -118,7 +124,7 @@ function Walk(){
 	
 	for(var i = 0; i <= nOfSteps; i++ ){
 		Orion.Step(newDir, true);
-		Orion.Wait(500);
+		Orion.Wait(250);
 	}
 }
 
@@ -197,7 +203,7 @@ function GoMineRandSpot(){
 	var randStopt =  Orion.Random(0, 5);
 	
 	if(randStopt == 0)
-		PathFinder(2574, 477);
+		PathFinder(2580, 452);
 	if(randStopt == 1)
 		PathFinder(2574, 454);
 	if(randStopt == 2)
@@ -218,8 +224,6 @@ function OreToBank(){
 	}
 }
 	
-		
-
 function PathFinder(x, y){
 
 	var destination = false;
@@ -227,4 +231,27 @@ function PathFinder(x, y){
 		destination = Orion.WalkTo(x, y, -1, 2);
 		Orion.Wait(100);
 	}
+}
+
+function CallGuards(){
+
+
+	if(Orion.Now() - lastGuards > 5000 )	{
+		Orion.Say('guards')
+		lastGuards = Orion.Now();
+	}
+}
+
+function Test(){
+
+
+	  if (Orion.ValidateTargetTile('mine', Player.X(), Player.Y() ))
+            {
+               Orion.Print(45, 'True');
+            }
+           else
+	Orion.Print(45, 'False');
+
+
+
 }

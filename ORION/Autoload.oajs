@@ -697,7 +697,7 @@ function AntiPK(){
 	while(true){
 	
 		Orion.ClearJournal();
-		var pks = Orion.FindType('0x0190|0x0191', '-1', ground, 'near|human|live', '15', 'red');
+		var pks = Orion.FindType('0x0190|0x0191', '-1', ground, 'near|human|live', '25', 'red');
 
 		if (pks.length == 0){
 			Orion.Wait(delay);
@@ -708,15 +708,17 @@ function AntiPK(){
 		//var player = Orion.WaitJournal('What', Orion.Now(),Orion.Now()+1000, '-1', '-1', '-1');
 		//if(player != null)
 		//	Orion.Print(0x5f, ' -> ' + player.Text() ) ;
-	
-		var pk = Orion.FindObject(pks[0]);
 
-		Orion.CharPrint(self, 0xff, pk.IsPlayer() + ' ' + Orion.GetDistance((pks[0])) + ' '+ pk.Name());
+		//Orion.CharPrint(self, 0xff, pk.IsPlayer() + ' ' + Orion.GetDistance((pks[0])) + ' '+ pk.Name());
 
 		//invis potion
+		Orion.BlockMoving(true);
 		Orion.UseType('0x0F0E', '0x0001', backpack, true );
 		Orion.Say('.recall 1 1');
+		var pk = Orion.FindObject(pks[0]);
 		Orion.CharPrint(self, 0xff, "PK[" +  Orion.GetDistance((pks[0])) + "] " + pk.Name());
+		Orion.Wait(4000);
+		Orion.BlockMoving(false);
 		Orion.Wait(20000);
 	}
 }
@@ -737,4 +739,3 @@ function tmp(){
 		Orion.WaitTargetObject(mob.Serial());
 		
 }
-

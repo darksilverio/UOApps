@@ -1,0 +1,199 @@
+function AutoLumber()
+{
+    PrintSelf('Started');
+
+    var axeSerial = EquipAxe();
+    if (axeSerial == '')
+        return;
+
+    var treeCoords = FindTrees(10);
+    while (treeCoords.length > 0)
+    {
+        PrintSelf(treeCoords.length + ' trees remaining');    	
+        var closest = GetClosest(treeCoords);
+        var treeCoord = treeCoords[closest];        
+        treeCoords = Remove(treeCoords, closest);
+        
+        MakeLastCarpentry();
+        Orion.Wait(500);
+        
+        Orion.WalkTo(treeCoord.x, treeCoord.y, 0);
+        
+        var timeout = Orion.Now() + 3000;
+        
+        while (!InRange(treeCoord.x, treeCoord.y) && Orion.Now() < timeout)
+        {
+            PrintSelf('.');
+            Orion.Wait(200);
+        }
+        
+        if (InRange(treeCoord.x, treeCoord.y))
+        {
+            LumberTree(treeCoord.x, treeCoord.y, axeSerial);
+        }
+            
+        PrintSelf('Tree Finished');
+    }
+
+    MakeLastCarpentry();
+    Orion.Wait(500);
+
+    PrintSelf('Finished');
+}
+
+function Remove(arr, idx)
+{
+    var result = [];
+    for (var i = 0; i < arr.length; ++i)
+    {
+        if (i != idx)
+        {
+	        result.push(arr[i]);
+	  }
+    }
+    
+    return result;
+}
+
+function FindTrees(range)
+{
+    var d = range;
+    
+    var treeCoords = [];
+    
+    var found = 0;
+    
+    for (x = Player.X() - d; x < Player.X() + d; ++x)
+    {
+        for (y = Player.Y() - d; y < Player.Y() + d; ++y)
+        {
+            if (Orion.ValidateTargetTile('mine', x, y))
+            {
+               // PrintSelf('Tree at ' + x + ',' + y);
+            
+                var coord = { x: x, y: y};            
+                treeCoords.push(coord);
+            
+                found++;                
+            }
+        }
+    
+    }
+    
+    PrintSelf('Found ' + found + ' trees');
+    return treeCoords;
+}
+
+function GetClosest(treeCoords)
+{
+    var px = Player.X();
+    var py = Player.Y();
+    
+    var closest = 0;
+    var dsq = 1000;
+    
+    for (var i =0; i < treeCoords.length; ++i)
+    {
+        var dx = Math.abs(px - treeCoords[i].x);
+        var dy = Math.abs(py - treeCoords[i].y);
+    
+        var dq = dx + dy;
+        
+        if (dq < dsq)
+        {
+            dsq = dq;
+            closest = i;
+        }
+    }
+    
+    return closest;
+}
+
+function InRange(x, y)
+{
+    var dx = Math.abs(Player.X() - x);
+    var dy = Math.abs(Player.Y() - y);
+    
+    return dx <2 && dy < 2;    
+}
+
+function LumberTree(x, y, axeSerial)
+{
+    var success = 'You put';
+    var fail = 'You cannot mine so close';
+    var end = 'There is nothing here';
+    var tooFar = 'That is too far away';
+    
+    var timeout = Orion.Now() + 12000;
+            
+    while (true)
+    {
+        Orion.ClearJournal(success);
+        Orion.ClearJournal(fail);
+        Orion.ClearJournal(end);
+        Orion.ClearJournal(tooFar);
+        
+        Orion.UseObject(axeSerial);
+        Orion.WaitTargetTile('tree', x, y, 0);        
+     
+        var timeout = Orion.Now() + 12000;
+            
+        while (!(Orion.InJournal(success) 
+            || Orion.InJournal(fail)
+            || Orion.InJournal(end) 
+            || Orion.InJournal(tooFar)
+            || Orion.Now() > timeout)) 
+        {
+            Orion.Wait(200);
+        }      
+
+        if (Orion.InJournal(end) || Orion.InJournal(tooFar))
+            return;
+        
+    }            
+}
+
+function EquipAxe()
+{
+    Orion.Unequip(2);
+    Orion.Wait(500);
+
+    var axeType = '0x0E85'
+    var axes = Orion.FindType(axeType, 'backpack');
+    
+    if (axes.length == 0)
+    {
+        PrintSelf('Missing Axe');
+        return '';
+    }
+    
+    var axe = axes[0];    
+    PrintSelf('Equiping Axe ' + axe);
+    Orion.Equip(axe);
+    Orion.Wait(500);
+    
+    return axe;
+}
+
+function MakeLastCarpentry()
+{
+    Orion.CancelWaitGump();
+    Orion.WaitGump(Orion.CreateGumpHook(21));   
+
+    var carpentryToolType = '0x1032';        
+    Orion.UseType(carpentryToolType);
+}
+
+function PrintSelf(msg)
+{
+    var oldUse = Orion.OptionScaleSpeech();
+	var oldDelay = Orion.OptionScaleSpeechDelay();
+    Orion.OptionScaleSpeech(true);
+	Orion.OptionScaleSpeechDelay(50);
+
+    Orion.CharPrint('self', '30', msg);
+    
+    Orion.Wait(50);
+    Orion.OptionScaleSpeech(oldUse);
+	Orion.OptionScaleSpeechDelay(oldDelay);
+}
