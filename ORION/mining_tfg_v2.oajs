@@ -1,90 +1,147 @@
-function AutoLumber()
+//************ YOU MUST DO **********
+//1 - PUT A BAG IN YOUR BANK AND ADD AS AN OBOJECT CALLED: miningBox
+
+var infoColor = 0x0185;
+var errorColor = 0x0020;
+
+var miningRange = 100
+var miningTools = '0x0E85|0x0E86';
+var miningDelay=16000
+var persist = true;
+var bankweight = 335;
+var oresType='0x19B7|0x19BA|0x19B8|0x19B9|0x0F0F|0x0F10|0x0F16|0x0F15|0x0F11|0x0F26|0x0F18|0x19B7|0x0F13'
+var moveitemdelay=1500
+
+var newSpotMsgs='Try mining elsewhere|There is nothing here|That is too far|You have no line of sight|You cannot mine so close'
+var sameSpotMsgs='You put'
+var persistSpotMsgs='You loosen some rocks but fail'
+var toolUsageMsg='Where do you want to use'
+var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver'
+
+// DONT CHANGE THESE VARS
+var timeout=-1;
+
+function Autostart()
 {
-    PrintSelf('Started');
 
-    var axeSerial = EquipAxe();
-    if (axeSerial == '')
-        return;
-
-    var treeCoords = FindTrees(10);
-    while (treeCoords.length > 0)
-    {
-        PrintSelf(treeCoords.length + ' trees remaining');    	
-        var closest = GetClosest(treeCoords);
-        var treeCoord = treeCoords[closest];        
-        treeCoords = Remove(treeCoords, closest);
-        
-        MakeLastCarpentry();
-        Orion.Wait(500);
-        
-        Orion.WalkTo(treeCoord.x, treeCoord.y, 0);
-        
-        var timeout = Orion.Now() + 3000;
-        
-        while (!InRange(treeCoord.x, treeCoord.y) && Orion.Now() < timeout)
-        {
-            PrintSelf('.');
-            Orion.Wait(200);
-        }
-        
-        if (InRange(treeCoord.x, treeCoord.y))
-        {
-            LumberTree(treeCoord.x, treeCoord.y, axeSerial);
-        }
-            
-        PrintSelf('Tree Finished');
-    }
-
-    MakeLastCarpentry();
-    Orion.Wait(500);
-
-    PrintSelf('Finished');
+	Orion.OptionAlwaysRun(false);
+	
+	Orion.Print(infoColor, 'MINING WILL START IN 20 SECONDS');
+	Orion.Wait(20000);
+	
+	Orion.Exec('Mining', true);
+	Orion.Exec('CallGuards', true);
+	
 }
 
-function Remove(arr, idx)
-{
-    var result = [];
-    for (var i = 0; i < arr.length; ++i)
-    {
-        if (i != idx)
-        {
-	        result.push(arr[i]);
-	  }
-    }
-    
-    return result;
+function Mining(){
+
+	var closest;
+	var closestTile;
+	var mineCoords = [];
+
+	while(!Player.Dead())
+	{
+		if(mineCoords.length <= 0)
+			mineCoords = FindMinableSpots(miningRange);
+		
+		closest = GetClosest(mineCoords);
+		closestTile = mineCoords[closest];
+		
+		 if( closestTile.y > 480)
+		 {
+			mineCoords = Remove(mineCoords, closest);
+			
+			if( Player.Y() > 480)
+				GoMineRandSpot();
+				
+			continue;
+       	}
+		 
+		PathFinder(closestTile.x, closestTile.y);
+		
+		Orion.CancelTarget();
+    		Orion.ClearJournal();
+     		  
+     		timeout = Orion.Now();
+     		
+     		Orion.Print(infoColor, ' ');
+     		Orion.Print(infoColor, ' '); 
+		Dig(closestTile.x, closestTile.y);
+		
+		while( ( Orion.Now() - timeout ) < miningDelay )
+		{     	
+     			if( Orion.InJournal(newSpotMsgs) || Orion.InJournal(garbageOreMsg) )
+     			{	
+				mineCoords = Remove(mineCoords, closest);
+				break;
+			}
+			if( Orion.InJournal(persistSpotMsgs) )
+			{
+				if(!persist)
+					mineCoords = Remove(mineCoords, closest);
+					
+				break;
+			}
+
+			if( Orion.InJournal(sameSpotMsgs) )	
+				break;
+				
+     			Orion.Wait(100);
+     		}
+     		
+     		if(Player.Weight() >= bankweight && bankweight > 0)
+     		{
+     			MineToBank();
+			OreToBank();
+			BankToMine();
+			GoMineRandSpot();
+     			mineCoords = FindMinableSpots(miningRange);
+     		}
+     		
+		Orion.Wait(1);	
+	}
 }
 
-function FindTrees(range)
+function Dig(x, y)
 {
-    var d = range;
+	var tool = Orion.FindType(miningTools, '-1', self, 'item|first', '-1', '-1');
+      
+      if(tool.length == 0)
+	      tool =  Orion.FindType(miningTools, '-1', backpack, 'item|first', '-1', '-1');
+
+     if (tool.length == 0)
+     {
+     		Orion.Print(23, 'NO MINING TOOL. MACRO ABORTED');
+     		Orion.Terminate('Mining')
+     	}
+     	
+     	Orion.WaitTargetTile('mine', x , y, 0);
+     	Orion.UseObject(tool[0]);
+     	Orion.WaitJournal(toolUsageMsg, Orion.Now(), Orion.Now() + 5000, 'sys', -1, -1);
+}
+
+function FindMinableSpots( range )
+{	
+    var coord;    
+    var mineCoords = [];
     
-    var treeCoords = [];
-    
-    var found = 0;
-    
-    for (x = Player.X() - d; x < Player.X() + d; ++x)
+    for (x = Player.X() - range; x < Player.X() +range; ++x)
     {
-        for (y = Player.Y() - d; y < Player.Y() + d; ++y)
+        for (y = Player.Y() - range; y < Player.Y() + range; ++y)
         {
             if (Orion.ValidateTargetTile('mine', x, y))
             {
-               // PrintSelf('Tree at ' + x + ',' + y);
-            
-                var coord = { x: x, y: y};            
-                treeCoords.push(coord);
-            
-                found++;                
+                coord = { x: x, y: y};            
+                mineCoords.push(coord);        
             }
-        }
-    
+        }    
     }
-    
-    PrintSelf('Found ' + found + ' trees');
-    return treeCoords;
+    Orion.Print(infoColor, 'Found ' + mineCoords.length + ' tiles to mine');
+    return mineCoords;
 }
 
-function GetClosest(treeCoords)
+function GetClosest(minesArr)
 {
     var px = Player.X();
     var py = Player.Y();
@@ -92,10 +149,10 @@ function GetClosest(treeCoords)
     var closest = 0;
     var dsq = 1000;
     
-    for (var i =0; i < treeCoords.length; ++i)
+    for (var i =0; i < minesArr.length; ++i)
     {
-        var dx = Math.abs(px - treeCoords[i].x);
-        var dy = Math.abs(py - treeCoords[i].y);
+        var dx = Math.abs(px - minesArr[i].x);
+        var dy = Math.abs(py - minesArr[i].y);
     
         var dq = dx + dy;
         
@@ -109,91 +166,88 @@ function GetClosest(treeCoords)
     return closest;
 }
 
-function InRange(x, y)
+function Remove(arr, idx)
 {
-    var dx = Math.abs(Player.X() - x);
-    var dy = Math.abs(Player.Y() - y);
-    
-    return dx <2 && dy < 2;    
-}
-
-function LumberTree(x, y, axeSerial)
-{
-    var success = 'You put';
-    var fail = 'You cannot mine so close';
-    var end = 'There is nothing here';
-    var tooFar = 'That is too far away';
-    
-    var timeout = Orion.Now() + 12000;
-            
-    while (true)
+    var result = [];
+    for (var i = 0; i < arr.length; ++i)
     {
-        Orion.ClearJournal(success);
-        Orion.ClearJournal(fail);
-        Orion.ClearJournal(end);
-        Orion.ClearJournal(tooFar);
-        
-        Orion.UseObject(axeSerial);
-        Orion.WaitTargetTile('tree', x, y, 0);        
-     
-        var timeout = Orion.Now() + 12000;
-            
-        while (!(Orion.InJournal(success) 
-            || Orion.InJournal(fail)
-            || Orion.InJournal(end) 
-            || Orion.InJournal(tooFar)
-            || Orion.Now() > timeout)) 
-        {
-            Orion.Wait(200);
-        }      
-
-        if (Orion.InJournal(end) || Orion.InJournal(tooFar))
-            return;
-        
-    }            
-}
-
-function EquipAxe()
-{
-    Orion.Unequip(2);
-    Orion.Wait(500);
-
-    var axeType = '0x0E85'
-    var axes = Orion.FindType(axeType, 'backpack');
-    
-    if (axes.length == 0)
-    {
-        PrintSelf('Missing Axe');
-        return '';
+        if (i != idx)
+	        result.push(arr[i]);
     }
     
-    var axe = axes[0];    
-    PrintSelf('Equiping Axe ' + axe);
-    Orion.Equip(axe);
-    Orion.Wait(500);
-    
-    return axe;
+    return result;
 }
 
-function MakeLastCarpentry()
+function PathFinder(x, y)
 {
-    Orion.CancelWaitGump();
-    Orion.WaitGump(Orion.CreateGumpHook(21));   
+	Orion.OptionAlwaysRun(true);
+	
+	while(!Orion.WalkTo(x, y, -1, 2))
+		Orion.Wait(100);
 
-    var carpentryToolType = '0x1032';        
-    Orion.UseType(carpentryToolType);
+	Orion.OptionAlwaysRun(false);
 }
 
-function PrintSelf(msg)
-{
-    var oldUse = Orion.OptionScaleSpeech();
-	var oldDelay = Orion.OptionScaleSpeechDelay();
-    Orion.OptionScaleSpeech(true);
-	Orion.OptionScaleSpeechDelay(50);
+function OreToBank(){
 
-    Orion.CharPrint('self', '30', msg);
-    
-    Orion.Wait(50);
-    Orion.OptionScaleSpeech(oldUse);
-	Orion.OptionScaleSpeechDelay(oldDelay);
+	var bag = Orion.FindObject('miningBox');
+	
+	if(!bag)
+	{
+		 Orion.Print(infoColor,'You have no deposit bag defined');
+		 return;
+	
+	}
+		
+	
+	Orion.Say('banker bank');		
+	Orion.Wait(1000);	
+	
+	var ores = Orion.FindType(oresType, '-1', backpack);
+
+	for(var i = 0; i < ores.length; i++){
+		Orion.MoveItem(ores[i], 0, bag.Serial());
+		Orion.Wait(moveitemdelay);
+	}
+}
+
+function MineToBank()
+{
+	PathFinder(2558,502);
+	PathFinder(2528,502);
+	PathFinder(2529,542);
+	PathFinder(2512,545);
+}
+
+function BankToMine()
+{
+	PathFinder(2529,542);
+	PathFinder(2529,542);
+	PathFinder(2528,502);
+	PathFinder(2558,502);
+}
+
+function GoMineRandSpot(dummy){
+
+	var randStopt =  Orion.Random(0, 5);
+	
+	if(randStopt == 0)
+		PathFinder(2580, 452);
+	if(randStopt == 1)
+		PathFinder(2574, 454);
+	if(randStopt == 2)
+		PathFinder(2592, 461);
+	if(randStopt == 3)
+		PathFinder(2586, 445);
+	if(randStopt == 4)
+		PathFinder(2573, 433);
+}
+
+function CallGuards(dummy)
+{
+	while(!Player.Dead())
+	{
+		Orion.Say('guards');
+		Orion.Wait(7000);
+	}
 }

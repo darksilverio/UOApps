@@ -3,5 +3,5 @@
     <main flags="2200328" messageslevel="2" searchdistance="3" usedistance="3" opencorpsedistance="3" corpsekeepdelay="15000" waittargetsdelay="0" moveitemsdelay="600" useitemsdelay="0" windowsopacity="100" usefontcolor="true" fontcolor="0x0046" usecharactersfontcolor="false" charactersfontcolor="0x0002" autoreconnect="true" autoreconnecttimer="10"/>
     <display type="3" flags="4" textcolor="0" backgroundcolor="0" titledata="{name} ({server}) {barlarge} {hp_maxhp} {mp_maxmp} {sp_maxsp} {armor} {weight_maxweight} {gold2} {group allreag} {group pots} {sheaf}  X:{x} Y:{y} "/>
     <hotkeys passhotkeys="false" hotkeyprefix="_" sortscripts="false"/>
-    <scripts scriptfile="D:/tmp/Mining2.oajs"/>
+    <scripts scriptfile="C:/Users/gabriel/Documents/GitHub/UOApps/ORION/Autoload.oajs"/>
 </data>

@@ -21,11 +21,9 @@
         <item graphic="0x0F82" color="0x0000" comment="Dragon's Blood"/>
         <item graphic="0x0F80" color="0x0000" comment="Daemon Bones"/>
         <item graphic="0x0E21" color="0x0000" comment="clean bandages"/>
-        <item graphic="0x0F82" color="0x0026" comment="Great Life Boost"/>
-        <item graphic="0x0F0E" color="0x0001" comment="Invisibility"/>
+        <item graphic="0x0F0E" color="0xFFFF" comment="Invisibility"/>
         <item graphic="0x1F5F" color="0x0000" comment="Flamestrike"/>
-        <item graphic="0x0F0E" color="0x0022" comment="Refresh"/>
-        <item graphic="0x0F82" color="0x017F" comment="Great Refilling"/>
+        <item graphic="0x175D" color="0xFFFF" comment="Cloth"/>
     </findlist>
     <findlist name="AutoLootTest">
         <item graphic="0x0EED" color="0x0000" comment="gold coin"/>
