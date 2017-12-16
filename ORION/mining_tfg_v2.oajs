@@ -4,7 +4,7 @@
 var infoColor = 0x0185;
 var errorColor = 0x0020;
 
-var miningRange = 100
+var miningRange = 30
 var miningTools = '0x0E85|0x0E86';
 var miningDelay=16000
 var persist = true;
