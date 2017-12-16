@@ -190,19 +190,18 @@ function PathFinder(x, y)
 
 function OreToBank(){
 
-	var bag = Orion.FindObject('miningBox');
-	
-	if(!bag)
-	{
-		 Orion.Print(infoColor,'You have no deposit bag defined');
-		 return;
-	
-	}
-		
-	
+
 	Orion.Say('banker bank');		
 	Orion.Wait(1000);	
 	
+	var bag = Orion.FindObject('miningBox');
+	
+	if(!bag)	{
+		 Orion.Print(infoColor,'You have no deposit bag defined');
+		 Orion.Terminate('Mining')
+		 return;
+	}
+		
 	var ores = Orion.FindType(oresType, '-1', backpack);
 
 	for(var i = 0; i < ores.length; i++){
@@ -232,7 +231,7 @@ function GoMineRandSpot(dummy){
 	var randStopt =  Orion.Random(0, 5);
 	
 	if(randStopt == 0)
-		PathFinder(2580, 452);
+		PathFinder(2591, 476);
 	if(randStopt == 1)
 		PathFinder(2574, 454);
 	if(randStopt == 2)
