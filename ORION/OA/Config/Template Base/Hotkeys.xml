@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data version="0" size="34">
+<data version="0" size="35">
     <hotkey onescriptrunning="true" key="119" modifiers="0" macro="ExternalCode" externalcode="Orion.Cast('Paralyze', Orion.ClientLastTarget())"/>
     <hotkey onescriptrunning="true" key="118" modifiers="0" macro="ExternalCode" externalcode="Orion.Cast('Lightning', Orion.ClientLastTarget())"/>
     <hotkey onescriptrunning="true" key="117" modifiers="0" macro="CastGreaterHeal" externalcode=""/>
@@ -33,5 +33,6 @@
     <hotkey onescriptrunning="true" key="114" modifiers="0" macro="CastMagicArrow" externalcode="Orion.Cast('Paralyze', Orion.ClientLastTarget())"/>
     <hotkey onescriptrunning="true" key="115" modifiers="0" macro="CastParalyze" externalcode="Orion.Cast('Paralyze', Orion.ClientLastTarget())"/>
     <hotkey onescriptrunning="false" key="45" modifiers="16" macro="GoHome" externalcode=""/>
+    <hotkey onescriptrunning="false" key="219" modifiers="0" macro="Skining" externalcode=""/>
     <toggle_hotkeys key="0" modifiers="0"/>
 </data>

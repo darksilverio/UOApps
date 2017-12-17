@@ -502,8 +502,6 @@ function autoDoor() {
 
 function FastLootRPGLoop() {
 
-	var useSkining = 0;
-	//create a list of itens to loot in the tab Lists > Find
 	var listName = 'AutoLoot';
 
 	Orion.IgnoreReset();
@@ -522,9 +520,6 @@ function FastLoot(listName, useSkining) {
 	if (body != null) {
 
 		Orion.AddObject('corpse', body.Serial());
-
-		if (useSkining == 1 && body.IsCorpse())
-			Skining();
 
 		Orion.UseObject('corpse');
 		LootLoadingLag();
@@ -577,12 +572,20 @@ function Loot(listName, body, useSkining) {
 
 	}
 }
-
-function Skining(dummy) {
+function Skining() {
+	
+	Orion.CharPrint(self, infoColor, 'Cut Corpse' );
 	Orion.WaitTargetObject('corpse');
-	Orion.UseType('0x0F52');
-	Orion.Wait(600);
+	
+	equipments = Orion.FindList('myWeapons', self);
+	if (!equipments.length)
+		equipments = Orion.FindList('myWeapons', backpack);
+	if (!equipments.length)
+		Orion.CharPrint(self, infoColor, 'You have no utting weapon to use' );
+		
+	Orion.UseObject(equipments[0]);
 }
+
 
 function LootLoadingLag(dummy) {
 	var timer = Orion.Now();
@@ -670,6 +673,9 @@ function Corridor() {
 
 function ColectFeno() {
 
+	Orion.Terminate('Corridor');
+	Orion.Terminate('SuperFeno');
+
 	var pickupDelay = 1000;
 	var msg = 'You can not pick that up'
 	var timeout;
@@ -688,12 +694,10 @@ function ColectFeno() {
 			while (Orion.Now() <= timeout) {
 
 				if (Orion.InJournal(msg)) {
-					//Orion.Say("timeout: " + timeout);
 					break;
 				}
-				Orion.Wait(1);
+				Orion.Wait(50);
 			}
-			//			Orion.WaitJournal(msg ,  Orion.Now(),  Orion.Now() + 1100, 'sys', 0, 0xFFFF);
 		}
 	}
 }

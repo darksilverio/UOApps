@@ -48,11 +48,11 @@ function Mining(){
 		closest = GetClosest(mineCoords);
 		closestTile = mineCoords[closest];
 		
-		 if( closestTile.y > 480)
+		 if( closestTile.y > 477)
 		 {
 			mineCoords = Remove(mineCoords, closest);
 			
-			if( Player.Y() > 480)
+			if( Player.Y() > 477)
 				GoMineRandSpot();
 				
 			continue;
