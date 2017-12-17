@@ -506,12 +506,12 @@ function FastLootRPGLoop() {
 
 	Orion.IgnoreReset();
 	while (true) {
-		FastLoot(listName, useSkining);
+		FastLoot(listName);
 		Orion.Wait(100);
 	}
 }
 
-function FastLoot(listName, useSkining) {
+function FastLoot(listName) {
 	var body = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC', '-1', ground, 'fast', '3');
 
 	body = Orion.FindObject(body[0]);
@@ -524,12 +524,12 @@ function FastLoot(listName, useSkining) {
 		Orion.UseObject('corpse');
 		LootLoadingLag();
 
-		Loot(listName, body, useSkining);
+		Loot(listName, body);
 
 	}
 }
 
-function Loot(listName, body, useSkining) {
+function Loot(listName, body) {
 
 	//GETTING PLAYER BAG
 	//TODO: MAKE PROMPT FOR BAG OR ADD TO THE OBJECT LIST AND VALIDATE BEFORE LOOP
@@ -584,6 +584,11 @@ function Skining() {
 		Orion.CharPrint(self, infoColor, 'You have no utting weapon to use' );
 		
 	Orion.UseObject(equipments[0]);
+	
+	Orion.Terminate('FastLootRPGLoop');
+	Orion.Wait(200);
+	Orion.Exec('FastLootRPGLoop', true);
+	Orion.Wait(200);
 }
 
 
