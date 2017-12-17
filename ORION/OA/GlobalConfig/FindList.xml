@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data version="0" size="4">
-    <findlist name="bandage">
-        <item graphic="0x0E21" color="0x0000" comment="clean bandages"/>
-    </findlist>
+<data version="0" size="5">
     <findlist name="AutoLoot">
-        <item graphic="0x0EED" color="0x0000" comment="gold coin"/>
-        <item graphic="0x0F3F" color="0x0000" comment="arrows"/>
-        <item graphic="0x1406" color="0x0231" comment="Magic Silver War Mace"/>
-        <item graphic="0x1F31" color="0x084D" comment="Power Scroll"/>
+        <item graphic="0x0EED" color="0xFFFF" comment="gold coin"/>
+        <item graphic="0x0F3F" color="0xFFFF" comment="arrows"/>
+        <item graphic="0x1406" color="0xFFFF" comment="War Mace"/>
+        <item graphic="0x1F31" color="0xFFFF" comment="PS &amp; Recipe"/>
         <item graphic="0x0E40" color="0x0A23" comment="Paragon Chest"/>
-        <item graphic="0x13FE" color="0x0021" comment="Magic Blood Katana"/>
-        <item graphic="0x14EB" color="0x0000" comment="treasure map"/>
+        <item graphic="0x13FE" color="0xFFFF" comment="Katana"/>
+        <item graphic="0x14EB" color="0xFFFF" comment="treasure map"/>
         <item graphic="0x0F26" color="0x0000" comment="diamonds"/>
         <item graphic="0x0F0F" color="0x0000" comment="star sapphires"/>
         <item graphic="0x0F13" color="0x0000" comment="rubies"/>
         <item graphic="0x0F10" color="0x0000" comment="emeralds"/>
         <item graphic="0x0E76" color="0x0000" comment="bag"/>
-        <item graphic="0x1F31" color="0x005B" comment="Recipe Scroll"/>
         <item graphic="0x1078" color="0x0902" comment="couro wyrm"/>
-        <item graphic="0x0F82" color="0x0000" comment="Dragon's Blood"/>
+        <item graphic="0x0F82" color="0xFFFF" comment="Dragon's Blood"/>
         <item graphic="0x0F80" color="0x0000" comment="Daemon Bones"/>
         <item graphic="0x0E21" color="0x0000" comment="clean bandages"/>
         <item graphic="0x0F0E" color="0xFFFF" comment="Invisibility"/>
         <item graphic="0x1F5F" color="0x0000" comment="Flamestrike"/>
         <item graphic="0x175D" color="0xFFFF" comment="Cloth"/>
     </findlist>
-    <findlist name="AutoLootTest">
-        <item graphic="0x0EED" color="0x0000" comment="gold coin"/>
+    <findlist name="myBows">
+        <item graphic="0x13B1" color="0xFFFF" comment="Bow"/>
+    </findlist>
+    <findlist name="myShields">
+        <item graphic="0x1BC4" color="0xFFFF" comment="Order Shield"/>
+        <item graphic="0x1BC3" color="0xFFFF" comment="Chaos Shield"/>
+    </findlist>
+    <findlist name="myWeapons">
+        <item graphic="0x13FA" color="0xFFFF" comment="Large Battle Axe"/>
+        <item graphic="0x13B5" color="0xFFFF" comment="Scimitar"/>
+        <item graphic="0x0F45" color="0xFFFF" comment="Executioner's Axe "/>
+        <item graphic="0x13FE" color="0xFFFF" comment="Katana"/>
+        <item graphic="0x1400" color="0xFFFF" comment="Kryss"/>
     </findlist>
 </data>

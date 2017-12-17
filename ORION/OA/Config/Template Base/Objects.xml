@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data version="0" size="8" dressbag="0x40036EC8">
-    <object name="corpse" id="0x40016B1B"/>
+    <object name="corpse" id="0x4011EB4F"/>
     <object name="lootpack" id="0x40036EC8"/>
-    <object name="lootItem" id="0x40016B2D"/>
-    <object name="emptycontainer" id="0x4001BC3A"/>
-    <object name="receiver" id="0x4002DECF"/>
+    <object name="lootItem" id="0x4011EB51"/>
+    <object name="emptycontainer" id="0x00000000"/>
+    <object name="receiver" id="0x4002CA3E"/>
     <object name="harpTame" id="0x00036ECB"/>
     <object name="follow" id="0x00033C4C"/>
-    <object name="model" id="0x400906E5"/>
+    <object name="model" id="0x400E5C97"/>
 </data>
