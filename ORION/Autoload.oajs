@@ -207,16 +207,31 @@ function Follow() {
 }
 
 function Heal() {
-	var Timer, Msg = "You put the bloody bandage|failed";
+	var timer, Msg = "You put the bloody bandage|failed";
+	var lHand, rHand;
+	
 	while (!Player.Dead() && Orion.Count("bandage")) {
-		if (Player.Hits() < 40) {
+		if (Player.Hits() < ( Player.MaxHits() - 15 ) ) {
+		
 			Orion.CharPrint(self, infoColor, 'Auto Heal - Low Life');
 			Orion.ClearJournal(Msg);
+			
+			rHand = Orion.ObjAtLayer('RightHand', self);
+			lHand = Orion.ObjAtLayer('LeftHand', self);
+			
 			Orion.BandageSelf();
 			Orion.Wait(500);
-			Orion.CreateClientMacro('EquipLastWeapon').Play(false, 1000);
-			Timer = Orion.Now() + 5500;
-			while (!Orion.InJournal(Msg) && Orion.Now() < Timer) {
+						
+			if(lHand != null)
+				Orion.UseObject(lHand.Serial());
+			if(rHand != null)
+	       		Orion.UseObject(rHand.Serial());
+	       		
+	       	Orion.CancelTarget();
+			
+
+			timer = Orion.Now() + 6000;
+			while (!Orion.InJournal(Msg) || Orion.Now() < timer) {
 				Orion.Wait(100);
 			}
 		} else {
@@ -308,7 +323,7 @@ function EquipBow() {
 
 	Orion.WarMode(true);
 
-	if (Player.Hits() < Player.MaxHits() - 15) {
+	if (Player.Hits() < Player.MaxHits()) {
 
 		Orion.CharPrint(self, infoColor, 'Equip Bow + Band');
 		Orion.BandageSelf();
@@ -330,7 +345,7 @@ function EquipWeaponAndShield() {
 
 	Orion.WarMode(true);
 
-	if (Player.Hits() < Player.MaxHits() - 15) {
+	if (Player.Hits() < Player.MaxHits()) {
 		Orion.CharPrint(self, infoColor, 'Weapon + Shield + Band');
 		Orion.BandageSelf();
 		Orion.Wait(500);
