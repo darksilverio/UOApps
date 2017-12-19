@@ -25,6 +25,7 @@ function Autostart() {
 
 	Orion.Print(infoColor, 'BG Macro: AntiPK');
 	Orion.Exec('AntiPK', true);
+
 }
 
 //show name of creatures on screen
@@ -709,8 +710,8 @@ function ColectFeno() {
 
 function AntiPK() {
 
-	var delay = 500;
-	var range = 30;
+	var delay = 100;
+	var range = 23;
 
 
 
@@ -728,7 +729,7 @@ function AntiPK() {
 				continue;
 
 
-		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', 25, 'murderer');
+		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', range, 'murderer');
 
 		if (pksFound.length == 0) {
 			continue;

@@ -3,12 +3,13 @@
 
 var infoColor = 0x0185;
 var errorColor = 0x0020;
+var debugColor = 0x45F
 
 var miningRange = 30
 var miningTools = '0x0E85|0x0E86';
 var miningDelay=16000
 var persist = true;
-var bankweight = 335;
+var bankweight = 450;
 var oresType='0x19B7|0x19BA|0x19B8|0x19B9|0x0F0F|0x0F10|0x0F16|0x0F15|0x0F11|0x0F26|0x0F18|0x19B7|0x0F13'
 var moveitemdelay=1500
 
@@ -16,10 +17,11 @@ var newSpotMsgs='Try mining elsewhere|There is nothing here|That is too far|You 
 var sameSpotMsgs='You put'
 var persistSpotMsgs='You loosen some rocks but fail'
 var toolUsageMsg='Where do you want to use'
-var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver'
+var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite'
 
 // DONT CHANGE THESE VARS
 var timeout=-1;
+var mineSector=0;
 
 function Autostart()
 {
@@ -42,21 +44,21 @@ function Mining(){
 
 	while(!Player.Dead())
 	{
-		if(mineCoords.length <= 0)
+		DEBUG('Main Loop');
+		if(mineCoords.length <= 0){
+			DEBUG('All mined, Searching for more');
 			mineCoords = FindMinableSpots(miningRange);
+		}
 		
 		closest = GetClosest(mineCoords);
 		closestTile = mineCoords[closest];
 		
-		 if( closestTile.y > 477)
-		 {
+		 if( closestTile.y > 477) {
+		 	DEBUG('Spot discarted: > 477');
 			mineCoords = Remove(mineCoords, closest);
-			
-			if( Player.Y() > 477)
-				GoMineRandSpot();
-				
 			continue;
        	}
+       		
 		 
 		PathFinder(closestTile.x, closestTile.y);
 		
@@ -69,29 +71,33 @@ function Mining(){
      		Orion.Print(infoColor, ' '); 
 		Dig(closestTile.x, closestTile.y);
 		
-		while( ( Orion.Now() - timeout ) < miningDelay )
-		{     	
+		while( ( Orion.Now() - timeout ) < miningDelay ){    
+		 	
+		 	DEBUG('Waiting dig: ' + (  Orion.Now() - timeout ) );
      			if( Orion.InJournal(newSpotMsgs) || Orion.InJournal(garbageOreMsg) )
      			{	
+     				DEBUG('Garbage Ore / New spot ...');
 				mineCoords = Remove(mineCoords, closest);
 				break;
 			}
 			if( Orion.InJournal(persistSpotMsgs) )
 			{
+				DEBUG('Persisting ...');
 				if(!persist)
 					mineCoords = Remove(mineCoords, closest);
 					
 				break;
 			}
 
-			if( Orion.InJournal(sameSpotMsgs) )	
+			if( Orion.InJournal(sameSpotMsgs) ){
+				DEBUG('Good Spot ...');
 				break;
+			}
 				
-     			Orion.Wait(100);
+     			Orion.Wait(2000);
      		}
      		
-     		if(Player.Weight() >= bankweight && bankweight > 0)
-     		{
+     		if(Player.Weight() >= bankweight && bankweight > 0){
      			MineToBank();
 			OreToBank();
 			BankToMine();
@@ -99,12 +105,13 @@ function Mining(){
      			mineCoords = FindMinableSpots(miningRange);
      		}
      		
-		Orion.Wait(1);	
+		Orion.Wait(50);	
 	}
 }
 
 function Dig(x, y)
 {
+	DEBUG('Dig: ' + x + ', ' + y);
 	var tool = Orion.FindType(miningTools, '-1', self, 'item|first', '-1', '-1');
       
       if(tool.length == 0)
@@ -137,12 +144,13 @@ function FindMinableSpots( range )
             }
         }    
     }
-    Orion.Print(infoColor, 'Found ' + mineCoords.length + ' tiles to mine');
+    DEBUG('Found ' + mineCoords.length + ' tiles to mine');
     return mineCoords;
 }
 
 function GetClosest(minesArr)
 {
+
     var px = Player.X();
     var py = Player.Y();
     
@@ -162,7 +170,7 @@ function GetClosest(minesArr)
             closest = i;
         }
     }
-    
+    DEBUG('GetClosest: ' + closest);
     return closest;
 }
 
@@ -175,15 +183,19 @@ function Remove(arr, idx)
 	        result.push(arr[i]);
     }
     
+    DEBUG('Tile Mined: ' + idx + '. Left: ' + arr.length);
     return result;
 }
 
 function PathFinder(x, y)
 {
+	
 	Orion.OptionAlwaysRun(true);
 	
-	while(!Orion.WalkTo(x, y, -1, 2))
-		Orion.Wait(100);
+	while(!Orion.WalkTo(x, y, -1, 2)){
+		Orion.Wait(250);
+		Orion.Print(31, 'Going to: ' + x + ', ' + y + ' Can walk: ' + Orion.CanWalk(Player.Direction(), x, y, -1));
+		}
 
 	Orion.OptionAlwaysRun(false);
 }
@@ -228,18 +240,23 @@ function BankToMine()
 
 function GoMineRandSpot(dummy){
 
-	var randStopt =  Orion.Random(0, 5);
-	
-	if(randStopt == 0)
+	DEBUG('GoMineRandSpot: ' + mineSector);
+
+	if(mineSector == 0)
 		PathFinder(2591, 476);
-	if(randStopt == 1)
+	if(mineSector == 1)
 		PathFinder(2574, 454);
-	if(randStopt == 2)
+	if(mineSector == 2)
 		PathFinder(2592, 461);
-	if(randStopt == 3)
+	if(mineSector == 3)
 		PathFinder(2586, 445);
-	if(randStopt == 4)
+	if(mineSector == 4)
 		PathFinder(2573, 433);
+		
+	mineSector++;
+	
+	if(mineSector > 4)
+		mineSector = 0;
 }
 
 function CallGuards(dummy)
@@ -249,4 +266,10 @@ function CallGuards(dummy)
 		Orion.Say('guards');
 		Orion.Wait(7000);
 	}
+}
+
+function DEBUG(msg){
+	
+	if(false)
+		Orion.Print(debugColor, msg);
 }
