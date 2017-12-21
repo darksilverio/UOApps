@@ -1,0 +1,269 @@
+//************ YOU MUST DO **********
+//1 - PUT A BAG IN YOUR BANK AND ADD AS AN OBOJECT NAMED: miningBox
+//2 - SET THE MINE POSITION ON THE mineRectangle VARIABLE(OBJECT)
+
+var infoColor = 0x0185;
+var errorColor = 0x0020;
+var debugColor = 0x45F
+
+//Monte Tresshorn - Fire Island
+//var mineRectangle = { Xsmall: 4805, Xbig:4817 , Ysmall: 3632 , Ybig: 3665 };  
+//Montain of knowledge
+var mineRectangle = { Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1452 };  
+				    
+var miningRange = 60
+var miningTools = '0x0E85|0x0E86';
+var miningDelay=16000
+var persist = true;
+var bankweight = 380;
+var oresType='0x19B7|0x19BA|0x19B8|0x19B9|0x0F0F|0x0F10|0x0F16|0x0F15|0x0F11|0x0F26|0x0F18|0x19B7|0x0F13'
+var moveitemdelay=1500
+
+var newSpotMsgs='Try mining elsewhere|There is nothing here|That is too far|You have no line of sight|You cannot mine so close'
+var sameSpotMsgs='You put'
+var persistSpotMsgs='You loosen some rocks but fail'
+var toolUsageMsg='Where do you want to use'
+var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite'
+
+// DONT CHANGE THESE VARS
+var timeout=-1;
+
+
+function Autostart()
+{
+	Orion.Terminate('Mining');
+
+	Orion.Print(infoColor, 'MINING WILL START IN 20 SECONDS');
+	Orion.Wait(20000);
+	
+	Orion.Exec('Mining', true);
+	
+}
+
+function Mining(){
+
+	var closest;
+	var closestTile;
+	var mineCoords = [];
+
+	while(!Player.Dead() && Orion.Connected() )
+	{
+		DEBUG('Main Loop');
+		if(mineCoords.length <= 0){
+			DEBUG('All mined, Searching for more');
+			//GoMineRandSpot();
+			mineCoords = FindMinableSpots(miningRange);
+		}
+		
+		closest = GetClosest(mineCoords);
+		closestTile = mineCoords[closest];
+				 
+		 if( closestTile.x > mineRectangle.Xbig || closestTile.x < mineRectangle.Xsmall ||
+		     closestTile.y > mineRectangle.Ybig  || closestTile.y < mineRectangle.ysmall )
+		 	{
+		 		DEBUG2('Spot discarted: ' + closestTile.x + ', ' + closestTile.y  );
+				mineCoords = Remove(mineCoords, closest);
+				Orion.Wait(1);
+				continue;
+       		}
+       
+		PathFinder(closestTile.x, closestTile.y);
+		
+		Orion.CancelTarget();
+    		Orion.ClearJournal();
+     		  
+     		timeout = Orion.Now();
+     		
+     		Orion.Print(infoColor, ' ');
+     		Orion.Print(infoColor, ' '); 
+		Dig(closestTile.x, closestTile.y);
+		
+		while( ( Orion.Now() - timeout ) < miningDelay ){    
+		 	
+		 	DEBUG('Waiting dig: ' + (  Orion.Now() - timeout ) );
+     			if( Orion.InJournal(newSpotMsgs) || Orion.InJournal(garbageOreMsg) )
+     			{	
+     				DEBUG('Garbage Ore / New spot ...');
+				mineCoords = Remove(mineCoords, closest);
+				break;
+			}
+			if( Orion.InJournal(persistSpotMsgs) )
+			{
+				DEBUG('Persisting ...');
+				if(!persist)
+					mineCoords = Remove(mineCoords, closest);
+					
+				break;
+			}
+
+			if( Orion.InJournal(sameSpotMsgs) ){
+				DEBUG('Good Spot ...');
+				break;
+			}
+				
+     			Orion.Wait(50);
+     		}
+     		
+     		if(Player.Weight() >= bankweight && bankweight > 0){
+     			MineToBank();
+			OreToBank();
+			BankToMine();
+			//GoMineRandSpot();
+     			mineCoords = FindMinableSpots(miningRange);
+     		}
+     		
+		Orion.Wait(50);	
+	}
+}
+
+function Dig(x, y)
+{
+	DEBUG('Dig: ' + x + ', ' + y);
+	var tool = Orion.FindType(miningTools, '-1', self, 'item|first', '-1', '-1');
+      
+      if(tool.length == 0)
+	      tool =  Orion.FindType(miningTools, '-1', backpack, 'item|first', '-1', '-1');
+
+     if (tool.length == 0)
+     {
+     		Orion.Print(23, 'NO MINING TOOL. MACRO ABORTED');
+     		Orion.Terminate('Mining')
+     	}
+     	
+     	Orion.WaitTargetTile('mine', x , y, 0);
+     	Orion.UseObject(tool[0]);
+     	Orion.WaitJournal(toolUsageMsg, Orion.Now(), Orion.Now() + 5000, 'sys', -1, -1);
+}
+
+function FindMinableSpots( range )
+{	
+    var coord;    
+    var mineCoords = [];
+    
+    for (x = Player.X() - range; x < Player.X() +range; ++x)
+    {
+        for (y = Player.Y() - range; y < Player.Y() + range; ++y)
+        {
+            if (Orion.ValidateTargetTile('mine', x, y))
+            {
+                coord = { x: x, y: y};            
+                mineCoords.push(coord);        
+            }
+        }    
+    }
+    DEBUG('Found ' + mineCoords.length + ' tiles to mine');
+    return mineCoords;
+}
+
+function GetClosest(minesArr)
+{
+
+    var px = Player.X();
+    var py = Player.Y();
+    
+    var closest = 0;
+    var dsq = 1000;
+    
+    for (var i =0; i < minesArr.length; ++i)
+    {
+        var dx = Math.abs(px - minesArr[i].x);
+        var dy = Math.abs(py - minesArr[i].y);
+    
+        var dq = dx + dy;
+        
+        if (dq < dsq)
+        {
+            dsq = dq;
+            closest = i;
+        }
+    }
+    DEBUG('GetClosest: ' + closest);
+    return closest;
+}
+
+function Remove(arr, idx)
+{
+    var result = [];
+    for (var i = 0; i < arr.length; ++i)
+    {
+        if (i != idx)
+	        result.push(arr[i]);
+    }
+    
+    DEBUG2('Tiles Left: ' + arr.length);
+    return result;
+}
+
+function PathFinder(x, y)
+{
+	
+	Orion.OptionAlwaysRun(true);
+	
+	while(!Orion.WalkTo(x, y, -1, 2)){
+		Orion.Wait(250);
+		Orion.Print(31, 'Going to: ' + x + ', ' + y + ' Can walk: ' + Orion.CanWalk(Player.Direction(), x, y, -1));
+		}
+
+	Orion.OptionAlwaysRun(false);
+}
+
+function OreToBank(){
+
+
+	Orion.Say('banker bank');		
+	Orion.Wait(1000);	
+	
+	var bag = Orion.FindObject('miningBox');
+	
+	if(!bag)	{
+		 Orion.Print(infoColor,'You have no deposit bag defined');
+		 Orion.Terminate('Mining')
+		 return;
+	}
+		
+	var ores = Orion.FindType(oresType, '-1', backpack);
+
+	for(var i = 0; i < ores.length; i++){
+		Orion.MoveItem(ores[i], 0, bag.Serial());
+		Orion.Wait(moveitemdelay);
+	}
+}
+
+function MineToBank()
+{
+	Orion.Say('.recall 1 5');
+	Orion.Wait(8000);
+}
+
+function BankToMine()
+{
+	Orion.Say('.recall 1 8');
+	Orion.Wait(8000);
+	
+}
+
+function BuyPickAxe(dummy)
+{
+	
+}
+
+function Meditation(dummy)
+{
+	
+}
+function AntiPlayer(dummy)
+{
+	
+}
+
+function DEBUG(msg){
+	
+	if(false)
+		Orion.Print(debugColor, msg);
+}
+
+function DEBUG2(msg){
+	
+	if(true)
+		Orion.Print(debugColor, msg);
+}

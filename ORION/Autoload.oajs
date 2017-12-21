@@ -13,6 +13,9 @@ function Autostart() {
 	Orion.Terminate('all', 'Autostart');
 
 	Orion.Wait(500);
+	
+	Orion.BlockMoving(false);
+	Orion.OptionAlwaysRun(false);
 
 	Orion.Print(infoColor, 'BG Macro: Heal');
 	Orion.Exec('Heal', true);
@@ -185,6 +188,7 @@ function Follow() {
 	Orion.CharPrint(self, infoColor, 'Follow something');
 	Orion.Print(0x60, 'What do you want to follow ?');
 
+	Orion.OptionAlwaysRun(true);
 
 	Orion.AddObject('follow')
 	while (Orion.HaveTarget()) {
@@ -203,6 +207,8 @@ function Follow() {
 		Orion.WalkTo(obj.X(), obj.Y(), obj.Z());
 		Orion.Wait(250);
 	}
+	
+	Orion.OptionAlwaysRun(false);
 	Orion.CharPrint(self, infoColor, 'Stopped Following');
 }
 
@@ -210,32 +216,37 @@ function Heal() {
 	var timer, Msg = "You put the bloody bandage|failed";
 	var lHand, rHand;
 	
-	while (!Player.Dead() && Orion.Count("bandage")) {
-		if (Player.Hits() < ( Player.MaxHits() - 15 ) ) {
+	while (!Player.Dead()) {
+		if(Orion.Count("bandage")){
+			if (Player.Hits() < ( Player.MaxHits() - 15 ) ) {
 		
-			Orion.CharPrint(self, infoColor, 'Auto Heal - Low Life');
-			Orion.ClearJournal(Msg);
+				Orion.CharPrint(self, infoColor, 'Auto Heal - Low Life');
+				Orion.ClearJournal(Msg);
 			
-			rHand = Orion.ObjAtLayer('RightHand', self);
-			lHand = Orion.ObjAtLayer('LeftHand', self);
+				rHand = Orion.ObjAtLayer('RightHand', self);
+				lHand = Orion.ObjAtLayer('LeftHand', self);
 			
-			Orion.BandageSelf();
-			Orion.Wait(500);
+				Orion.BandageSelf();
+				Orion.Wait(500);
 						
-			if(lHand != null)
-				Orion.UseObject(lHand.Serial());
-			if(rHand != null)
-	       		Orion.UseObject(rHand.Serial());
+				if(lHand != null)
+					Orion.UseObject(lHand.Serial());
+				if(rHand != null)
+	       			Orion.UseObject(rHand.Serial());
 	       		
-	       	Orion.CancelTarget();
+	       		Orion.CancelTarget();
 			
 
-			timer = Orion.Now() + 6000;
-			while (!Orion.InJournal(Msg) || Orion.Now() < timer) {
+				timer = Orion.Now() + 6000;
+				while (!Orion.InJournal(Msg) || Orion.Now() < timer) {
+					Orion.Wait(100);
+				}
+				
+			}else{
 				Orion.Wait(100);
-			}
-		} else {
-			Orion.Wait(250);
+			} 
+		}else{
+			Orion.Wait(100);
 		}
 	}
 }
@@ -362,8 +373,11 @@ function EquipWeaponAndShield() {
 
 	if (equipments.length) 	
 		Orion.UseObject(equipments[0]);
-		
+	
+	
 	Orion.Attack(lastattack);
+	Orion.Wait(250);
+	Orion.CancelTarget();
 }
 
 function PVMCasts() {
@@ -734,14 +748,25 @@ function AntiPK() {
 		Orion.Wait(delay);
 
 		//IGNORE COMMERCE
-		if (Player.X() > 2325 && Player.X() < 2357)
-			if (Player.Y() < 553 && Player.Y() > 517)
+		if (Player.X() > 2325 && Player.X() < 2357){
+			if (Player.Y() < 553 && Player.Y() > 517){
 				continue;
+			}
+		}
 
 		//IGNORE HELP ROOM
-		if (Player.X() > 5447 && Player.X() < 5459)
-			if (Player.Y() < 1195 && Player.Y() > 1186)
+		if (Player.X() > 5447 && Player.X() < 5459){
+			if (Player.Y() < 1198 && Player.Y() > 1186){
 				continue;
+			}
+		}
+				
+		//IGNORE ARENA	
+		if (Player.X() > 6042 && Player.X() < 6074){
+			if (Player.Y() < 1235 && Player.Y() > 1191){
+				continue;
+			}
+		}
 
 
 		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', range, 'murderer');
@@ -759,6 +784,7 @@ function AntiPK() {
 					Orion.BlockMoving(true);
 					Orion.UseType('0x0F0E', '0x0001', backpack, true); //invis
 					Orion.Say('.recall 1 1');
+					Orion.WarMode(false);
 
 					var pk = Orion.FindObject(pksFound[i]);
 					Orion.CharPrint(self, 0xff, "PK[" + Orion.GetDistance((pksFound[i])) + " tiles away] " + pk.Name());
