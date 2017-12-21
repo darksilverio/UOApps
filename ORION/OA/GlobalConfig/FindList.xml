@@ -20,6 +20,8 @@
         <item graphic="0x0F0E" color="0xFFFF" comment="Invisibility"/>
         <item graphic="0x1F5F" color="0x0000" comment="Flamestrike"/>
         <item graphic="0x175D" color="0xFFFF" comment="Cloth"/>
+        <item graphic="0x14EF" color="0xFFFF" comment="Deeds"/>
+        <item graphic="0x1BD1" color="0x0000" comment="feathers"/>
     </findlist>
     <findlist name="myBows">
         <item graphic="0x13B1" color="0xFFFF" comment="Bow"/>
@@ -27,6 +29,7 @@
     <findlist name="myShields">
         <item graphic="0x1BC4" color="0xFFFF" comment="Order Shield"/>
         <item graphic="0x1BC3" color="0xFFFF" comment="Chaos Shield"/>
+        <item graphic="0x1B76" color="0x0000" comment="heater shield"/>
     </findlist>
     <findlist name="myWeapons">
         <item graphic="0x13FA" color="0xFFFF" comment="Large Battle Axe"/>
@@ -34,5 +37,6 @@
         <item graphic="0x0F45" color="0xFFFF" comment="Executioner's Axe "/>
         <item graphic="0x13FE" color="0xFFFF" comment="Katana"/>
         <item graphic="0x1400" color="0xFFFF" comment="Kryss"/>
+        <item graphic="0x13B9" color="0xFFFF" comment="Viking Sword"/>
     </findlist>
 </data>

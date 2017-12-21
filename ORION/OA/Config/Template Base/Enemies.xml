@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data version="0" size="16">
+<data version="0" size="26">
     <enemy id="0x00089303" name="BeGood" enabled="true"/>
     <enemy id="0x000D6982" name="Iguin" enabled="true"/>
     <enemy id="0x00024863" name="Cannabis Sativa" enabled="true"/>
@@ -8,7 +8,6 @@
     <enemy id="0x00096956" name="Rasmus" enabled="true"/>
     <enemy id="0x0006C85E" name="KiKOO" enabled="true"/>
     <enemy id="0x000664EF" name="Se n Mato Alejo" enabled="true"/>
-    <enemy id="0x0004271B" name="Sly" enabled="true"/>
     <enemy id="0x00089570" name="Ray Charles" enabled="true"/>
     <enemy id="0x0006DC89" name="Projota" enabled="true"/>
     <enemy id="0x00006C54" name="VENON" enabled="true"/>
@@ -16,4 +15,15 @@
     <enemy id="0x000A345D" name="KillerLegend" enabled="true"/>
     <enemy id="0x0006A566" name="Jalin Rabei" enabled="true"/>
     <enemy id="0x000D4D8C" name="WarlocK" enabled="true"/>
+    <enemy id="0x0011E89E" name="BrTT BsB" enabled="true"/>
+    <enemy id="0x000D1114" name="ZilD" enabled="true"/>
+    <enemy id="0x0006DCB6" name="Sullivan Dane" enabled="true"/>
+    <enemy id="0x00023A02" name="Pandox" enabled="true"/>
+    <enemy id="0x00063AE8" name="Vito Corleone" enabled="true"/>
+    <enemy id="0x0004271B" name="Sly" enabled="true"/>
+    <enemy id="0x0012888B" name="Sepultura" enabled="true"/>
+    <enemy id="0x000671C3" name="ThE PoRcA" enabled="true"/>
+    <enemy id="0x00052BC3" name="Calado" enabled="true"/>
+    <enemy id="0x0010FB5E" name="SuDa" enabled="true"/>
+    <enemy id="0x0002164D" name="J a c k S p a r r o W" enabled="true"/>
 </data>
