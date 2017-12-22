@@ -1,13 +1,16 @@
 // GLOBAL VARIABLES
 var infoColor = 0x0185;
-var errorColor = 0x0020;
+var errorColor = 0x028;
+var debugColor = 0x45F
+
+var lootDelay = 2000;
 
 // OBJECTS AND LISTS
 //list myBows = EquipBow()
 //list myWeapons = EquipWeaponAndShield()
 //list myShields = EquipWeaponAndShield()
 //list myFoods = SkillTaming() --- not implemented yet
-
+//list autoLoot = FastLootRPGLoop
 function Autostart() {
 	Orion.Print(infoColor, '(Re)Starting BG macros');
 	Orion.Terminate('all', 'Autostart');
@@ -28,7 +31,6 @@ function Autostart() {
 
 	Orion.Print(infoColor, 'BG Macro: AntiPK');
 	Orion.Exec('AntiPK', true);
-
 }
 
 //show name of creatures on screen
@@ -217,9 +219,8 @@ function Heal() {
 	var lHand, rHand;
 	
 	while (!Player.Dead()) {
-		if(Orion.Count("bandage")){
-			if (Player.Hits() < ( Player.MaxHits() - 15 ) ) {
-		
+		if(Orion.FindType('0x0E21', '-1', backpack).length > 0){
+			if (Player.Hits() < ( Player.MaxHits() - 15 ) ) {	
 				Orion.CharPrint(self, infoColor, 'Auto Heal - Low Life');
 				Orion.ClearJournal(Msg);
 			
@@ -246,7 +247,8 @@ function Heal() {
 				Orion.Wait(100);
 			} 
 		}else{
-			Orion.Wait(100);
+			Orion.Print(errorColor, 'No more bandages.')
+			Orion.Wait(250);
 		}
 	}
 }
@@ -314,7 +316,7 @@ function RunAway() {
 	if (invisPotion.length > 0)
 		Orion.UseObject(invisPotion[0]);
 	else
-		Orion.Print(infoColor, 'No more invis potions =(');
+		Orion.Print(errorColor, 'No more invis potions =(');
 
 	Orion.Say('.recall 1 1');
 	Orion.BandageSelf();
@@ -337,11 +339,17 @@ function EquipBow() {
 	if (Player.Hits() < Player.MaxHits()) {
 
 		Orion.CharPrint(self, infoColor, 'Equip Bow + Band');
-		Orion.BandageSelf();
-		Orion.Wait(500);
-	} else {
+		
+		if(Orion.FindType('0x0E21', '-1', backpack).length <=  0){
+			Orion.Print(errorColor, 'No more bandages.')
+		}
+		else{			
+			Orion.BandageSelf();
+			Orion.Wait(500);
+		}
+		
+	} else 
 		Orion.CharPrint(self, infoColor, 'Equip Bow');
-	}
 
 	var bows = Orion.FindList('myBows', backpack);
 
@@ -358,11 +366,17 @@ function EquipWeaponAndShield() {
 
 	if (Player.Hits() < Player.MaxHits()) {
 		Orion.CharPrint(self, infoColor, 'Weapon + Shield + Band');
-		Orion.BandageSelf();
-		Orion.Wait(500);
-	} else {
+		
+		if(Orion.FindType('0x0E21', '-1', backpack).length <=  0){
+			Orion.Print(errorColor, 'No more bandages.')
+		}
+		else{			
+			Orion.BandageSelf();
+			Orion.Wait(500);
+		}
+		
+	} else
 		Orion.CharPrint(self, infoColor, 'Weapon + Shield');
-	}
 	
 	var equipments = Orion.FindList('myShields', backpack);
 
@@ -376,7 +390,7 @@ function EquipWeaponAndShield() {
 	
 	
 	Orion.Attack(lastattack);
-	Orion.Wait(250);
+	Orion.Wait(300);
 	Orion.CancelTarget();
 }
 
@@ -532,34 +546,31 @@ function autoDoor() {
 
 function FastLootRPGLoop() {
 
-	var listName = 'AutoLoot';
+	
 
 	Orion.IgnoreReset();
-	while (true) {
-		FastLoot(listName);
+	
+	while (Orion.Connected()) {
+		FastLoot('autoLoot');
 		Orion.Wait(100);
 	}
 }
 
 function FastLoot(listName) {
-	var body = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC', '-1', ground, 'fast', '3');
+	var bodies = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC', '-1', ground, 'fast', '2');
 
-	body = Orion.FindObject(body[0]);
+	if (bodies.length) {
 
 
-	if (body != null) {
 
-		Orion.AddObject('corpse', body.Serial());
-
-		Orion.UseObject('corpse');
-		LootLoadingLag();
-
-		Loot(listName, body);
+		Orion.UseObject(bodies[0]);
+		LootLoadingLag(bodies[0]);
+		Loot(listName, bodies[0]);
 
 	}
 }
 
-function Loot(listName, body) {
+function Loot(listName, corpseSerial) {
 
 	//GETTING PLAYER BAG
 	//TODO: MAKE PROMPT FOR BAG OR ADD TO THE OBJECT LIST AND VALIDATE BEFORE LOOP
@@ -568,38 +579,31 @@ function Loot(listName, body) {
 
 	Orion.AddObject('lootpack', Orion.GetSerial(backpack));
 
-	while (Orion.GetDistance('corpse') <= 3) {
-
-		var lootList = Orion.FindList(listName, 'corpse');
-		//var lootList = Orion.FindType('-1', '-1', 'corpse', 'fast', '3');
-
-
-		if (lootList.length == 0 || lootList == null) {
-			Orion.Ignore('corpse');
+	var timer;
+	while (Orion.GetDistance(corpseSerial) <= 2) {
+		
+		var lootList = Orion.FindList(listName, corpseSerial);
+		//var lootList = Orion.FindType('-1', '-1', 'corpse', 'fast', '2');
+		
+		if (lootList.length == 0) {
+			Orion.Ignore(corpseSerial);
 			break;
 		}
+		
+		if(Orion.Now() - timer < lootDelay){
+			Orion.Wait(100);
+			continue;
+		}
+		
+		timer = Orion.Now();
 
 		var item = Orion.FindObject(lootList[0]);
-		Orion.AddObject('lootItem', item.Serial());
+		var splitName = Orion.RequestName(corpseSerial, 1500)
 
+		splitName =  splitName.split(' ').slice(3).join(' ');
 
-		var splitName = ''; // body.Name().split('The remainings of').pop();
-
-		Orion.Print('60', item.Count() + ' ' + Orion.RequestName(item.Serial(), 1000) + ' from ' + body.Name() + splitName);
+		Orion.Print('60', item.Count() + ' ' +Orion.RequestName(lootList[0], 1500)  + ' from ' + splitName);
 		Orion.MoveItem(lootList[0], 0, 'lootpack');
-		Orion.Wait(1600);
-
-		if (false) {
-			Orion.Print('60', '1: ' + item.Serial());
-			Orion.Print('60', '2: ' + item[0]);
-			Orion.Print('60', '3: ' + Orion.RequestName(item, 1000));
-			Orion.Print('60', '5: ' + item.IsCorpse());
-			Orion.Print('60', '6: ' + item.Name());
-			Orion.Print('60', '7: ' + item.Ignored());
-			Orion.Print('60', '8: ' + item.Properties());
-			Orion.Print('60', '9: ' + item.Dead());
-		}
-
 	}
 }
 function Skining() {
@@ -622,11 +626,17 @@ function Skining() {
 }
 
 
-function LootLoadingLag(dummy) {
+function LootLoadingLag(bodySerial) {
+	
 	var timer = Orion.Now();
 
-	while (!Orion.FindType('-1', '-1', 'corpse').length && Orion.Now() < timer + 1000)
-		Orion.Wait(10);
+	while (Orion.Now() - timer < 400 ){	
+		if(Orion.FindType('-1', '-1', bodySerial).length > 0 )
+			break;
+				
+		Orion.Wait(100);
+	}
+		
 }
 
 // ##############################################################
@@ -739,17 +749,18 @@ function ColectFeno() {
 
 function AntiPK() {
 
-	var delay = 100;
+	var delay = 5;
 	var range = 23;
 
 
 
-	while (true) {
+	while (Orion.Connected()) {
 		Orion.Wait(delay);
 
 		//IGNORE COMMERCE
 		if (Player.X() > 2325 && Player.X() < 2357){
 			if (Player.Y() < 553 && Player.Y() > 517){
+				Orion.Exec('CapturePksSerial', true);
 				continue;
 			}
 		}
@@ -757,6 +768,7 @@ function AntiPK() {
 		//IGNORE HELP ROOM
 		if (Player.X() > 5447 && Player.X() < 5459){
 			if (Player.Y() < 1198 && Player.Y() > 1186){
+				Orion.Exec('CapturePksSerial', true);
 				continue;
 			}
 		}
@@ -764,10 +776,12 @@ function AntiPK() {
 		//IGNORE ARENA	
 		if (Player.X() > 6042 && Player.X() < 6074){
 			if (Player.Y() < 1235 && Player.Y() > 1191){
+				Orion.Exec('CapturePksSerial', true);
 				continue;
 			}
 		}
 
+		Orion.Terminate('CapturePksSerial');
 
 		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', range, 'murderer');
 
@@ -802,6 +816,8 @@ function CapturePksSerial() {
 	var delay = 500;
 	var found = false;
 
+	Orion.CharPrint(self, infoColor, "Capture Pks Serial");
+	
 	while (true) {
 		Orion.Wait(delay);
 		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', 25, 'murderer');
@@ -840,4 +856,24 @@ function tmp() {
 	Orion.UseType('0x0F0E');
 	Orion.WaitTargetObject(mob.Serial());
 
+}
+
+function test(){
+
+DEBUG( 'The remainings of octopus'.split(' ').slice(1).join(' ')  );
+
+
+}
+
+
+function DEBUG(msg){
+	
+	if(true)
+		Orion.Print(debugColor, msg);
+}
+
+function DEBUG2(msg){
+	
+	if(true)
+		Orion.Print(debugColor, msg);
 }
