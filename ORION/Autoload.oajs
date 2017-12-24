@@ -248,7 +248,7 @@ function Heal() {
 			} 
 		}else{
 			Orion.Print(errorColor, 'No more bandages.')
-			Orion.Wait(250);
+			Orion.Wait(5000);
 		}
 	}
 }

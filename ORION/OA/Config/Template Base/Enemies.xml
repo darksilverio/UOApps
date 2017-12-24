@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data version="0" size="26">
+<data version="0" size="29">
     <enemy id="0x00089303" name="BeGood" enabled="true"/>
     <enemy id="0x000D6982" name="Iguin" enabled="true"/>
     <enemy id="0x00024863" name="Cannabis Sativa" enabled="true"/>
@@ -26,4 +26,7 @@
     <enemy id="0x00052BC3" name="Calado" enabled="true"/>
     <enemy id="0x0010FB5E" name="SuDa" enabled="true"/>
     <enemy id="0x0002164D" name="J a c k S p a r r o W" enabled="true"/>
+    <enemy id="0x0001077A" name="wHitE sNaKe" enabled="true"/>
+    <enemy id="0x0004572D" name="Dance Of Death" enabled="true"/>
+    <enemy id="0x00002825" name="NoFX" enabled="true"/>
 </data>

@@ -6,7 +6,7 @@ var infoColor = 0x0185;
 var errorColor = 0x0020;
 var debugColor = 0x45F
 
-var mineIndex = 2;
+var mineIndex = 3;
 var mineRectangle = [
 				{ Xsmall: 2565, Xbig:2599 , Ysmall: 429 , Ybig: 479,  rune: 2, active: false }, //Minoc
 				{ Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1452, rune: 8, active: true }, //Mountain of Knowledge
@@ -16,11 +16,11 @@ var mineRectangle = [
 
 
 				    
-var miningRange = 100
+var miningRange = 70
 var miningTools = '0x0E85|0x0E86';
-var miningDelay=12000
+var miningDelay=16000
 var persist = false;
-var bankweight = 180;
+var bankweight = 300;
 var oresType='0x19B7|0x19BA|0x19B8|0x19B9|0x0F0F|0x0F10|0x0F16|0x0F15|0x0F11|0x0F26|0x0F18|0x19B7|0x0F13'
 var moveitemdelay=1500
 
@@ -28,7 +28,7 @@ var newSpotMsgs='Try mining elsewhere|There is nothing here|That is too far|You 
 var sameSpotMsgs='You put'
 var persistSpotMsgs='You loosen some rocks but fail'
 var toolUsageMsg='Where do you want to use'
-var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite|Iron'
+var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite'
 
 // DONT CHANGE THESE VARS
 var timeout=-1;
@@ -73,6 +73,10 @@ function Mining(){
 		 if(!IsInBoundaires(closestTile.x, closestTile.y) ) {
 		 		DEBUG2('Spot discarted: ' + closestTile.x + ', ' + closestTile.y  );
 				mineCoords = Remove(mineCoords, closest);
+				 if(mineCoords.length <= 0 ){
+		 			DEBUG2('All mined. Let the mine rest! >2< ');
+		 			ChangeMine();
+		 		}
 				Orion.Wait(1);
 				continue;
        	}
@@ -298,8 +302,8 @@ function ChangeMine(dummy){
 }
 function AntiPlayer() {
 
-	var delay = 1;
-	var range = 23;
+	var delay = 25;
+	var range = 25;
 
 	Orion.Ignore(self);
 
@@ -318,6 +322,7 @@ function AntiPlayer() {
 			}
 		}	
 		
+		DEBUG2('AntiPlayer in ACTION');
 		Orion.UseType('0x0F0E', '0x0001', backpack, true); //invis
 		Orion.BlockMoving(true);
 		Orion.Say('.recall 1 5');	// --> go to bank without	 delays
@@ -328,6 +333,7 @@ function AntiPlayer() {
 		Orion.Wait(6000);
  		OreToBank();
  		Orion.Wait(120000);
+ 		ChangeMine();
 		Orion.Exec('Autostart', true);
 	}
 }
