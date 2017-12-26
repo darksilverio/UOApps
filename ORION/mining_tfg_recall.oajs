@@ -6,21 +6,21 @@ var infoColor = 0x0185;
 var errorColor = 0x0020;
 var debugColor = 0x45F
 
-var mineIndex = 3;
+var mineIndex = 2;
 var mineRectangle = [
 				{ Xsmall: 2565, Xbig:2599 , Ysmall: 429 , Ybig: 479,  rune: 2, active: false }, //Minoc
 				{ Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1452, rune: 8, active: true }, //Mountain of Knowledge
 				{ Xsmall: 4805, Xbig:4817 , Ysmall: 3632 , Ybig: 3665, rune: 4, active: true },  //Monte Tresshorn - Fire Island
-				{ Xsmall: 987, Xbig:1012 , Ysmall: 1574 , Ybig: 1599, rune: 9, active: true } //Enchanted Mine
+				{ Xsmall: 987, Xbig:1012 , Ysmall: 1574 , Ybig: 1597, rune: 9, active: true } //Enchanted Mine
 					 ];  
 
 
 				    
-var miningRange = 70
+var miningRange = 100
 var miningTools = '0x0E85|0x0E86';
 var miningDelay=16000
 var persist = false;
-var bankweight = 300;
+var bankweight = 380;
 var oresType='0x19B7|0x19BA|0x19B8|0x19B9|0x0F0F|0x0F10|0x0F16|0x0F15|0x0F11|0x0F26|0x0F18|0x19B7|0x0F13'
 var moveitemdelay=1500
 
@@ -28,7 +28,7 @@ var newSpotMsgs='Try mining elsewhere|There is nothing here|That is too far|You 
 var sameSpotMsgs='You put'
 var persistSpotMsgs='You loosen some rocks but fail'
 var toolUsageMsg='Where do you want to use'
-var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite'
+var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite|Iron'
 
 // DONT CHANGE THESE VARS
 var timeout=-1;
@@ -57,7 +57,7 @@ function Mining(){
 	{
 		DEBUG('Main Loop');
 		
-		 if( ! IsInBoundaires(Player.X(), Player.Y())  ){
+		 if( ! IsInBoundaires(Player.X(), Player.Y(), 2) ){
 			DEBUG('Player NOT IsInBoundaires ');
 		 	BankToMine();
 		 	mineCoords = FindMinableSpots(miningRange);
@@ -82,28 +82,30 @@ function Mining(){
        	}
        
 		PathFinder(closestTile.x, closestTile.y);
-		
+
 		Orion.CancelTarget();
     		Orion.ClearJournal();
      		  
      		timeout = Orion.Now();
-     		
+
      		Orion.Print(infoColor, ' ');
      		Orion.Print(infoColor, ' '); 
      		
+     		//fish stakes (yes, very lazy and arbitrary, but okay for an async function call)
+     		Orion.UseType('0x097B');
 		Dig(closestTile.x, closestTile.y);
 		
 		while( ( Orion.Now() - timeout ) < miningDelay ){    
 		 	
      			if( Orion.InJournal(newSpotMsgs) || Orion.InJournal(garbageOreMsg) )
      			{	
-     				DEBUG2('Garbage Ore/New spot (' +  (  Orion.Now() - timeout ) + ')' );
+     				DEBUG2('Garbage Ore/New spot (' +  (  Orion.Now() - timeout ) + 'ms)' );
 				mineCoords = Remove(mineCoords, closest);
 				break;
 			}
 			if( Orion.InJournal(persistSpotMsgs) )
 			{
-				DEBUG2('Persisting... (' +  (  Orion.Now() - timeout ) + ')' );
+				DEBUG2('Persisting... (' +  (  Orion.Now() - timeout ) + 'ms)' );
 				if(!persist)
 					mineCoords = Remove(mineCoords, closest);
 					
@@ -111,7 +113,7 @@ function Mining(){
 			}
 
 			if( Orion.InJournal(sameSpotMsgs) ){
-				DEBUG2('Good Spot (' +  (  Orion.Now() - timeout ) + ')');
+				DEBUG2('Good Spot (' +  (  Orion.Now() - timeout ) + 'ms)');
 				break;
 			}
 				
@@ -192,7 +194,8 @@ function GetClosest(minesArr)
     
         var dq = dx + dy;
         
-        if (dq < dsq)
+       			 //cant mine under yourself
+        if (dq < dsq && dq != 0)
         {
             dsq = dq;
             closest = i;
@@ -228,13 +231,17 @@ function PathFinder(x, y)
 	Orion.OptionAlwaysRun(false);
 }
 
-function IsInBoundaires(x, y){
+function IsInBoundaires(x, y, precision){
+	
+	if(!precision)
+		precision = 0;
 
-	DEBUG('P: ' + x + ', ' + y);
+
+	DEBUG('P: ' + x + ', ' + y + ' - ' + precision);
 	DEBUG('R: ' + mineRectangle[mineIndex].Xsmall + ', ' + mineRectangle[mineIndex].Xbig  + ', ' + mineRectangle[mineIndex].Ysmall + ', ' +  mineRectangle[mineIndex].Ybig );
 
-	 if( x >= mineRectangle[mineIndex].Xsmall && x <= mineRectangle[mineIndex].Xbig &&
-	     y >= mineRectangle[mineIndex].Ysmall  && y <= mineRectangle[mineIndex].Ybig )
+	 if( x >= mineRectangle[mineIndex].Xsmall - precision  && x <= mineRectangle[mineIndex].Xbig + precision &&
+	     y >= mineRectangle[mineIndex].Ysmall - precision  && y <= mineRectangle[mineIndex].Ybig + precision )
 	{
 		return true; //in side rectangle 
 	}
