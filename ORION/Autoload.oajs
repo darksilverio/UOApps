@@ -235,14 +235,13 @@ function Heal() {
 				if(rHand != null)
 	       			Orion.UseObject(rHand.Serial());
 	       		
+	       		Orion.WaitForTarget();
 	       		Orion.CancelTarget();
 			
-
 				timer = Orion.Now() + 6000;
 				while (!Orion.InJournal(Msg) || Orion.Now() < timer) {
-					Orion.Wait(100);
+					Orion.Wait(250);
 				}
-				
 			}else{
 				Orion.Wait(100);
 			} 
@@ -262,11 +261,12 @@ function Meditation() {
 
 function ParalyzeFree() {
 	while (!Player.Dead()) {
-		if (Player.Paralyzed()) {
-			Orion.Say("droga de pf");
+		if (Player.Frozen() || Player.Paralyzed() ) {
+			DEBUG2('You are Paralyzed');
 		} else {
-			Orion.Wait(100);
+			//DEBUG2('NOT pa');
 		}
+		Orion.Wait(500);
 	}
 }
 
@@ -530,7 +530,7 @@ function FastLootRPGLoop() {
 }
 
 function FastLoot(listName) {
-	var bodies = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC|0x09AA', '-1', ground, 'fast', '2');
+	var bodies = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC', '-1', ground, 'fast', 3);
 
 	if (bodies.length) {
 
