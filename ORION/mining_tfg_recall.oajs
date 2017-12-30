@@ -6,14 +6,17 @@ var infoColor = 0x0185;
 var errorColor = 0x0020;
 var debugColor = 0x45F
 
-var mineIndex = 4;
+var mineIndex = 2;
 var mineRectangle = [
 				{ Xsmall: 2565, Xbig:2599 , Ysmall: 429 , Ybig: 479,  rune: 2, active: false }, //Minoc
-				{ Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1452, rune: 8, active: true }, //Mountain of Knowledge
-				{ Xsmall: 4805, Xbig:4817 , Ysmall: 3632 , Ybig: 3665, rune: 4, active: true },  //Monte Tresshorn - Fire Island
-				{ Xsmall: 987, Xbig:1012 , Ysmall: 1574 , Ybig: 1597, rune: 9, active: true }, //Enchanted Mine
+				{ Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1452, rune: 8, active: false }, //Mountain of Knowledge
+				{ Xsmall: 2430, Xbig:2447 , Ysmall: 867 , Ybig: 885, rune: 7, active: true }, //Haunted Montain
+				{ Xsmall: 1360, Xbig:1388 , Ysmall: 2705 , Ybig: 2724, rune: 4, active: true },  //Monte Tresshorn - Fire Island
+				{ Xsmall: 1253, Xbig:1278 , Ysmall: 1211 , Ybig: 1234, rune: 13, active: true }, //Golden Mine
+				{ Xsmall: 987, Xbig:1012 , Ysmall: 1574 , Ybig: 1597, rune: 9, active: false }, //Enchanted Mine
 				{ Xsmall: 1414, Xbig:1435 , Ysmall: 2878 , Ybig: 2892, rune: 12, active: true }, //Mount of Darkness
-				{ Xsmall: 2315, Xbig:2337 , Ysmall: 813 , Ybig: 825, rune: 11, active: true } //Valley of Light
+				{ Xsmall: 2315, Xbig:2337 , Ysmall: 813 , Ybig: 825, rune: 11, active: true }, //Valley of Light
+				{ Xsmall: 2430, Xbig:2447 , Ysmall: 867 , Ybig: 885, rune: 14, active: true } //Covetuos Mine
 				
 					 ];  
 
@@ -336,6 +339,7 @@ function AntiPlayer() {
 		Orion.UseType('0x0F0E', '0x0001', backpack, true); //invis
 		Orion.BlockMoving(true);
 		Orion.Say('.recall 1 5');	// --> go to bank without	 delays
+		Orion.Screenshot();
 		Orion.Terminate('Mining');
 		Orion.WarMode(false);
 		Orion.Wait(5000);
