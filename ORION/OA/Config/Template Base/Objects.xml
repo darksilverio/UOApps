@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data version="0" size="9" dressbag="0x40036EC8">
-    <object name="corpse" id="0x400B36F4"/>
+<data version="0" size="6" dressbag="0x40036EC8">
     <object name="lootpack" id="0x40036EC8"/>
-    <object name="lootItem" id="0x400B36F7"/>
-    <object name="emptycontainer" id="0x400FDC60"/>
-    <object name="receiver" id="0x40036EC8"/>
-    <object name="harpTame" id="0x00036ECB"/>
-    <object name="follow" id="0x000BEC1F"/>
-    <object name="model" id="0x400F1497"/>
-    <object name="miningBox" id="0x400F88D5"/>
+    <object name="emptycontainer" id="0x40098016"/>
+    <object name="receiver" id="0x00036ECB"/>
+    <object name="model" id="0x40030170"/>
+    <object name="follow" id="0x001064F2"/>
+    <object name="animalTame" id="0x00142FC3"/>
 </data>

@@ -31,6 +31,7 @@ function Autostart() {
 
 	Orion.Print(infoColor, 'BG Macro: AntiPK');
 	Orion.Exec('AntiPK', true);
+	
 }
 
 //show name of creatures on screen
@@ -578,7 +579,6 @@ function Loot(listName, corpseSerial) {
 		var item = Orion.FindObject(lootList[0]);
 
 		Orion.Print('60', item.Count() + ' ' +Orion.RequestName(lootList[0], 1500)  + ' from ' + splitName + ' (' + (Orion.Now() - timer) + 'ms)' );
-		//Orion.Print('60', ' (' + (Orion.Now() - timer) + 'ms)' );
 		Orion.MoveItem(lootList[0], 0, 'lootpack');
 		
 		timer = Orion.Now();
@@ -609,7 +609,7 @@ function LootLoadingLag(bodySerial) {
 	
 	var timer = Orion.Now();
 
-	while (Orion.Now() - timer < 600 ){	
+	while (Orion.Now() - timer < 800 ){	
 		if(Orion.FindType('-1', '-1', bodySerial).length > 0 )
 			break;
 				
@@ -837,14 +837,6 @@ function tmp() {
 
 }
 
-function test(){
-
-DEBUG( 'The remainings of octopus'.split(' ').slice(1).join(' ')  );
-
-
-}
-
-
 function DEBUG(msg){
 	
 	if(true)
@@ -855,4 +847,24 @@ function DEBUG2(msg){
 	
 	if(true)
 		Orion.Print(debugColor, msg);
+}
+
+
+function test(){
+
+
+	Orion.Ignore(self);
+	while(true){
+	
+	//Orion.Wait(1000);
+
+		
+		var j = Orion.WaitJournal('a|e|i|o|u',  Orion.Now()-5000, Orion.Now() + 10000 , -1 ,-1, -1);
+		if(j)
+		Orion.Print(0xff, "---" + j.Text());
+	Orion.Wait(200);
+
+
+}
+
 }

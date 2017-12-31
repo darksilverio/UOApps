@@ -22,6 +22,9 @@
         <item graphic="0x175D" color="0xFFFF" comment="Cloth"/>
         <item graphic="0x14EF" color="0xFFFF" comment="Deeds"/>
         <item graphic="0x1BD1" color="0x0000" comment="feathers"/>
+        <item graphic="0x0F45" color="0x0231" comment="Magic Silver Executioner's Axe"/>
+        <item graphic="0x1BC4" color="0x0000" comment="Order Shield"/>
+        <item graphic="0x0F87" color="0x0000" comment="Eyes of Newt"/>
     </findlist>
     <findlist name="myBows">
         <item graphic="0x13B1" color="0xFFFF" comment="Bow"/>
@@ -38,5 +41,8 @@
         <item graphic="0x13FE" color="0xFFFF" comment="Katana"/>
         <item graphic="0x1400" color="0xFFFF" comment="Kryss"/>
         <item graphic="0x13B9" color="0xFFFF" comment="Viking Sword"/>
+        <item graphic="0x1406" color="0xFFFF" comment="War Mace"/>
+        <item graphic="0x0F62" color="0xFFFF" comment="Spear"/>
+        <item graphic="0x13AF" color="0xFFFF" comment="War Axe"/>
     </findlist>
 </data>
