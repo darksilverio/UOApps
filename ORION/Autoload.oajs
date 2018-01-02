@@ -3,7 +3,7 @@ var infoColor = 0x0185;
 var errorColor = 0x028;
 var debugColor = 0x45F
 
-var lootDelay = 1800;
+var lootDelay = 250;
 
 // OBJECTS AND LISTS
 //list myBows = EquipBow()
@@ -31,6 +31,11 @@ function Autostart() {
 
 	Orion.Print(infoColor, 'BG Macro: AntiPK');
 	Orion.Exec('AntiPK', true);
+	
+	Orion.Print(infoColor, 'BG Macro: HideBlood');
+	Orion.Exec('HideBlood', true);
+	
+	
 	
 }
 
@@ -531,16 +536,14 @@ function FastLootRPGLoop() {
 }
 
 function FastLoot(listName) {
-	var bodies = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC', '-1', ground, 'fast', 3);
+	var bodies = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC|0x0E76', '-1', ground, 'fast', 2);
 
 	if (bodies.length) {
-
-
-
+		var t = Orion.Now();
 		Orion.UseObject(bodies[0]);
 		LootLoadingLag(bodies[0]);
 		Loot(listName, bodies[0]);
-
+		DEBUG((Orion.Now() - t) + " ms ::")
 	}
 }
 
@@ -569,16 +572,15 @@ function Loot(listName, corpseSerial) {
 			break;
 		}
 		
-		if(Orion.Now() - timer < lootDelay && !firstLoot){
-			Orion.Wait(10);
+		if(Orion.Now() - timer < 100 && !firstLoot){
+			Orion.Wait(20);
 			continue;
 		}
 		
-		
-
+		Orion.Wait(1);
 		var item = Orion.FindObject(lootList[0]);
 
-		Orion.Print('60', item.Count() + ' ' +Orion.RequestName(lootList[0], 1500)  + ' from ' + splitName + ' (' + (Orion.Now() - timer) + 'ms)' );
+		Orion.Print('60', item.Count() + ' ' +Orion.RequestName(lootList[0], 1500)  + ' from ' + splitName);
 		Orion.MoveItem(lootList[0], 0, 'lootpack');
 		
 		timer = Orion.Now();
@@ -644,23 +646,23 @@ function SuperFeno() {
 	mob = Orion.FindObject(mob[0]);
 	Orion.CharPrint(self, infoColor, "Locking: " + mob.Name());
 
-	Orion.Drop(feno[0], 1, mob.X() - 1, mob.Y(), mob.Z());
+	Orion.Drop(feno[0], 1, mob.X() - 1, mob.Y(), -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[3], 1, mob.X(), mob.Y() - 1, mob.Z());
+	Orion.Drop(feno[3], 1, mob.X(), mob.Y() - 1,  -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[1], 1, mob.X() + 1, mob.Y(), mob.Z());
+	Orion.Drop(feno[1], 1, mob.X() + 1, mob.Y(),  -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[2], 1, mob.X(), mob.Y() + 1, mob.Z());
+	Orion.Drop(feno[2], 1, mob.X(), mob.Y() + 1, -1);
 
 	Orion.Wait(delay);
 
-	Orion.Drop(feno[4], 1, Player.X() - 1, Player.Y(), Player.Z());
+	Orion.Drop(feno[4], 1, Player.X() - 1, Player.Y(), -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[5], 1, Player.X() + 1, Player.Y(), Player.Z());
+	Orion.Drop(feno[5], 1, Player.X() + 1, Player.Y(), -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[6], 1, Player.X(), Player.Y() - 1, Player.Z());
+	Orion.Drop(feno[6], 1, Player.X(), Player.Y() - 1, -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[7], 1, Player.X(), Player.Y() + 1, Player.Z());
+	Orion.Drop(feno[7], 1, Player.X(), Player.Y() + 1, -1);
 }
 
 function Corridor() {
@@ -676,22 +678,22 @@ function Corridor() {
 
 	Orion.CharPrint(self, infoColor, "Corridor Vertical");
 
-	Orion.Drop(feno[1], 1, Player.X() + 1, Player.Y() + 1, Player.Z());
+	Orion.Drop(feno[1], 1, Player.X() + 1, Player.Y() + 1,  -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[2], 1, Player.X() + 1, Player.Y(), Player.Z());
+	Orion.Drop(feno[2], 1, Player.X() + 1, Player.Y(),  -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[3], 1, Player.X() + 1, Player.Y() - 1, Player.Z());
+	Orion.Drop(feno[3], 1, Player.X() + 1, Player.Y() - 1,  -1);
 	Orion.Wait(delay);
 
-	Orion.Drop(feno[4], 1, Player.X() - 1, Player.Y() + 1, Player.Z());
+	Orion.Drop(feno[4], 1, Player.X() - 1, Player.Y() + 1,  -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[5], 1, Player.X() - 1, Player.Y(), Player.Z());
+	Orion.Drop(feno[5], 1, Player.X() - 1, Player.Y(), -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[6], 1, Player.X() - 1, Player.Y() - 1, Player.Z());
+	Orion.Drop(feno[6], 1, Player.X() - 1, Player.Y() - 1,  -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[7], 1, Player.X(), Player.Y() + 1, Player.Z());
+	Orion.Drop(feno[7], 1, Player.X(), Player.Y() + 1,  -1);
 	Orion.Wait(delay);
-	Orion.Drop(feno[8], 1, Player.X(), Player.Y() - 1, Player.Z());
+	Orion.Drop(feno[8], 1, Player.X(), Player.Y() - 1,  -1);
 
 }
 
@@ -822,19 +824,85 @@ function CapturePksSerial() {
 	}
 }
 
+function HideBlood(){
+
+	var blood;
+
+Orion.Hide(0x4005BB53);
+
+	while(!Player.Dead()){
+	
+		blood = Orion.FindType('0x122C|0x122B|0x122F|0x122E|0x122D|0x122A|0x1645', '-1', ground, 12);
+		
+		for(var i=0; i < blood.length; i++)
+			Orion.Hide(blood[i]);
+			
+		Orion.Wait(150);
+	}
+}
+//=====================================================
+//=============== CRAFTS ================================
+//=====================================================
+function MakeBagsOfRegs(){
+
+	Orion.Print(infoColor, 'If you have a Dye tub in you bag this macro will paint de bag of reagents for you.');
+	Orion.Print(infoColor, 'Container with bags');
+	Orion.AddObject('cbags');
+	
+	while (Orion.HaveTarget())
+		Orion.Wait(50);
+	
+	Orion.Print(infoColor, 'Container with reagents');
+	Orion.AddObject('cregs');
+	
+	while (Orion.HaveTarget())
+		Orion.Wait(50);
+		
+	Orion.Print(infoColor, 'Container to put the bag with reagents');
+	Orion.AddObject('cTo');
+	
+	while (Orion.HaveTarget())
+		Orion.Wait(50);
+	
+	var bag = Orion.FindType('0x0E76', '-1', 'cbags','first', 3);
+	
+	
+	
+	Orion.MoveItem(bag[0], 1, backpack, 100,100,-1);
+	Orion.UseObject(bag[0]);
+	
+	Orion.Wait(800);
+	
+	var regs =  Orion.FindType('0x0F7A|0x0F85|0x0F8D|0x0F84|0x0F7B|0x0F8C|0x0F86|0x0F88', '-1', 'cregs', 3);
+	
+	for(var i = 0; i < regs.length; i++){
+	
+		Orion.MoveItem(regs[i], 200,bag[0], 100,100,-1);
+		Orion.Wait(600);
+	}
+	
+	var dye =  Orion.FindType('0x0FAB', '-1',backpack);
+	if(dye){
+		Orion.UseObject(dye[0]);
+		Orion.WaitForTarget();
+		Orion.TargetObject(bag[0])
+	}
+	
+	Orion.MoveItem(bag[0], 200,'cTo');
+	
+}
+
 //buy and shiirink animals
-function tmp() {
+function ShrinkAnimals() {
 
-	//buy and shiirink animals
-	Orion.CreateClientMacro('Say', 'buy').Play(false, 1000);
+	var mob = Orion.FindType('-1', '-1', ground, 'mobile', '3', 'gray');
 
-	var mob = Orion.FindType('-1', '-1', ground, 'mobile|near|fast', '2', 'gray|red');
-
-	mob = Orion.FindObject(mob[0]);
-
-	Orion.UseType('0x0F0E');
-	Orion.WaitTargetObject(mob.Serial());
-
+	for(var i = 0; i < mob.length; i++){
+	
+		Orion.UseType('0x0F0E'); //use shrink
+		Orion.WaitTargetObject(mob[i]);
+		Orion.Wait(600);
+	}
 }
 
 function DEBUG(msg){

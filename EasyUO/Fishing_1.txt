@@ -35,10 +35,10 @@ Set %ERRO1 you_can't
 Set %ERRO2 close_to_yourself
 Set %ERRO3 voce_nao_tem_linha_de_visao
 Set %ERRO4 o_alvo_esta_muito_distante
-Set %ERRO5 nao_ha_peixes_aqui
+Set %ERRO5 You_fish_a_while,_but_fail_to_catch_anything.
 Set %ERRO6 too_far_away
 Set %ERRO7 tente_pescar_na_agua
-Set %FALHA1 Voce_nao_pescou_nada_de_util
+Set %FALHA1 There_are_no_fish_here.
 ;========== Variáveis que NÃO DEVEM ser modificadas ==========
 Set %PeixeNormal 0
 Set %PeixeHighPeculiar 0
@@ -381,13 +381,13 @@ if %TempoGuardar <= #Scnt
 GoSub GuardarNovo
 Set %TempoGuardar #Scnt + 2
 }
-if voce_pescou in #JOURNAL
+if You_pull_out in #JOURNAL
 {
-if voce_pescou_um_fish in #JOURNAL
+if a_fish in #JOURNAL
 {
 Set %PeixeNormal %PeixeNormal + 1
 }
-if Truly_Rare_Fish in #JOURNAL
+if Heavy_Fish in #JOURNAL
 {
 Set %PeixeTrulyRare %PeixeTrulyRare + 1
 }
@@ -403,7 +403,7 @@ if Wondrous_Fish in #JOURNAL
 {
 Set %PeixeWondrous %PeixeWondrous + 1
 }
-if Tattered_Treasure_Map in #JOURNAL
+if Treasure_Map in #JOURNAL
 {
 Set %Mapas %Mapas + 1
 }
