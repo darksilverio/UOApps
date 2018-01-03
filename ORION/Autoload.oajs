@@ -1,7 +1,15 @@
 // GLOBAL VARIABLES
 var infoColor = 0x0185;
 var errorColor = 0x028;
-var debugColor = 0x45F
+var debugColor = 0x45F;
+
+var stealthSteps = 0;
+var AntiPKIgnoreAreas=[
+					{ Xsmall: 2325, Xbig:2357 , Ysmall: 517 , Ybig: 553, active: true },     //commerce
+					{ Xsmall: 5447, Xbig:5459 , Ysmall: 1186 , Ybig: 1198, active: true }, //helproom
+					{ Xsmall: 6042, Xbig:6074 , Ysmall: 1191 , Ybig: 1235, active: true }, //arenas 1x1
+					{ Xsmall: 1893, Xbig:1926 , Ysmall: 2112 , Ybig: 2126, active: true }  //tween tower
+				];
 
 // OBJECTS AND LISTS
 //list myBows = EquipBow()
@@ -55,6 +63,24 @@ function SetViewRange(){
 	Orion.Print(infoColor, 'View Range set to: ' + Orion.ClientViewRange() );	
 }
 
+function HideBlood(){
+
+	var blood;
+
+	while(!Player.Dead()){
+	
+		blood = Orion.FindType('0x122C|0x122B|0x122F|0x122E|0x122D|0x122A|0x1645', '-1', ground, 12);
+		
+		for(var i=0; i < blood.length; i++)
+			Orion.Hide(blood[i]);
+			
+		Orion.Wait(150);
+	}
+}
+
+//================================================
+//============= PVP PVM ============================
+//================================================
 function ___PVP_PVM___(){}
 
 
@@ -736,46 +762,27 @@ function ColectFeno() {
 	}
 }
 
+
 function AntiPK() {
 
 	var delay = 5;
 	var range = 25;
-
-
-
+	var isInIgnoreArea;
+	
 	while (Orion.Connected()) {
 		Orion.Wait(delay);
-
-		//IGNORE COMMERCE
-		if (Player.X() > 2325 && Player.X() < 2357){
-			if (Player.Y() < 553 && Player.Y() > 517){
-				Orion.Exec('CapturePksSerial', true);
-				continue;
-			}
-		}
-
-		//IGNORE HELP ROOM
-		if (Player.X() > 5447 && Player.X() < 5459){
-			if (Player.Y() < 1198 && Player.Y() > 1186){
-				Orion.Exec('CapturePksSerial', true);
-				continue;
-			}
-		}
-				
-		//IGNORE ARENA	
-		if (Player.X() > 6042 && Player.X() < 6074){
-			if (Player.Y() < 1235 && Player.Y() > 1191){
-				Orion.Exec('CapturePksSerial', true);
-				continue;
+		isInIgnoreArea = false;
+	
+		for(var i=0; i < AntiPKIgnoreAreas.length; i++){
+			if(IsInBoundaries(Player.X(), Player.Y(), 0, AntiPKIgnoreAreas[i]) ){
+				isInIgnoreArea = true;
+				break;
 			}
 		}
 		
-		//IGNORE HOUSES AREA
-		if (Player.X() > 1892 && Player.X() < 1927){
-			if (Player.Y() < 2127 && Player.Y() > 2112){
-				Orion.Exec('CapturePksSerial', true);
-				continue;
-			}
+		if(isInIgnoreArea){
+			Orion.Exec('CapturePksSerial', true);
+			continue;
 		}
 
 		Orion.Terminate('CapturePksSerial');
@@ -841,22 +848,22 @@ function CapturePksSerial() {
 	}
 }
 
-function HideBlood(){
 
-	var blood;
-
-Orion.Hide(0x4005BB53);
-
-	while(!Player.Dead()){
+function IsInBoundaries(x, y, precision, rect){
 	
-		blood = Orion.FindType('0x122C|0x122B|0x122F|0x122E|0x122D|0x122A|0x1645', '-1', ground, 12);
-		
-		for(var i=0; i < blood.length; i++)
-			Orion.Hide(blood[i]);
-			
-		Orion.Wait(150);
+	//DEBUG('P: ' + x + ', ' + y + ' - ' + precision);
+	//DEBUG('R: ' + rect.Xsmall + ', ' + rect.Xbig  + ', ' + rect.Ysmall + ', ' +  rect.Ybig );
+
+	 if( x >= rect.Xsmall - precision  && x <= rect.Xbig + precision &&
+	     y >= rect.Ysmall - precision  && y <= rect.Ybig + precision )
+	{
+		return true; //in side rectangle 
 	}
+	
+	return false; //out side rectangle  	
 }
+
+
 //=====================================================
 //=============== CRAFTS ================================
 //=====================================================
