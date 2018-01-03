@@ -3,14 +3,15 @@ var infoColor = 0x0185;
 var errorColor = 0x028;
 var debugColor = 0x45F
 
-var lootDelay = 1800;
-
 // OBJECTS AND LISTS
 //list myBows = EquipBow()
 //list myWeapons = EquipWeaponAndShield()
 //list myShields = EquipWeaponAndShield()
 //list myFoods = SkillTaming() --- not implemented yet
 //list autoLoot = FastLootRPGLoop
+
+function ___EXP_ENHAN___(){}
+
 function Autostart() {
 	Orion.Print(infoColor, '(Re)Starting BG macros');
 	Orion.Terminate('all', 'Autostart');
@@ -35,11 +36,10 @@ function Autostart() {
 	Orion.Print(infoColor, 'BG Macro: HideBlood');
 	Orion.Exec('HideBlood', true);
 	
-	SetViewRange();
-	
-	
-	
+	Orion.Exec('SetViewRange', true);
 }
+
+
 
 //show name of creatures on screen
 function AllNames() {
@@ -50,10 +50,12 @@ function AllNames() {
 }
 
 function SetViewRange(){	
-	Orion.ClientViewRange(20);
-	Orion.Wait(250);
+	Orion.ClientViewRange(21);
+	Orion.Wait(500);
 	Orion.Print(infoColor, 'View Range set to: ' + Orion.ClientViewRange() );	
 }
+
+function ___PVP_PVM___(){}
 
 
 function AttackNearestHostile() {
@@ -137,9 +139,7 @@ function SkillTrackingPlayer() {
 	Orion.WarMode(false);
 	
 	Orion.UseSkill('Tracking');
-	Orion.Wait(500);
-	var menu = Orion.GetMenu(0);
-	menu.Select(3);
+	Orion.WaitMenu('Tracking', 3);
 }
 
 function SkillTaming() {
@@ -739,7 +739,7 @@ function ColectFeno() {
 function AntiPK() {
 
 	var delay = 5;
-	var range = 23;
+	var range = 25;
 
 
 
@@ -765,6 +765,14 @@ function AntiPK() {
 		//IGNORE ARENA	
 		if (Player.X() > 6042 && Player.X() < 6074){
 			if (Player.Y() < 1235 && Player.Y() > 1191){
+				Orion.Exec('CapturePksSerial', true);
+				continue;
+			}
+		}
+		
+		//IGNORE HOUSES AREA
+		if (Player.X() > 1892 && Player.X() < 1927){
+			if (Player.Y() < 2127 && Player.Y() > 2112){
 				Orion.Exec('CapturePksSerial', true);
 				continue;
 			}
@@ -916,6 +924,83 @@ function ShrinkAnimals() {
 	}
 }
 
+function LeatherClothes(){
+
+	Orion.Print(infoColor, 'Instructions: Put the leather and sewing kit in your bag and let it run.')
+	
+	var leather = Orion.FindType('0x1078', '-1', backpack);
+	
+	if(leather.length)
+		leather = Orion.FindObject(leather[0]);
+	else
+		return;
+	
+	if(leather.Count() % 36 != 0){
+		Orion.Print(errorColor, 'Put leather amount multiple of 36 (36, 72, 108, 144, 180)')
+		return;
+	}
+	
+	while(leather.Count() % 36 == 0 && (leather.Count()) ){
+	
+		for(var i = 1; i <= 5; i ++){
+	
+			Orion.UseType(0x0F9D);
+			Orion.WaitTargetType(0x1078);
+		
+			Orion.Wait(1000);
+			var menu = Orion.GetMenu(0);
+			Orion.Wait(1000);
+			menu.Select(i);
+		
+			Orion.ClearJournal();
+			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 10000, -1 ,-1, -1);
+		}
+	}
+}
+
+
+//=================================================
+//============  MACROS  ==============================
+//=================================================
+function ___SkillMacros___(){}
+
+function HidingAndStealth(){
+
+	var timer;
+	while(!Player.Dead()){
+	
+		Orion.UseSkill('Hiding');
+		Orion.ClearJournal();
+		
+		timer = Orion.Now();
+		while(!Player.Hidden() && Orion.Now() - timer < 6000 ){
+		
+			if(Orion.InJournal('seem to hide here|hidden', 'my|sys', -1, -1, Orion.Now() -1000, Orion.Now() + 1000) ){
+				DEBUG2('Hidding Delay: ' + (Orion.Now() - timer) );
+				break;
+			}
+			Orion.Wait(50)
+		}
+		
+		if(Player.Hidden()){
+		
+			Orion.UseSkill('Stealth');
+			Orion.ClearJournal();
+			DEBUG2('Waiting Stealth');
+			Orion.WaitJournal('not hidden|quietly', Orion.Now(), Orion.Now() + 10000, 'my|sys',-1,-1);
+			DEBUG2('Stealthed...');
+			
+			Orion.Say('Costela de Panamino, HUMM. Nao ha coisa melhor!');
+		
+			while(Player.Hidden()){
+			Orion.Wait(50);
+			}
+		}
+	}
+}
+
+
+
 //=================================================
 //============  DEBUG   ==============================
 //=================================================
@@ -983,4 +1068,28 @@ function PlayOneSound(){
 
 	Orion.Wait(1500);
 	Orion.Sound(107);
+}
+
+function DropZ() {
+
+	var ZAjust = -29;
+	
+	
+
+	Orion.Print(infoColor, 'Select an item to ajust height (Z axis is hard coded:' + ZAjust +')');
+	Orion.AddObject('dropable');
+	
+	while (Orion.HaveTarget())
+		Orion.Wait(50);
+
+	
+	var obj = Orion.FindObject('dropable',-1, ground, 3);
+	
+	Orion.Drop(obj.Serial(), 1, obj.X(), obj.Y(), + (Player.Z() + ZAjust) );
+	
+	Orion.Print(infoColor, 'Heigth set to: ' + obj.Z() );
+	
+	Orion.RemoveObject('dropable')
+	
+
 }

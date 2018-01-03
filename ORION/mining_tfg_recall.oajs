@@ -6,7 +6,7 @@ var infoColor = 0x0185;
 var errorColor = 0x0020;
 var debugColor = 0x45F
 
-var mineIndex = 1;
+var mineIndex = 2;
 var mineRectangle = [
 				{ Xsmall: 2565, Xbig:2599 , Ysmall: 429 , Ybig: 479,  rune: 2, active: false }, //Minoc
 				{ Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1452, rune: 8, active: true }, //Mountain of Knowledge
@@ -43,15 +43,28 @@ var timeout=-1;
 function Autostart()
 {
 	Orion.Terminate('Mining');
+	
+	Orion.Exec('SetViewRange', true);
 
 	Orion.Print(infoColor, 'MINING WILL START IN 20 SECONDS');
+
 	Orion.Wait(20000);
-	
 	Orion.Exec('Mining', true);
-	Orion.Exec('AntiPlayer', true);
 	
+	var x = Player.X();
 	
+	while(x == Player.X())
+		Orion.Wait(250);
+	
+	Orion.Exec('AntiPlayer', true);	
 }
+
+function SetViewRange(){	
+	Orion.ClientViewRange(21);
+	Orion.Wait(500);
+	Orion.Print(infoColor, 'View Range set to: ' + Orion.ClientViewRange() );	
+}
+
 
 function Mining(){
 
@@ -350,6 +363,16 @@ function AntiPlayer() {
  		ChangeMine();
 		Orion.Exec('Autostart', true);
 	}
+}
+
+function Hiding(){
+
+
+
+
+
+
+
 }
 
 function DEBUG(msg){

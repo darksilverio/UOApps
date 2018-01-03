@@ -12,4 +12,5 @@
         <shopitem graphic="0x0F7A" color="0x0000" name="Black Pearls" count="100" price="0" comment=""/>
         <shopitem graphic="0x0E85" color="0x0000" name="pickaxe" count="6" price="0" comment=""/>
     </shoplist>
+    <shoplist name="tmp"/>
 </data>

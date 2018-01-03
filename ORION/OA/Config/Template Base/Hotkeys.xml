@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data version="0" size="35">
+<data version="0" size="34">
     <hotkey onescriptrunning="true" key="119" modifiers="0" macro="ExternalCode" externalcode="Orion.Cast('Paralyze', Orion.ClientLastTarget())"/>
     <hotkey onescriptrunning="true" key="118" modifiers="0" macro="ExternalCode" externalcode="Orion.Cast('Lightning', Orion.ClientLastTarget())"/>
     <hotkey onescriptrunning="true" key="117" modifiers="0" macro="CastGreaterHeal" externalcode=""/>
@@ -10,7 +10,6 @@
     <hotkey onescriptrunning="true" key="116" modifiers="8" macro="ExternalCode" externalcode="Orion.Cast('Magic Reflection', 'self')"/>
     <hotkey onescriptrunning="true" key="86" modifiers="2" macro="EmptyContainer" externalcode=""/>
     <hotkey onescriptrunning="false" key="19" modifiers="0" macro="RunAway" externalcode="Orion.TextWindow('fuga');&#10;//Orion.Say('.recall 1,1');"/>
-    <hotkey onescriptrunning="true" key="76" modifiers="8" macro="ExternalCode" externalcode="Orion.CancelWaitTarget();&#10;Orion.Cast('Magic Arrow');&#10;Orion.WaitTargetType('0x0F02');"/>
     <hotkey onescriptrunning="true" key="70" modifiers="2" macro="Follow" externalcode="follow thing"/>
     <hotkey onescriptrunning="true" key="112" modifiers="0" macro="EquipBow" externalcode=""/>
     <hotkey onescriptrunning="true" key="113" modifiers="0" macro="EquipWeaponAndShield" externalcode=""/>

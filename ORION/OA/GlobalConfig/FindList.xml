@@ -25,6 +25,8 @@
         <item graphic="0x0F45" color="0x0231" comment="Magic Silver Executioner's Axe"/>
         <item graphic="0x1BC4" color="0x0000" comment="Order Shield"/>
         <item graphic="0x0F87" color="0x0000" comment="Eyes of Newt"/>
+        <item graphic="0x1400" color="0xFFFF" comment="Kryss"/>
+        <item graphic="0x0F36" color="0x0000" comment="sheaf of hay"/>
     </findlist>
     <findlist name="myBows">
         <item graphic="0x13B1" color="0xFFFF" comment="Bow"/>
