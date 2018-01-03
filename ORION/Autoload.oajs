@@ -3,7 +3,7 @@ var infoColor = 0x0185;
 var errorColor = 0x028;
 var debugColor = 0x45F
 
-var lootDelay = 250;
+var lootDelay = 1800;
 
 // OBJECTS AND LISTS
 //list myBows = EquipBow()
@@ -35,6 +35,8 @@ function Autostart() {
 	Orion.Print(infoColor, 'BG Macro: HideBlood');
 	Orion.Exec('HideBlood', true);
 	
+	SetViewRange();
+	
 	
 	
 }
@@ -47,6 +49,11 @@ function AllNames() {
 	macro.Play(false, 1000);
 }
 
+function SetViewRange(){	
+	Orion.ClientViewRange(20);
+	Orion.Wait(250);
+	Orion.Print(infoColor, 'View Range set to: ' + Orion.ClientViewRange() );	
+}
 
 
 function AttackNearestHostile() {
@@ -536,14 +543,21 @@ function FastLootRPGLoop() {
 }
 
 function FastLoot(listName) {
-	var bodies = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC|0x0E76', '-1', ground, 'fast', 2);
+	
+	var bodies = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC', '-1', ground, 'fast', 3);
 
 	if (bodies.length) {
+		
 		var t = Orion.Now();
+		
 		Orion.UseObject(bodies[0]);
 		LootLoadingLag(bodies[0]);
 		Loot(listName, bodies[0]);
-		DEBUG((Orion.Now() - t) + " ms ::")
+		
+		var splitName = Orion.RequestName(bodies[0], 1500)
+		splitName =  splitName.split(' ').slice(3).join(' ');
+		
+		DEBUG2('Nothing to loot on ' + splitName + ' (' + (Orion.Now() - t) + ' ms)' );
 	}
 }
 
@@ -551,40 +565,35 @@ function Loot(listName, corpseSerial) {
 
 	//GETTING PLAYER BAG
 	//TODO: MAKE PROMPT FOR BAG OR ADD TO THE OBJECT LIST AND VALIDATE BEFORE LOOP
-	var bag = '0x0E75';
-	var lootBagList = Orion.FindType(bag);
+	//var bag = '0x0E75';
+	//var lootBagList = Orion.FindType(bag);
 
-	Orion.AddObject('lootpack', Orion.GetSerial(backpack));
+	//Orion.AddObject('lootpack', Orion.GetSerial(backpack));
 
-	var timer = Orion.Now();
-	var firstLoot = true;
-	while (Orion.GetDistance(corpseSerial) <= 2) {
+	var prevItem = null;
+	while (Orion.GetDistance(corpseSerial) <= 3) {
 		
 		var lootList = Orion.FindList(listName, corpseSerial);
 		//var lootList = Orion.FindType('-1', '-1', corpseSerial, 'fast', 3);
-		
-		var splitName = Orion.RequestName(corpseSerial, 1500)
-		splitName =  splitName.split(' ').slice(3).join(' ');
-		
-		if (lootList.length == 0) {
-			DEBUG2('Nothing to loot on: ' + splitName );
-			Orion.Ignore(corpseSerial);
-			break;
-		}
-		
-		if(Orion.Now() - timer < 100 && !firstLoot){
-			Orion.Wait(20);
-			continue;
-		}
-		
-		Orion.Wait(1);
-		var item = Orion.FindObject(lootList[0]);
 
-		Orion.Print('60', item.Count() + ' ' +Orion.RequestName(lootList[0], 1500)  + ' from ' + splitName);
-		Orion.MoveItem(lootList[0], 0, 'lootpack');
+		if (lootList.length == 0) {
+			Orion.Ignore(corpseSerial);
+			return;
+		}	
 		
+		if(prevItem != null)
+			Orion.Wait(200);
+		
+
+		if(prevItem != lootList[0] ){
+			var item = Orion.FindObject(lootList[0]);
+			Orion.Print('60', item.Count() + ' ' +Orion.RequestName(lootList[0], 1500) );
+		}
+
+		Orion.MoveItem(lootList[0], 0, backpack);
 		timer = Orion.Now();
-		firstLoot = false;
+				
+		prevItem =  lootList[0];
 	}
 }
 function Skining() {
@@ -611,13 +620,12 @@ function LootLoadingLag(bodySerial) {
 	
 	var timer = Orion.Now();
 
-	while (Orion.Now() - timer < 800 ){	
+	while (Orion.Now() - timer < 550 ){	
 		if(Orion.FindType('-1', '-1', bodySerial).length > 0 )
 			break;
 				
-		Orion.Wait(100);
+		Orion.Wait(50);
 	}
-		
 }
 
 // ##############################################################
@@ -780,6 +788,7 @@ function AntiPK() {
 					Orion.UseType('0x0F0E', '0x0001', backpack, true); //invis
 					Orion.Say('.recall 1 1');
 					Orion.WarMode(false);
+					Orion.Sound(107);
 
 					var pk = Orion.FindObject(pksFound[i]);
 					Orion.CharPrint(self, 0xff, "PK[" + Orion.GetDistance((pksFound[i])) + " tiles away] " + pk.Name());
@@ -843,6 +852,8 @@ Orion.Hide(0x4005BB53);
 //=====================================================
 //=============== CRAFTS ================================
 //=====================================================
+function ___CRAFTS___(){}
+
 function MakeBagsOfRegs(){
 
 	Orion.Print(infoColor, 'If you have a Dye tub in you bag this macro will paint de bag of reagents for you.');
@@ -905,6 +916,9 @@ function ShrinkAnimals() {
 	}
 }
 
+//=================================================
+//============  DEBUG   ==============================
+//=================================================
 function DEBUG(msg){
 	
 	if(true)
@@ -918,21 +932,55 @@ function DEBUG2(msg){
 }
 
 
-function test(){
+//=================================================
+//============  TESTS   ==============================
+//=================================================
+function ___TESTS___(){}
 
+
+
+function EchoAllJournal(){
+
+	while(true){
+	
+		var j = Orion.WaitJournal('a|e|i|o|u',  Orion.Now(), Orion.Now() + 10000 , -1 ,-1, -1);
+		if(j)
+			Orion.Print(0xff, j.Text());
+		Orion.Wait(200);
+	}
+}
+
+
+function ShowAllMobs(){
 
 	Orion.Ignore(self);
 	while(true){
 	
-	//Orion.Wait(1000);
-
+		var mob = Orion.FindType(-1,-1,ground,'mobile',30)
+		if(mob.length > 0){
 		
-		var j = Orion.WaitJournal('a|e|i|o|u',  Orion.Now()-5000, Orion.Now() + 10000 , -1 ,-1, -1);
-		if(j)
-		Orion.Print(0xff, "---" + j.Text());
+			for(var i=0; i < mob.length; i++ ){
+				var mobObj = Orion.FindObject(mob[i]);
+				Orion.Print(0xff, (i+1) + '/' + mob.length + " MOB[" + Orion.GetDistance(mobObj.Serial()) + " tiles away] " + mobObj.Name());
+				Orion.CharPrint(mobObj.Serial(), errorColor, (i+1) );
+			}
+			Orion.Print(0xff, '----------`');
+		}
 	Orion.Wait(200);
-
-
+	}
 }
 
+function PlayAllSounds(){
+
+	for(var i=0; i < 0xFFFF; i++){
+ 		DEBUG2('Playing: ' + i );
+		Orion.Sound(i);
+		Orion.Wait(1500);
+	}
+}
+
+function PlayOneSound(){
+
+	Orion.Wait(1500);
+	Orion.Sound(107);
 }

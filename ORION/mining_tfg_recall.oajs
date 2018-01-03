@@ -6,10 +6,10 @@ var infoColor = 0x0185;
 var errorColor = 0x0020;
 var debugColor = 0x45F
 
-var mineIndex = 8;
+var mineIndex = 1;
 var mineRectangle = [
 				{ Xsmall: 2565, Xbig:2599 , Ysmall: 429 , Ybig: 479,  rune: 2, active: false }, //Minoc
-				{ Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1452, rune: 8, active: false }, //Mountain of Knowledge
+				{ Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1452, rune: 8, active: true }, //Mountain of Knowledge
 				{ Xsmall: 1361, Xbig:1388 , Ysmall: 2705 , Ybig: 2724, rune: 6, active: true }, //Haunted Montain
 				{ Xsmall: 4805, Xbig:4817 , Ysmall: 3632 , Ybig: 3665, rune: 4, active: true },  //Monte Tresshorn - Fire Island
 				{ Xsmall: 1253, Xbig:1278 , Ysmall: 1211 , Ybig: 1234, rune: 13, active: true }, //Golden Mine
