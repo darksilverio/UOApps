@@ -3,7 +3,6 @@ var infoColor = 0x0185;
 var errorColor = 0x028;
 var debugColor = 0x45F;
 
-var stealthSteps = 0;
 var AntiPKIgnoreAreas=[
 					{ Xsmall: 2325, Xbig:2357 , Ysmall: 517 , Ybig: 553, active: true },     //commerce
 					{ Xsmall: 5447, Xbig:5459 , Ysmall: 1186 , Ybig: 1198, active: true }, //helproom
@@ -21,7 +20,7 @@ var AntiPKIgnoreAreas=[
 function ___EXP_ENHAN___(){}
 
 function Autostart() {
-	Orion.Print(infoColor, '(Re)Starting BG macros');
+
 	Orion.Terminate('all', 'Autostart');
 
 	Orion.Wait(500);
@@ -45,9 +44,9 @@ function Autostart() {
 	Orion.Exec('HideBlood', true);
 	
 	Orion.Exec('SetViewRange', true);
+	
+	
 }
-
-
 
 //show name of creatures on screen
 function AllNames() {
@@ -254,32 +253,40 @@ function Follow() {
 }
 
 function Heal() {
-	var timer, Msg = "You put the bloody bandage|failed";
+	var Msg = "You put the bloody bandage|Voce curou|failed";
 	var lHand, rHand;
+	var timer;
+	
+	var healAt =  ( Player.MaxHits() - 15 );
 	
 	while (!Player.Dead()) {
 		if(Orion.FindType('0x0E21', '-1', backpack).length > 0){
-			if (Player.Hits() < ( Player.MaxHits() - 15 ) ) {	
+			if (Player.Hits() < healAt) {	
 				Orion.CharPrint(self, infoColor, 'Auto Heal - Low Life');
-				Orion.ClearJournal(Msg);
-			
+							
 				rHand = Orion.ObjAtLayer('RightHand', self);
 				lHand = Orion.ObjAtLayer('LeftHand', self);
 			
 				Orion.BandageSelf();
-				Orion.Wait(500);
-						
+				
+				timer = Orion.Now();
+				Orion.Wait(600);
+					
 				if(lHand != null)
 					Orion.UseObject(lHand.Serial());
-				if(rHand != null)
+				if(rHand != null){
 	       			Orion.UseObject(rHand.Serial());
-	       		
-	       		Orion.WaitForTarget();
-	       		Orion.CancelTarget();
-			
-				timer = Orion.Now() + 6000;
-				while (!Orion.InJournal(Msg) || Orion.Now() < timer) {
-					Orion.Wait(250);
+	       			Orion.WaitForTarget();
+	       			Orion.CancelTarget();
+	       		}
+				
+				Orion.ClearJournal(Msg);
+				while ( (Orion.Now() - timer) < 6500) {
+				
+					if(Orion.InJournal(Msg) || (Player.Hits() > healAt) )
+						break
+						
+					Orion.Wait(100);
 				}
 			}else{
 				Orion.Wait(100);
@@ -299,12 +306,29 @@ function Meditation() {
 }
 
 function ParalyzeFree() {
+
+	var lexplo;
+
 	while (!Player.Dead()) {
 		if (Player.Frozen() || Player.Paralyzed() ) {
+		
+			Orion.CharPrint(self, infoColor, 'Paralyze free');
+			lexplo = Orion.FindType(0x0F02, backpack);
+			
+			if(lexplo.length){
+			
+				Orion.Cast('Magic Arrow', lexplo[0]);
+				Orion.Wait(3000);
+			}
+			else{
+			
+				DEBUG2('else');
+				Orion.Cast('Dispel', self);
+				Orion.Wait(3000);
+			}
+			
 			DEBUG2('You are Paralyzed');
-		} else {
-			//DEBUG2('NOT pa');
-		}
+		} 
 		Orion.Wait(500);
 	}
 }
@@ -762,16 +786,21 @@ function ColectFeno() {
 	}
 }
 
+//======================================================
+//==================== ANTI PK ============================
+//======================================================
+function ___ANTI_PKs___(){}
 
 function AntiPK() {
 
-	var delay = 5;
+	var delay = 10;
 	var range = 25;
 	var isInIgnoreArea;
 	
 	while (Orion.Connected()) {
 		Orion.Wait(delay);
 		isInIgnoreArea = false;
+	
 	
 		for(var i=0; i < AntiPKIgnoreAreas.length; i++){
 			if(IsInBoundaries(Player.X(), Player.Y(), 0, AntiPKIgnoreAreas[i]) ){
@@ -807,12 +836,38 @@ function AntiPK() {
 
 					var pk = Orion.FindObject(pksFound[i]);
 					Orion.CharPrint(self, 0xff, "PK[" + Orion.GetDistance((pksFound[i])) + " tiles away] " + pk.Name());
-					Orion.Wait(4000);
+					Orion.Wait(1000);
 					Orion.BlockMoving(false);
 					Orion.Wait(20000);
 				}
 			}
 		}
+	}
+}
+
+
+function ActivateStealthSteps(){
+
+	Orion.Say('!');
+	
+	while(Player.Hidden())
+		Orion.Wait(50);
+	
+	Orion.UseSkill('Hiding');
+	Orion.ClearJournal();
+		
+	timer = Orion.Now();
+	while(!Player.Hidden() && Orion.Now() - timer < 4000 ){
+		Orion.Wait(50)
+	}
+	
+	if(Player.Hidden()){
+		
+		Orion.UseSkill('Stealth');
+		Orion.ClearJournal();
+		Orion.WaitJournal('not hidden|quietly', Orion.Now(), Orion.Now() + 10000, 'my|sys',-1,-1);		
+		Orion.Say('!!');
+		
 	}
 }
 
@@ -849,72 +904,66 @@ function CapturePksSerial() {
 }
 
 
-function IsInBoundaries(x, y, precision, rect){
-	
-	//DEBUG('P: ' + x + ', ' + y + ' - ' + precision);
-	//DEBUG('R: ' + rect.Xsmall + ', ' + rect.Xbig  + ', ' + rect.Ysmall + ', ' +  rect.Ybig );
-
-	 if( x >= rect.Xsmall - precision  && x <= rect.Xbig + precision &&
-	     y >= rect.Ysmall - precision  && y <= rect.Ybig + precision )
-	{
-		return true; //in side rectangle 
-	}
-	
-	return false; //out side rectangle  	
-}
-
 
 //=====================================================
 //=============== CRAFTS ================================
 //=====================================================
 function ___CRAFTS___(){}
 
-function MakeBagsOfRegs(){
+function MakeBagsOfPVP(){
 
 	Orion.Print(infoColor, 'If you have a Dye tub in you bag this macro will paint de bag of reagents for you.');
-	Orion.Print(infoColor, 'Container with bags');
+	Orion.Print(infoColor, 'Container with empty bags');
+
 	Orion.AddObject('cbags');
-	
 	while (Orion.HaveTarget())
 		Orion.Wait(50);
 	
-	Orion.Print(infoColor, 'Container with reagents');
-	Orion.AddObject('cregs');
+	Orion.Print(infoColor, 'Container with Items');
 	
+	Orion.AddObject('cregs');
 	while (Orion.HaveTarget())
 		Orion.Wait(50);
 		
-	Orion.Print(infoColor, 'Container to put the bag with reagents');
-	Orion.AddObject('cTo');
+	Orion.Print(infoColor, 'Container to put the loaded bags');
 	
+	Orion.AddObject('cTo');
 	while (Orion.HaveTarget())
 		Orion.Wait(50);
+
+	for(var j = 0; j < 10; j++){
 	
-	var bag = Orion.FindType('0x0E76', '-1', 'cbags','first', 3);
+		var bag = Orion.FindType('0x0E76', '-1', 'cbags','first', 3);
 	
+		Orion.MoveItem(bag[0], 1, backpack, 100,100,-1);
+		Orion.UseObject(bag[0]);
 	
+		Orion.Wait(600);
 	
-	Orion.MoveItem(bag[0], 1, backpack, 100,100,-1);
-	Orion.UseObject(bag[0]);
+		var regs =  Orion.FindType('0x0F7A|0x0F85|0x0F8D|0x0F84|0x0F7B|0x0F8C|0x0F86|0x0F88', '-1', 'cregs', 3);
+		var lexplo =  Orion.FindType('0x0F02', '-1', 'cregs', 3); //lesser explosion
 	
-	Orion.Wait(800);
+		for(var i = 0; i < regs.length; i++){
+			Orion.MoveItem(regs[i], 200,bag[0], 100,100,-1);
+			Orion.Wait(600);
+		}
 	
-	var regs =  Orion.FindType('0x0F7A|0x0F85|0x0F8D|0x0F84|0x0F7B|0x0F8C|0x0F86|0x0F88', '-1', 'cregs', 3);
+		for(var i = 0; i < 20; i++){
+			Orion.MoveItem(lexplo[i], 1,bag[0],  Orion.Random(80, 100) , Orion.Random(60, 90) ,-1);
+			Orion.Wait(600);
+		}
 	
-	for(var i = 0; i < regs.length; i++){
+		var dye =  Orion.FindType('0x0FAB', '-1',backpack);
+		if(dye){
+			Orion.UseObject(dye[0]);
+			Orion.WaitForTarget();
+			Orion.TargetObject(bag[0])
+			Orion.Wait(300);
+		}
 	
-		Orion.MoveItem(regs[i], 200,bag[0], 100,100,-1);
+		Orion.MoveItem(bag[0], 1,'cTo');
 		Orion.Wait(600);
 	}
-	
-	var dye =  Orion.FindType('0x0FAB', '-1',backpack);
-	if(dye){
-		Orion.UseObject(dye[0]);
-		Orion.WaitForTarget();
-		Orion.TargetObject(bag[0])
-	}
-	
-	Orion.MoveItem(bag[0], 200,'cTo');
 	
 }
 
@@ -964,6 +1013,29 @@ function LeatherClothes(){
 		}
 	}
 }
+
+
+function MakeLExplosion(){
+
+	Orion.Print(infoColor, 'Instructions: Put SS, empty bottles and mortar&pastle in your bag and let it go.')
+	
+	var ss = Orion.FindType('0x0F8C', 0, backpack);
+	
+	if(ss.length)
+		ss = Orion.FindObject(ss[0]);
+	else
+		return;
+		
+	while(ss.Count() > 0 ){
+	
+		Orion.UseType(0x0F8C);
+		Orion.WaitMenu('Alchemy menu', 0);
+
+		Orion.ClearJournal();
+		Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 10000, -1 ,-1, -1);
+	}
+}
+
 
 
 //=================================================
@@ -1021,6 +1093,19 @@ function DEBUG2(msg){
 	
 	if(true)
 		Orion.Print(debugColor, msg);
+}
+
+
+
+function IsInBoundaries(x, y, precision, rect){
+
+	 if( x >= rect.Xsmall - precision  && x <= rect.Xbig + precision &&
+	     y >= rect.Ysmall - precision  && y <= rect.Ybig + precision )
+	{
+		return true; //in side rectangle 
+	}
+	
+	return false; //out side rectangle  	
 }
 
 
