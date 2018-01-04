@@ -6,19 +6,19 @@ var infoColor = 0x0185;
 var errorColor = 0x0020;
 var debugColor = 0x45F
 
-var mineIndex = 2;
+var mineIndex = 8;
 var mineRectangle = [
-				{ Xsmall: 2565, Xbig:2599 , Ysmall: 429 , Ybig: 479,  rune: 2, active: false }, //Minoc
-				{ Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1452, rune: 8, active: true }, //Mountain of Knowledge
-				{ Xsmall: 1361, Xbig:1388 , Ysmall: 2705 , Ybig: 2724, rune: 6, active: true }, //Haunted Montain
-				{ Xsmall: 4805, Xbig:4817 , Ysmall: 3632 , Ybig: 3665, rune: 4, active: true },  //Monte Tresshorn - Fire Island
-				{ Xsmall: 1253, Xbig:1278 , Ysmall: 1211 , Ybig: 1234, rune: 13, active: true }, //Golden Mine
-				{ Xsmall: 987, Xbig:1012 , Ysmall: 1574 , Ybig: 1597, rune: 9, active: true }, //Enchanted Mine
-				{ Xsmall: 1414, Xbig:1435 , Ysmall: 2878 , Ybig: 2892, rune: 12, active: true }, //Mount of Darkness
-				{ Xsmall: 2315, Xbig:2337 , Ysmall: 813 , Ybig: 825, rune: 11, active: true }, //Valley of Light
-				{ Xsmall: 2430, Xbig:2447 , Ysmall: 867 , Ybig: 885, rune: 14, active: true } //Covetuos Mine
+			{ Xsmall: 2565, Xbig:2599 , Ysmall: 429 , Ybig: 479,  rune: 2, active: false }, //Minoc
+			{ Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1457, rune: 8, active: true }, //Mountain of Knowledge (limit 5 tiles from exit) top
+			{ Xsmall: 1361, Xbig:1388 , Ysmall: 2705 , Ybig: 2724, rune: 6, active: true }, //Haunted Montain
+			{ Xsmall: 4805, Xbig:4817 , Ysmall: 3632 , Ybig: 3665, rune: 4, active: true },  //Monte Tresshorn - Fire Island
+			{ Xsmall: 1253, Xbig:1278 , Ysmall: 1211 , Ybig: 1234, rune: 13, active: true }, //Golden Mine
+			{ Xsmall: 987, Xbig:1012 , Ysmall: 1574 , Ybig: 1597, rune: 9, active: true }, //Enchanted Mine
+			{ Xsmall: 1414, Xbig:1435 , Ysmall: 2878 , Ybig: 2892, rune: 12, active: true }, //Mount of Darkness
+			{ Xsmall: 2315, Xbig:2337 , Ysmall: 813 , Ybig: 825, rune: 11, active: true }, //Valley of Light
+			{ Xsmall: 2430, Xbig:2449 , Ysmall: 867 , Ybig: 909, rune: 14, active: true } //Covetuos Mine
 				
-					 ];  
+				 ];  
 
 
 				    
@@ -50,16 +50,19 @@ function Autostart()
 
 	Orion.Wait(20000);
 	Orion.Exec('Mining', true);
+	Orion.OptionAlwaysRun(false);
 	
+	
+	//Only Activate AntiPlayer after recall complete
 	var x = Player.X();
-	
 	while(x == Player.X())
 		Orion.Wait(250);
-	
+		
+		
 	Orion.Exec('AntiPlayer', true);	
 }
 
-function SetViewRange(){	
+function SetViewRange(dummy){	
 	Orion.ClientViewRange(21);
 	Orion.Wait(500);
 	Orion.Print(infoColor, 'View Range set to: ' + Orion.ClientViewRange() );	
@@ -110,6 +113,7 @@ function Mining(){
      		Orion.Print(infoColor, ' ');
      		Orion.Print(infoColor, ' '); 
      		
+     		HidingAndStealth();
      		//fish stakes (yes, very lazy and arbitrary, but okay for an async function call)
      		Orion.UseType('0x097B');
 		Dig(closestTile.x, closestTile.y);
@@ -218,7 +222,7 @@ function GetClosest(minesArr)
         {
             dsq = dq;
             closest = i;
-        }
+         }
     }
     DEBUG('GetClosest: ' + closest);
     return closest;
@@ -239,15 +243,10 @@ function Remove(arr, idx)
 
 function PathFinder(x, y)
 {
-	
-	Orion.OptionAlwaysRun(true);
-	
 	while(IsInBoundaires(x, y) && !Orion.WalkTo(x, y, -1, 2)){
 		Orion.Wait(250);
 		Orion.Print(31, 'Going to: ' + x + ', ' + y + ' Can walk: ' + Orion.CanWalk(Player.Direction(), x, y, -1));
 	}
-
-	Orion.OptionAlwaysRun(false);
 }
 
 function IsInBoundaires(x, y, precision){
@@ -365,14 +364,36 @@ function AntiPlayer() {
 	}
 }
 
-function Hiding(){
+function HidingAndStealth(){
 
-
-
-
-
-
-
+	var timer;
+	
+	if(Player.Hidden())
+		return true;
+	
+	Orion.UseSkill('Hiding');
+	Orion.ClearJournal();
+		
+	timer = Orion.Now();
+	while(!Player.Hidden() && Orion.Now() - timer < 6000 ){
+		
+		if(Orion.InJournal('seem to hide here|hidden', 'my|sys', -1, -1, Orion.Now() -1000, Orion.Now() + 1000) ){
+			DEBUG2('Hidding Delay: ' + (Orion.Now() - timer) );
+			break;
+		}
+		Orion.Wait(50)
+	}
+		
+	if(Player.Hidden()){
+		
+		Orion.UseSkill('Stealth');
+		Orion.ClearJournal();
+		
+		Orion.WaitJournal('not hidden|quietly', Orion.Now(), Orion.Now() + 10000, 'my|sys',-1,-1);
+		return true;
+	}
+	
+	return false;
 }
 
 function DEBUG(msg){

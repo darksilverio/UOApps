@@ -144,7 +144,7 @@ function LumberTree(x, y, axeSerial)
 {
     var success = 'You put';
     var fail = 'You hack at the tree for a while, but fail to produce any useable wood.';
-    var end = 'There is nothing here to chop';
+    var end = 'There is nothing here to chop|You put the logs in';
     var tooFar = 'That is too far away';
     
     var timeout = Orion.Now() + choppingDelay;
