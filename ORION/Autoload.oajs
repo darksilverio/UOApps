@@ -28,8 +28,12 @@ function Autostart() {
 	Orion.BlockMoving(false);
 	Orion.OptionAlwaysRun(false);
 
-	Orion.Print(infoColor, 'BG Macro: Heal');
-	Orion.Exec('Heal', true);
+	Orion.Print(infoColor, 'BG Macro: HealBandageLong');
+	Orion.Exec('HealBandageLong', true);
+	
+	Orion.Print(infoColor, 'BG Macro: HealBandageSelf');
+	Orion.Exec('HealBandageSelf', true);
+	
 
 	Orion.Print(infoColor, 'BG Macro: ParalyzeFree');
 	Orion.Exec('ParalyzeFree', true);
@@ -42,6 +46,14 @@ function Autostart() {
 	
 	Orion.Print(infoColor, 'BG Macro: HideBlood');
 	Orion.Exec('HideBlood', true);
+	
+	Orion.Print(infoColor, 'BG Macro: WatchManaStaminaPoison');
+	Orion.Exec('WatchManaStaminaPoison', true);
+	
+	
+	//Orion.Print(infoColor, 'BG Macro: Scavenger');
+	//Orion.Exec('Scavenger', true);
+	
 	
 	Orion.Exec('SetViewRange', true);
 	
@@ -135,6 +147,7 @@ function CastParalizeField() {
 	Orion.CharPrint(self, infoColor, "Paralyze Field");
 	Orion.CancelTarget();
 	Orion.Cast('Paralyze Field');
+//	Orion.
 }
 
 function CastGreaterHeal() {
@@ -149,6 +162,79 @@ function CastHealFree() {
 	Orion.CharPrint(self, infoColor, "Heal");
 	Orion.CancelTarget();
 	Orion.Cast('Heal')
+}
+
+function WatchManaStaminaPoison(){
+
+	while(!Player.Dead()){
+	Orion.Wait(300);
+	
+		if(Player.Mana() < 13){
+			Orion.CharPrint(self, infoColor, "Potion: Mana");
+			Orion.UseType('0x0F82','0x0532', backpack);
+		}
+		
+		if(Player.Stam() < 5){
+			Orion.CharPrint(self, infoColor, "Potion: Stam");
+			Orion.UseType('0x0F0E','0x0022', backpack);
+		}
+		
+		if(Player.Poisoned()){
+			Orion.CharPrint(self, infoColor, "Potion: Cure");
+			Orion.UseType('0x0F0E','0x008F', backpack);
+		
+		}
+	
+	}
+
+
+}
+
+function CastLightningFlood(){
+
+	
+	var timer;
+	var msgCancel = 'Skill Magery cancelada.|Target is not in line';
+	//var msgCast =  'soundecho: id=0x0029';
+	var msgCast =  'soundecho: id=0x01E5';
+	
+	
+	Orion.CharPrint(self, infoColor, " Cast Lightning Flood");
+	//Orion.Say('Chuva de MA');
+	
+	while(!Player.Dead() &&  !Player.Paralyzed() ){
+		Orion.Wait(50);
+		Orion.CancelTarget();
+		
+		timer = Orion.Now();
+		//Orion.Cast('Magic Arrow', Orion.ClientLastAttack());
+		Orion.Cast('Flamestrike', Orion.ClientLastAttack());
+	
+		Orion.ClearJournal(msgCancel);
+		Orion.ClearJournal(msgCast);
+		while(Orion.Now() - timer < 3500 )
+		{
+			if( Orion.InJournal(msgCancel, 'my|sys', -1, -1, Orion.Now(), Orion.Now() + 500) ){
+				break;
+			}
+			
+			var msg = Orion.InJournal(msgCast, 'my|sys', -1, -1, Orion.Now(), Orion.Now() + 500);
+			
+			if(!msg)	
+				continue;
+			
+			msg = msg.Text();
+			if( msg.search(Player.X()) && msg.search(Player.Y()) ){
+				break;
+			}
+			
+			Orion.Wait(50);
+		}
+		DEBUG2('Raio: ' + (Orion.Now() - timer ) );
+	
+	}
+
+
 }
 
 function SkillTracking() {
@@ -245,24 +331,63 @@ function Follow() {
 			break;
 
 		Orion.WalkTo(obj.X(), obj.Y(), obj.Z());
-		Orion.Wait(250);
+		Orion.Wait(50);
 	}
 	
 	Orion.OptionAlwaysRun(false);
 	Orion.CharPrint(self, infoColor, 'Stopped Following');
 }
 
-function Heal() {
+function HealBandageSelf(){
+
+	var msg = "You put the bloody bandage|Your healing was interrupted";
+	var timer;
+	var lifePercent;
+
+	while (!Player.Dead()) {
+	
+		Orion.Wait(100);
+		lifePercent =  ( Player.Hits()/Player.MaxHits() ) * 100;
+		
+		if( lifePercent > 40 )
+			continue;
+			
+		while(lifePercent < 100){
+	
+			Orion.Wait(100);
+			Orion.CharPrint(self, errorColor, 'CRITICAL Heal (40%)');
+			
+			Orion.CreateClientMacro('BandageSelf').Play(false, 1000);
+			
+			Orion.ClearJournal(msg);
+			Orion.WaitJournal(msg, Orion.Now(), Orion.Now() + 2500, 'my|sys', -1, -1)
+			
+			lifePercent =  ( Player.Hits()/Player.MaxHits() ) * 100;	
+		}
+	}
+}
+
+
+function HealBandageLong() {
 	var Msg = "You put the bloody bandage|Voce curou|failed";
 	var lHand, rHand;
 	var timer;
 	
-	var healAt =  ( Player.MaxHits() - 15 );
+	var lifePercent;
 	
 	while (!Player.Dead()) {
 		if(Orion.FindType('0x0E21', '-1', backpack).length > 0){
-			if (Player.Hits() < healAt) {	
-				Orion.CharPrint(self, infoColor, 'Auto Heal - Low Life');
+		
+			lifePercent =  ( Player.Hits()/Player.MaxHits() ) * 100;
+			//DEBUG(lifePercent);
+			if (lifePercent > 80) {
+				Orion.Wait(100);
+				continue;
+			}
+			
+			while( Player.Hits() < (Player.MaxHits() - 5)){
+				Orion.CharPrint(self, infoColor, 'Auto Heal (80%)');
+				
 							
 				rHand = Orion.ObjAtLayer('RightHand', self);
 				lHand = Orion.ObjAtLayer('LeftHand', self);
@@ -273,7 +398,7 @@ function Heal() {
 				Orion.Wait(600);
 					
 				if(lHand != null)
-					Orion.UseObject(lHand.Serial());
+						Orion.UseObject(lHand.Serial());
 				if(rHand != null){
 	       			Orion.UseObject(rHand.Serial());
 	       			Orion.WaitForTarget();
@@ -283,14 +408,12 @@ function Heal() {
 				Orion.ClearJournal(Msg);
 				while ( (Orion.Now() - timer) < 6500) {
 				
-					if(Orion.InJournal(Msg) || (Player.Hits() > healAt) )
+					if(Orion.InJournal(Msg))
 						break
 						
 					Orion.Wait(100);
 				}
-			}else{
-				Orion.Wait(100);
-			} 
+			}
 		}else{
 			Orion.Print(errorColor, 'No more bandages.')
 			Orion.Wait(5000);
@@ -407,8 +530,8 @@ function EquipBow() {
 			Orion.Print(errorColor, 'No more bandages.')
 		}
 		else{			
-			Orion.BandageSelf();
-			Orion.Wait(500);
+			//Better use of bandage at TFG
+			Orion.CreateClientMacro('BandageSelf').Play(false, 1000);
 		}
 		
 	} else 
@@ -434,8 +557,8 @@ function EquipWeaponAndShield() {
 			Orion.Print(errorColor, 'No more bandages.')
 		}
 		else{			
-			Orion.BandageSelf();
-			Orion.Wait(500);
+			//Better use of bandage at TFG
+			Orion.CreateClientMacro('BandageSelf').Play(false, 1000);
 		}
 		
 	} else
@@ -678,6 +801,29 @@ function LootLoadingLag(bodySerial) {
 	}
 }
 
+
+function Scavenger() {
+	
+	var list;
+	
+	while(!Player.Dead()){
+		
+		Orion.Wait(100);
+	
+		list = Orion.FindList('scavenger', 'ground','',3)     
+		if (!list.length)
+			continue;
+	
+		Orion.CharPrint(self, infoColor, 'Scavenging...');
+	
+		for (var i = 0; i < list.length; i++){
+			Orion.MoveItem(list[i], 0, 'lootpack');
+	      	Orion.Wait(1100);
+		}     
+	}
+	
+	return true;
+ }
 // ##############################################################
 // ############################### AUTO LOOT FUNCTIONS END #########
 // ##############################################################
@@ -1114,6 +1260,45 @@ function IsInBoundaries(x, y, precision, rect){
 //=================================================
 function ___TESTS___(){}
 
+function ping(){
+
+	var timer, timer1;
+	var cont = 0, sum = 0, med = 0, max = 0, min = 10000;
+	var items = Orion.FindType(-1, '-1', -1, -1, 30, -1);
+	
+	if(!items.length){
+		Orion.Print(infoColor, 'Please have more items arround you');
+		return;
+	}
+
+	timer = Orion.Now();
+	for(var i = items.length -1; i >= 0; i--){
+	
+		var med, count, sum;
+		timer1 = Orion.Now();
+		Orion.RequestName(items[i], 1000);
+		timer1 = Orion.Now() - timer1;
+		
+		if(timer1 > 20){
+			cont++;
+			sum =  sum + timer1;
+			med = sum/cont
+			med = med.toFixed(0);
+			
+			if(timer1 > max)
+				max = timer1;
+				
+			if(timer1 < min)
+			min = timer1;
+	
+		}
+		
+		//Orion.Print(infoColor. self, 'Ping: ' + timer1);	
+		Orion.Print(infoColor, 'ping: ' + timer1 + ' med: ' + med + ' min: ' + min + ' max: ' + max);	
+	}
+	
+	Orion.Print(infoColor, 'Loops: ' + cont + ' Total time: ' + ( Orion.Now() - timer ) + ' ms');	
+}
 
 
 function EchoAllJournal(){
@@ -1183,5 +1368,41 @@ function DropZ() {
 	
 	Orion.RemoveObject('dropable')
 	
+
+}
+
+
+function decifraMap()
+{
+
+var msg='As coordenadas deste mapa';
+while(true){
+
+	if(Orion.InJournal(msg)){
+
+		var a = Orion.InJournal(':').Text().split(':');;
+		var b  = a[1].split(',');
+		var c= b[0].trim().replace('"','');
+		var x = c.split(' ')[0].replace('x=','');
+		var y =  c.split(' ')[1].replace('y=','');
+		Orion.Print(y+':'+x);
+
+
+Orion.OpenOrionMap(20,20);
+
+		Orion.ClearJournal(msg);
+	
+	}
+}
+
+}
+
+function StrFind(){
+
+	var s = 'O gato pulou pela janela';
+	
+	if(s.search('gato'))
+		DEBUG2('gato')
+
 
 }
