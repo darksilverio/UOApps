@@ -1,4 +1,4 @@
-var choppingTools = '0x0F4B|0x0F49';
+var choppingTools = '0x0F51|0x0F4B|0x0F49';
 var choppingDelay=12000
 var persist = true;
 var bankweight = 320;
@@ -17,7 +17,7 @@ function AutoLumber()
     if (axeSerial == '')
         return;
 
-    var treeCoords = FindTrees(200);
+    var treeCoords = FindTrees(100);
     while (treeCoords.length > 0)
     {
         PrintSelf(treeCoords.length + ' trees remaining');    	
@@ -79,31 +79,30 @@ function Remove(arr, idx)
 
 function FindTrees(range)
 {
-    var d = range;
-    
     var treeCoords = [];
     
-    var found = 0;
+    var lowX =  Player.X() - range;
+    var higX = Player.X() + range;
     
-    PrintSelf('Scanning area for trees');
-    for (x = Player.X() - d; x < Player.X() + d; ++x)
-    {
-        for (y = Player.Y() - d; y < Player.Y() + d; ++y)
-        {
-            if (Orion.ValidateTargetTile('tree', x, y))
-            {
-                //PrintSelf('Tree at ' + x + ',' + y);
-            
-                var coord = { x: x, y: y};            
-                treeCoords.push(coord);
-            
-                found++;                
-            }
+    var lowY =  Player.Y() - range;
+    var higY = Player.Y() + range;
+    
+    var total = range * 2;
+    var inc = 0;
+    
+    for (var x = lowX; x < higX; ++x){
+    
+    	Orion.Print( 'Scanning area: ' + ((++inc/total) * 100).toFixed(1) + '%' );
+    	
+       for (var y = lowY; y < higY; ++y){
+        
+           if (Orion.ValidateTargetTile('tree', x, y))
+                treeCoords.push( { x: x, y: y} );       
         }
     
     }
     
-    PrintSelf('Found ' + found + ' trees');
+    PrintSelf('Found ' + treeCoords.legth + ' trees');
     return treeCoords;
 }
 
@@ -144,7 +143,7 @@ function LumberTree(x, y, axeSerial)
 {
     var success = 'You put';
     var fail = 'You hack at the tree for a while, but fail to produce any useable wood.';
-    var end = 'There is nothing here to chop|You put the logs in';
+    var end = 'There is nothing here to chop|You put the logs in|There is no wood';
     var tooFar = 'That is too far away';
     
     var timeout = Orion.Now() + choppingDelay;
@@ -236,4 +235,21 @@ function PathFinder(x, y){
 		destination = Orion.WalkTo(x, y, -1, 2);
 		Orion.Wait(100);
 	}
+}
+
+
+function guards(){
+
+
+
+while(!Player.Dead())
+{
+	Orion.Wait(100);
+	if(Player.Hits() < 59)
+		Orion.Say('guards');
+	
+
+}
+
+
 }

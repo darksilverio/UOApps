@@ -1,6 +1,7 @@
 // GLOBAL VARIABLES
 var infoColor = 0x0185;
 var errorColor = 0x028;
+var highlightColor = 0x168;
 var debugColor = 0x45F;
 
 var AntiPKIgnoreAreas=[
@@ -51,8 +52,8 @@ function Autostart() {
 	Orion.Exec('WatchManaStaminaPoison', true);
 	
 	
-	//Orion.Print(infoColor, 'BG Macro: Scavenger');
-	//Orion.Exec('Scavenger', true);
+	//Orion.Print(infoColor, 'BG Macro: ShapedIron');
+	//Orion.Exec('ShapedIron', true);
 	
 	
 	Orion.Exec('SetViewRange', true);
@@ -70,7 +71,7 @@ function AllNames() {
 
 function SetViewRange(){	
 	Orion.ClientViewRange(21);
-	Orion.Wait(500);
+	Orion.Wait(200);
 	Orion.Print(infoColor, 'View Range set to: ' + Orion.ClientViewRange() );	
 }
 
@@ -176,7 +177,7 @@ function WatchManaStaminaPoison(){
 		
 		if(Player.Stam() < 5){
 			Orion.CharPrint(self, infoColor, "Potion: Stam");
-			Orion.UseType('0x0F0E','0x0022', backpack);
+			Orion.UseType('0x0F0E','0x017F', backpack);
 		}
 		
 		if(Player.Poisoned()){
@@ -194,12 +195,12 @@ function CastLightningFlood(){
 
 	
 	var timer;
-	var msgCancel = 'Skill Magery cancelada.|Target is not in line';
+	var msgCancel = 'Skill Magery cancelada.|Target is not in line|t see the target';
 	//var msgCast =  'soundecho: id=0x0029';
 	var msgCast =  'soundecho: id=0x01E5';
 	
 	
-	Orion.CharPrint(self, infoColor, " Cast Lightning Flood");
+	Orion.CharPrint(self, infoColor, "Flood Magic Arrow");
 	//Orion.Say('Chuva de MA');
 	
 	while(!Player.Dead() &&  !Player.Paralyzed() ){
@@ -208,7 +209,7 @@ function CastLightningFlood(){
 		
 		timer = Orion.Now();
 		//Orion.Cast('Magic Arrow', Orion.ClientLastAttack());
-		Orion.Cast('Flamestrike', Orion.ClientLastAttack());
+		Orion.Cast('Magic Arrow', Orion.ClientLastAttack());
 	
 		Orion.ClearJournal(msgCancel);
 		Orion.ClearJournal(msgCast);
@@ -240,6 +241,7 @@ function CastLightningFlood(){
 function SkillTracking() {
 	Orion.CharPrint(self, infoColor, "Tracking");
 	Orion.WarMode(false);
+	Orion.CancelWaitMenu();
 	Orion.UseSkill('Tracking');
 }
 
@@ -248,7 +250,7 @@ function SkillTrackingPlayer() {
 	Orion.CharPrint(self, infoColor, "Track Players");
 
 	Orion.WarMode(false);
-	
+	Orion.CancelWaitMenu();
 	Orion.UseSkill('Tracking');
 	Orion.WaitMenu('Tracking', 3);
 }
@@ -703,6 +705,8 @@ function autoDoor() {
 // ############################### AUTO LOOT FUNCTIONS START #########
 // ##############################################################
 
+function __LOOTING__(){}
+
 function FastLootRPGLoop() {
 
 	
@@ -725,12 +729,14 @@ function FastLoot(listName) {
 		
 		Orion.UseObject(bodies[0]);
 		LootLoadingLag(bodies[0]);
+			
 		Loot(listName, bodies[0]);
 		
 		var splitName = Orion.RequestName(bodies[0], 1500)
 		splitName =  splitName.split(' ').slice(3).join(' ');
 		
-		DEBUG2('Nothing to loot on ' + splitName + ' (' + (Orion.Now() - t) + ' ms)' );
+		Orion.Print(0x0A4, 'Loot Completed: ' + splitName + ' (' + (Orion.Now() - t) + ' ms)' );
+		
 	}
 }
 
@@ -760,7 +766,7 @@ function Loot(listName, corpseSerial) {
 
 		if(prevItem != lootList[0] ){
 			var item = Orion.FindObject(lootList[0]);
-			Orion.Print('60', item.Count() + ' ' +Orion.RequestName(lootList[0], 1500) );
+			Orion.Print(0x0793, item.Count() + ' ' +Orion.RequestName(lootList[0], 1500) );
 		}
 
 		Orion.MoveItem(lootList[0], 0, backpack);
@@ -768,6 +774,13 @@ function Loot(listName, corpseSerial) {
 				
 		prevItem =  lootList[0];
 	}
+}
+
+function PrintItemDetails(dummy){
+
+	var item = Orion.FindObject(  Orion.GetGlobal('gTMP') );
+	Orion.Print(debugColor, item.Count() + ' ' +Orion.RequestName(item.Serial(), 1500) );
+	
 }
 function Skining() {
 	
@@ -824,6 +837,9 @@ function Scavenger() {
 	
 	return true;
  }
+ 
+ 
+ 
 // ##############################################################
 // ############################### AUTO LOOT FUNCTIONS END #########
 // ##############################################################
@@ -962,12 +978,15 @@ function AntiPK() {
 
 		Orion.Terminate('CapturePksSerial');
 
-		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', range, 'murderer');
+		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', range, 'murderer|blue');
+		//var bluFound =  Orion.FindType('0x0190|0x0191', '-1', ground, 'human', range, 'blue');
 
-		if (pksFound.length == 0) {
+		//pksFound = pksFound.concat(bluFound);
+		
+		if (pksFound.length == 0 ) {
 			continue;
 		}
-
+		
 		var pkList = Orion.GetEnemyList();
 
 		for (var i = 0; i < pksFound.length; i++) {
@@ -981,7 +1000,7 @@ function AntiPK() {
 					Orion.Sound(107);
 
 					var pk = Orion.FindObject(pksFound[i]);
-					Orion.CharPrint(self, 0xff, "PK[" + Orion.GetDistance((pksFound[i])) + " tiles away] " + pk.Name());
+					Orion.CharPrint(self, 0xff, "PK[" + Orion.GetDistance((pksFound[i])) + " tiles away] " + pk.Name() + ' : ' + pkList[j]);
 					Orion.Wait(1000);
 					Orion.BlockMoving(false);
 					Orion.Wait(20000);
@@ -1161,6 +1180,58 @@ function LeatherClothes(){
 }
 
 
+function ShapedIron(){
+
+	var iron;
+
+	Orion.Print(infoColor, 'Container with Iron');
+
+	//Orion.RemoveObject('cbags');
+	//if('cbags' == null){
+	Orion.AddObject('cbags');
+	while (Orion.HaveTarget())
+		Orion.Wait(50);
+//}
+	Orion.UseObject('cbags');
+	
+	while(Orion.Connected){
+	
+		 iron = Orion.FindType('0x1BEF', '-1', backpack);
+	
+		 if(!iron.length){
+	 		iron = Orion.FindType('0x1BEF', '-1', 'cbags');
+	 	
+	 		if(iron.length){
+	 			Orion.MoveItem(iron[0], 2000,backpack, -1,-1,-1);
+	 			Orion.Wait(600);
+	 		}
+	 	 	else{
+		 		Orion.Print(infoColor, 'No more iron');
+		 		return;
+			 }
+		 }
+	
+		 iron = Orion.FindType('0x1BEF', '-1', backpack);
+		 iron = Orion.FindObject(iron[0]);
+	 
+
+		while(iron.Count() > 10 ){
+	
+			Orion.UseObject(iron.Serial())
+			Orion.WaitMenu('Blacksmithing', 1);
+			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 3000, -1 ,-1, -1);
+			Orion.ClearJournal();
+		}
+	
+		Orion.MoveItem(iron.Serial(), 0,'cbags', -1,-1,-1);
+		Orion.Wait(600);
+		iron = Orion.FindType('0x1BD7', '-1', backpack);
+		Orion.MoveItem(iron[0], 0,'cbags', -1,-1,-1);
+		Orion.Wait(600);
+	}
+}
+
+
 function MakeLExplosion(){
 
 	Orion.Print(infoColor, 'Instructions: Put SS, empty bottles and mortar&pastle in your bag and let it go.')
@@ -1182,6 +1253,97 @@ function MakeLExplosion(){
 	}
 }
 
+function FullSpeelBook(){
+
+// 1 - Put logs and saw in your bag.
+// 2 - Must have skill to craft blank scroll.
+// 3 - Tested at TFG Shard
+
+	var scrollID = 0x1F2E;
+	
+	for(var circle = 1; circle <= 8; circle++){
+		for(var spell = 0; spell <= 9; spell++){
+			
+			DEBUG2(circle + ' : '+ spell );
+			
+			Orion.CancelWaitMenu();		
+			Orion.ClearJournal();
+			
+			Orion.UseType(0x1034); //saw
+			Orion.WaitMenu('Carpentry', 2);
+			Orion.WaitMenu('Blank Scrolls', 0);
+			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 5000, -1 ,-1, -1);
+			
+			Orion.CancelWaitMenu();		
+			Orion.ClearJournal();
+			
+			Orion.UseType(0x0E34); //blank scroll
+			Orion.WaitMenu('Spell Circles', circle);
+						
+			Orion.Wait(600);
+			var menu = Orion.GetMenu(0);
+			menu.Select(spell);
+			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 5000, -1 ,-1, -1);
+			
+			
+			if( Player.WarMode() == true  )
+				Orion.WarMode(false);
+		
+				while(Player.Mana() <= 44 ){
+					Orion.UseSkill('Meditation');
+					Orion.Wait(1000);
+				}
+				
+			
+			
+			//var scroll =  Orion.FindType(scrollID++, 0, backpack);
+			//var spellBook = Orion.FindType(0x0EFA, 0, backpack);
+			
+			//Orion.MoveItem(scroll[0],1,spellBook);
+			//Orion.Wait(600);
+			//DEBUG2(scroll);
+			
+
+	
+			
+		}	
+	}
+
+
+
+}
+
+function SaySell(){
+
+	var gold;
+	var restocked = false;
+	
+	while(Orion.Connected()){
+	
+		 gold = Player.Gold();
+		Orion.Say('vendor sell');
+		
+		for(var i = 0; gold == Player.Gold(); i++  ){
+			Orion.Wait(40);
+			if(i > 30){
+				if(!restocked){
+				
+					Orion.Ignore(self);
+					var vendor = Orion.FindType('0x0190|0x0191', '-1', ground, 'human|first', 3, 'blue');
+					Orion.UseObject(vendor[0]);
+					restocked = true;
+					Orion.CharPrint(self, infoColor, 'RESTOCK DONE');
+					Orion.Wait(600);
+					break;
+				}
+				Orion.Print(infoColor, 'All done selling');
+				return;
+			}
+		}
+	
+	}
+
+}
 
 
 //=================================================
@@ -1253,7 +1415,6 @@ function IsInBoundaries(x, y, precision, rect){
 	
 	return false; //out side rectangle  	
 }
-
 
 //=================================================
 //============  TESTS   ==============================
@@ -1397,12 +1558,20 @@ Orion.OpenOrionMap(20,20);
 
 }
 
-function StrFind(){
+function PrintColors(){
 
-	var s = 'O gato pulou pela janela';
+	for(var i = 300; i < 0xFFFF; i++)
+	{
+		Orion.Print(i,'Printing Colors: ' + i.toString(16));
+		Orion.Wait(100);
+	}
 	
-	if(s.search('gato'))
-		DEBUG2('gato')
 
+}
+
+function test(){
+
+var vendor = Orion.FindType('0x0190|0x0191', '-1', ground, 'human|first', 3, 'blue');
+					Orion.UseObject(vendor[0]);
 
 }

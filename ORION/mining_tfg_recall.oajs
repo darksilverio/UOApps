@@ -12,7 +12,7 @@ var mineRectangle = [
 			{ Xsmall: 346, Xbig:389 , Ysmall: 1426 , Ybig: 1457, rune: 8, active: true }, //Mountain of Knowledge (limit 5 tiles from exit) top
 			{ Xsmall: 1361, Xbig:1388 , Ysmall: 2705 , Ybig: 2724, rune: 6, active: true }, //Haunted Montain -- full mine
 			{ Xsmall: 4805, Xbig:4817 , Ysmall: 3632 , Ybig: 3665, rune: 4, active: true },  //Monte Tresshorn - Fire Island -- full mine
-			{ Xsmall: 1224, Xbig:1278 , Ysmall: 1211 , Ybig: 1247, rune: 13, active: false }, //Golden Mine
+			{ Xsmall: 1224, Xbig:1278 , Ysmall: 1211 , Ybig: 1247, rune: 13, active: true }, //Golden Mine
 			{ Xsmall: 987, Xbig:1012 , Ysmall: 1574 , Ybig: 1597, rune: 9, active: true }, //Enchanted Mine
 			{ Xsmall: 1414, Xbig:1435 , Ysmall: 2878 , Ybig: 2892, rune: 12, active: true }, //Mount of Darkness
 			{ Xsmall: 2315, Xbig:2337 , Ysmall: 813 , Ybig: 825, rune: 11, active: true }, //Valley of Light
@@ -20,7 +20,7 @@ var mineRectangle = [
 				
 				 ];  
 		    
-var miningRange = 100
+var miningRange = 50
 var miningTools = '0x0E85|0x0E86';
 var miningDelay=16000
 var persist = false;
@@ -32,7 +32,7 @@ var newSpotMsgs='Try mining elsewhere|There is nothing here|That is too far|You 
 var sameSpotMsgs='You put'
 var persistSpotMsgs='You loosen some rocks but fail'
 var toolUsageMsg='Where do you want to use'
-var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite|Iron'
+var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite'
 
 // DONT CHANGE THESE VARS
 var timeout=-1;
@@ -44,21 +44,16 @@ function Autostart()
 	
 	Orion.Exec('SetViewRange', true);
 	
-	while(Player.Mana() <= 44 ){
-		Orion.UseSkill('Meditation');
-		Orion.Wait(1000);
-	}
+	Orion.Print(infoColor, 'MINING WILL START IN 15 SECONDS');
 
-	Orion.Print(infoColor, 'MINING WILL START IN 20 SECONDS');
-
-	Orion.Wait(20000);
+	Orion.Wait(15000);
 	
 	Orion.Exec('Mining', true);	
 }
 
 function SetViewRange(dummy){	
 	Orion.ClientViewRange(21);
-	Orion.Wait(500);
+	Orion.Wait(200);
 	Orion.Print(infoColor, 'View Range set to: ' + Orion.ClientViewRange() );	
 }
 
@@ -72,8 +67,8 @@ function Mining(){
 	Orion.Exec('AntiPlayer', true);	
 	Orion.Exec('RESS', true);
 	
-
 	mineIndex = Orion.GetGlobal('mineIndex');
+	DEBUG('mineIndex: ' + mineIndex)
 	if(!mineIndex)
 		ChangeMine();
 
@@ -81,15 +76,20 @@ function Mining(){
 	{
 		DEBUG('Main Loop');
 		
+		 Meditation();
+				
 		 if( ! IsInBoundaires(Player.X(), Player.Y(), 2) ){
 			DEBUG('Player NOT IsInBoundaires ');
 		 	BankToMine();
+		 	HidingAndStealth(); //next operaion may take some time
 		 	mineCoords = FindMinableSpots(miningRange);
 		 }
 		
 		//if you dont have spots to this mine yet
-		 if(mineCoords.length <= 0 )
+		 if(mineCoords.length <= 0 ){
+			HidingAndStealth(); //next operaion may take some time
 		 	mineCoords = FindMinableSpots(miningRange);
+		 }
 		
 		closest = GetClosest(mineCoords);
 		closestTile = mineCoords[closest];
@@ -98,26 +98,25 @@ function Mining(){
 		 		DEBUG2('Spot discarted: ' + closestTile.x + ', ' + closestTile.y  );
 				mineCoords = Remove(mineCoords, closest);
 				 if(mineCoords.length <= 0 ){
-		 			DEBUG2('All mined. Let the mine rest! >2< ');
-		 			ChangeMine();
+		 			DEBUG2('All mined. Going to FullRestockAndMine >1<');
+		 			FullRestockAndMine()
 		 		}
-				Orion.Wait(1);
+				Orion.Wait(10);
 				continue;
        	}
        
 		PathFinder(closestTile.x, closestTile.y);
 
 		Orion.CancelTarget();
+		Orion.CancelWaitTarget();
     		Orion.ClearJournal();
      		  
-     		timeout = Orion.Now();
-
      		Orion.Print(infoColor, ' ');
      		Orion.Print(infoColor, ' '); 
      		 
+     		HidingAndStealth()  //next operaion may take some time
      		
-     		
-     		HidingAndStealth();
+     		timeout = Orion.Now();
 		Dig(closestTile.x, closestTile.y);
 		
 		while( ( Orion.Now() - timeout ) < miningDelay ){    
@@ -129,14 +128,17 @@ function Mining(){
 				break;
 			}
 			if( Orion.InJournal(persistSpotMsgs) )
-			{
-				DEBUG2('Persisting... (' +  (  Orion.Now() - timeout ) + 'ms)' );
-				if(!persist)
+			{	
+				if(!persist){
+				
+					DEBUG2('NOT Persisting (' +  (  Orion.Now() - timeout ) + 'ms)' );
 					mineCoords = Remove(mineCoords, closest);
-					
+				
+				}else{
+					DEBUG2('Persisting (' +  (  Orion.Now() - timeout ) + 'ms)' );
+				}
 				break;
 			}
-
 			if( Orion.InJournal(sameSpotMsgs) ){
 				DEBUG2('Good Spot (' +  (  Orion.Now() - timeout ) + 'ms)');
 				break;
@@ -148,29 +150,21 @@ function Mining(){
      		if( (Player.Weight() >= bankweight && bankweight > 0) || 
      			(mineCoords.length <= 0) ||
      			(Orion.InJournal('Adamantium')) ||
-     			( Orion.FindType(miningTools, 0, backpack,-1, 3).length <= 0) ||
-     			( Orion.Count(miningTools) <= 2   )  ||
+     			( Orion.Count(miningTools) <= 0   )  ||
      			( Orion.Count(0x0F7A) <= 5   )  ||
      			( Orion.Count(0x0F86) <= 5   )  ||
      			( Orion.Count(0x0F7B) <= 5   )  
-     			
      			 ){
      		
      			if(mineCoords.length <= 0)
-     				DEBUG2('All mined. Let the mine rest !');
+     				DEBUG2('All mined. Going to FullRestockAndMine>2<');
      			else
-     				DEBUG2('Max weight reached');
+     				DEBUG2('FullRestockAndMine (regs or mining tools or Adamantium or weight)');
      			
      			//get rid of all spots left 
      			mineCoords = [];
-     			MineToBank();
-			OreToBank();
-			Destock();
-			Restock();
-			ChangeMine();
-			BankToMine();
+			FullRestockAndMine();
      		}
-     		
 		Orion.Wait(50);	
 	}
 }
@@ -183,10 +177,9 @@ function Dig(x, y)
       if(tool.length == 0)
 	      tool =  Orion.FindType(miningTools, '-1', backpack, 'item|first', '-1', '-1');
 
-     if (tool.length == 0)
-     {
-     		Orion.Print(23, 'NO MINING TOOL. MACRO ABORTED');
-     		Orion.Terminate('Mining')
+     if (tool.length == 0)     {
+     		Orion.Print(infoColor, 'NO MINING TOOL.');
+     		FullRestockAndMine();
      	}
      	
      	Orion.WaitTargetTile('mine', x , y, 0);
@@ -196,21 +189,27 @@ function Dig(x, y)
 
 function FindMinableSpots( range )
 {	
-    var coord;    
     var mineCoords = [];
     
-    for (x = Player.X() - range; x < Player.X() +range; ++x)
-    {
-        for (y = Player.Y() - range; y < Player.Y() + range; ++y)
-        {
-            if (Orion.ValidateTargetTile('mine', x, y))
-            {
-                coord = { x: x, y: y};            
-                mineCoords.push(coord);        
-            }
-        }    
-    }
-    DEBUG('Found ' + mineCoords.length + ' tiles to mine');
+    var lowX =  Player.X() - range;
+    var higX = Player.X() + range;
+    
+    var lowY =  Player.Y() - range;
+    var higY = Player.Y() + range;
+    
+    var total = range * 2;
+    var inc = 0;
+    
+    for (var x = lowX; x < higX; ++x){
+    
+    	Orion.Print( 'Scanning area: ' + ((++inc/total) * 100).toFixed(1) + '%' );
+    	
+       for (var y = lowY; y < higY; ++y){
+        
+           if (Orion.ValidateTargetTile('mine', x, y))
+                mineCoords.push( { x: x, y: y} );       
+        }
+    }  
     return mineCoords;
 }
 
@@ -271,23 +270,19 @@ function IsInBoundaires(x, y, precision){
 	
 	if(!precision)
 		precision = 0;
-
-
-	DEBUG('P: ' + x + ', ' + y + ' - ' + precision);
-	DEBUG('R: ' + mineRectangle[mineIndex].Xsmall + ', ' + mineRectangle[mineIndex].Xbig  + ', ' + mineRectangle[mineIndex].Ysmall + ', ' +  mineRectangle[mineIndex].Ybig );
-
+	
 	 if( x >= mineRectangle[mineIndex].Xsmall - precision  && x <= mineRectangle[mineIndex].Xbig + precision &&
 	     y >= mineRectangle[mineIndex].Ysmall - precision  && y <= mineRectangle[mineIndex].Ybig + precision )
 	{
+		DEBUG("IsInBoundaires == true");
 		return true; //in side rectangle 
 	}
 	
-	return false; //out side rectangle 
-       	
+	DEBUG('IsInBoundaires == false');
+	return false; //out side rectangle    	
 }
 
 function OreToBank(){
-
 
 	Orion.Say('banker bank');		
 	Orion.Wait(1000);	
@@ -311,45 +306,33 @@ function OreToBank(){
 function MineToBank()
 {
 	Orion.Say('.recall 1 5');
-	Orion.Wait(13000);
+	Orion.WaitJournal('soundecho: id=0x01FE', Orion.Now(), Orion.Now() + 13000, -1, -1, -1);
+	Orion.Wait(600);
 }
 
-function BankToMine()
-{
+function BankToMine(){
+
 	Orion.Say('.recall 1 ' + mineRectangle[mineIndex].rune );
-	Orion.Wait(13000);
-	
+	Orion.WaitJournal('soundecho: id=0x01FE', Orion.Now(), Orion.Now() + 13000, -1, -1, -1);
+	Orion.Wait(600);
 }
 
-function BuyPickAxe(dummy)
-{
-	
-}
-
-function Meditation(dummy)
-{
-	
-}
-
-function ChangeMine(dummy){
+function ChangeMine(){
 
 	mineIndex = Orion.GetGlobal('mineIndex');
 	if(!mineIndex)
-		mineIndex = mineRectangle.length -2; // -2 is arbitrary
-		
-		
+		mineIndex = mineRectangle.length - Orion.Random(0,mineRectangle.length );
+			
 	mineIndex++;
 	
-	if(mineIndex >= mineRectangle.length )
+	if(mineIndex >= mineRectangle.length || mineIndex < 0)
 		mineIndex = 0;
 		
-	while(!mineRectangle[mineIndex].active)
+	while(mineRectangle[mineIndex].active == false)
 		mineIndex++;
 		
 	DEBUG2('ChangeMine: ' +  mineIndex);
 	Orion.SetGlobal('mineIndex', mineIndex);
-
-
 }
 function AntiPlayer() {
 
@@ -361,25 +344,45 @@ function AntiPlayer() {
 	while (!Player.Dead() && Orion.Connected()) {
 		Orion.Wait(delay);
 
-		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', range, 'red|blue|gray|orange');
+		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', range, 'red|blue|gray|orange|green');
 
 		if (pksFound.length == 0) 
 			continue;
-			
+		
+		 if( ! IsInBoundaires(Player.X(), Player.Y(), 2) ){
+			Orion.Print(infoColor, 'Antiplayer allowed here.');
+		 	Orion.Wait(5000);
+		 	continue;
+		 }
+		
+		/*	
 		//IGNORE MAGINCIA BANK
 		if (Player.X() > 3727 && Player.X() < 3744){
 			if (Player.Y() < 2160 && Player.Y() > 2143){
 				continue;
 			}
 		}	
+		//IGNORE AREA DO GATE DE BRIT
+		if (Player.X() > 1486 && Player.X() < 1509){
+			if (Player.Y() < 1645 && Player.Y() > 1622){
+				continue;
+			}
+		}	
 		
+		//IGNORE MINOC BANK
+		if (Player.X() > 2460 && Player.X() < 2568){
+			if (Player.Y() < 610 && Player.Y() > 514){
+				continue;
+			}
+		}	
+			
+		*/
 		DEBUG2('AntiPlayer in ACTION');
 		Orion.UseType('0x0F0E', '0x0001', backpack, true); //invis
-		Orion.BlockMoving(true);
 		Orion.Say('.recall 1 5');	// --> go to bank without	 delays
+		Orion.BlockMoving(true);
 		Orion.Terminate('Mining');
-		Orion.WarMode(false);
-		Orion.Wait(1000);
+		Orion.Wait(1500);
 		Orion.Screenshot();
 		Orion.Wait(4000);
 		Orion.BlockMoving(false);
@@ -387,7 +390,6 @@ function AntiPlayer() {
  		OreToBank();
  		Destock();
  		Restock();
- 		//Orion.Wait(120000);
  		ChangeMine();
 		Orion.Exec('Autostart', true);
 	}
@@ -444,12 +446,10 @@ function RESS(){
 		Orion.WalkTo(2330, 534, -1, 0);
 		
 		Orion.Exec('Autostart', true);	
-	
 	}
-	
 }
 
-function ToHelpRoom(){
+function ToHelpRoom(dummy){
 
 	var gump;
 
@@ -474,7 +474,7 @@ function ToHelpRoom(){
 
 }
 
-function Restock(){
+function Restock(dummy){
 
 	DEBUG2('Restocking ...');
 	
@@ -484,23 +484,23 @@ function Restock(){
 	Orion.Wait(600);
 	
 	var pickaxes = Orion.FindType(miningTools, 0, 'srcBag',-1, 3);	
-	for(var i=0; i <= 7; i++){
+	for(var i=0; i < 3; i++){
 		Orion.MoveItem(pickaxes[i], 1, backpack, -1,-1,-1);
 		Orion.Wait(600);
 	}
 	
 	var regs =  Orion.FindType('0x0F7A|0x0F86|0x0F7B', 0, 'srcBag',-1, 3);
 		for(var i=0; i < 3; i++){
-		Orion.MoveItem(regs[i], 70, backpack, -1,-1,-1);
+		Orion.MoveItem(regs[i], 10, backpack, -1,-1,-1);
 		Orion.Wait(600);
 	}
 	
 	var invis =  Orion.FindType('0x0F0E','0x0001', 'srcBag',-1, 3);
-	Orion.MoveItem(invis[0], 5, backpack, -1,-1,-1);
+	Orion.MoveItem(invis[0], 2, backpack, -1,-1,-1);
 	Orion.Wait(600);
 }
 
-function Destock(){
+function Destock(dummy){
 
 	DEBUG2('Destocking ...');
 	
@@ -524,7 +524,42 @@ function Destock(){
 		Orion.MoveItem(invis[i], 1000, 'srcBag', -1,-1,-1);
 		Orion.Wait(600);
 	}
+}
 
+function FullRestockAndMine(){
+
+	MineToBank();
+	OreToBank();
+	Destock();
+	Restock();
+	ChangeMine();
+	BankToMine();
+}
+
+function Meditation(){
+
+	if( Player.WarMode() == true  )
+		Orion.WarMode(false);
+		
+	while(Player.Mana() <= 44 ){
+		Orion.UseSkill('Meditation');
+		Orion.Wait(1000);
+	}
+	DEBUG('Medit ends');
+}
+	//===========================================
+function __OTHERS__(){}
+	//===========================================
+
+function EchoAllJournal(){
+
+	while(true){
+	
+		var j = Orion.WaitJournal('a|e|i|o|u',  Orion.Now(), Orion.Now() + 10000 , -1 ,-1, -1);
+		if(j)
+			Orion.Print(0xff, j.Text());
+		Orion.Wait(200);
+	}
 }
 
 
