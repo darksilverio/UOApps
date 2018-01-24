@@ -952,7 +952,10 @@ function ColectFeno() {
 //==================== ANTI PK ============================
 //======================================================
 function ___ANTI_PKs___(){}
-
+function AntiPKOFF(){
+	Orion.Print(infoColor, 'Anti PK OFF' );
+	Orion.Terminate('AntiPKOFF', true);
+}
 function AntiPK() {
 
 	var delay = 10;
@@ -1560,18 +1563,24 @@ Orion.OpenOrionMap(20,20);
 
 function PrintColors(){
 
-	for(var i = 300; i < 0xFFFF; i++)
-	{
+	for(var i =  0x0BB7; i >= 0; i--)	{
 		Orion.Print(i,'Printing Colors: ' + i.toString(16));
 		Orion.Wait(100);
 	}
-	
-
 }
 
-function test(){
+function TitleType(){
 
-var vendor = Orion.FindType('0x0190|0x0191', '-1', ground, 'human|first', 3, 'blue');
-					Orion.UseObject(vendor[0]);
+
+var o = {a: 1, b: 2};
+var a = Orion
+
+Orion.Print( a )
+return
+
+SelectedTile('mine');
+Orion.Print( SelectedTile.Serial() )
+Orion.Print( SelectedTile.Graphic() )
+
 
 }
