@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data version="0" show_shopping_progress_bar="true" max_shop_items="100" max_sell_price="0" shop_delay="450" shop_timeout="30">
+<data version="0" show_shopping_progress_bar="false" max_shop_items="100" max_sell_price="0" shop_delay="1" shop_timeout="30">
     <shoplist name="horses">
         <shopitem graphic="0x2121" color="0x0000" name="horse" count="0" price="0" comment=""/>
         <shopitem graphic="0x2120" color="0x0000" name="Horse" count="0" price="0" comment=""/>
@@ -7,10 +7,18 @@
         <shopitem graphic="0x2124" color="0x0000" name="Horse" count="0" price="0" comment=""/>
     </shoplist>
     <shoplist name="mining buys">
-        <shopitem graphic="0x0F86" color="0x0000" name="Mandrake Roots" count="100" price="0" comment=""/>
-        <shopitem graphic="0x0F7B" color="0x0000" name="Blood Moss" count="100" price="0" comment=""/>
-        <shopitem graphic="0x0F7A" color="0x0000" name="Black Pearls" count="100" price="0" comment=""/>
-        <shopitem graphic="0x0E85" color="0x0000" name="pickaxe" count="6" price="0" comment=""/>
+        <shopitem graphic="0x0F86" color="0x0000" name="Mandrake Roots" count="0" price="0" comment=""/>
+        <shopitem graphic="0x0F7B" color="0x0000" name="Blood Moss" count="0" price="0" comment=""/>
+        <shopitem graphic="0x0F7A" color="0x0000" name="Black Pearls" count="0" price="0" comment=""/>
+        <shopitem graphic="0x0E85" color="0x0000" name="pickaxe" count="0" price="0" comment=""/>
     </shoplist>
-    <shoplist name="tmp"/>
+    <shoplist name="Shaped Iron">
+        <shopitem graphic="0x1BD7" color="0x03BB" name="Shaped Iron" count="10" price="0" comment=""/>
+    </shoplist>
+    <shoplist name="recall buys">
+        <shopitem graphic="0x0F86" color="0x0000" name="Mandrake Roots" count="5" price="0" comment=""/>
+        <shopitem graphic="0x0F7B" color="0x0000" name="Blood Moss" count="5" price="0" comment=""/>
+        <shopitem graphic="0x0F7A" color="0x0000" name="Black Pearls" count="5" price="0" comment=""/>
+        <shopitem graphic="0x0F3F" color="0x0000" name="arrows" count="0" price="0" comment=""/>
+    </shoplist>
 </data>

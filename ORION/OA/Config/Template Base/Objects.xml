@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data version="0" size="5" dressbag="0x40036EC8">
+<data version="0" size="9" dressbag="0x40036EC8">
     <object name="lootpack" id="0x40036EC8"/>
-    <object name="emptycontainer" id="0x400CBE6D"/>
-    <object name="receiver" id="0x4013B70D"/>
-    <object name="model" id="0x400364C5"/>
-    <object name="follow" id="0x00009530"/>
+    <object name="emptycontainer" id="0x00000000"/>
+    <object name="receiver" id="0x4000783F"/>
+    <object name="model" id="0x4009D74C"/>
+    <object name="follow" id="0x00109827"/>
+    <object name="cTo" id="0x40004811"/>
+    <object name="cbags" id="0x4006260C"/>
+    <object name="corpse" id="0x4002D592"/>
+    <object name="miningBox" id="0x400F88D5"/>
 </data>

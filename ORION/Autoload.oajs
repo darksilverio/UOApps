@@ -952,7 +952,10 @@ function ColectFeno() {
 //==================== ANTI PK ============================
 //======================================================
 function ___ANTI_PKs___(){}
-
+function AntiPKOFF(){
+	Orion.Print(infoColor, 'Anti PK OFF' );
+	Orion.Terminate('AntiPKOFF', true);
+}
 function AntiPK() {
 
 	var delay = 10;

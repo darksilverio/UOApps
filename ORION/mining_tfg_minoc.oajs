@@ -2,9 +2,9 @@
 var miningTools = '0x0E85|0x0E86';
 var miningDelay=16000
 var persist = true;
-var bankweight = 330;
-//var bagBankSerial=0x400F88D5  //BELZEBOSS
-var bagBankSerial=0x4006D740   //AMIGO
+var bankweight = 124;
+var bagBankSerial=0x400F88D5  //BELZEBOSS
+//var bagBankSerial=0x4006D740   //AMIGO
 var oresType='0x19B7|0x19BA|0x19B8|0x19B9|0x0F0F|0x0F10|0x0F16|0x0F15|0x0F11|0x0F26|0x0F18'
 var moveitemdelay=1500
 
