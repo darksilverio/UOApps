@@ -343,17 +343,19 @@ function AntiPlayer() {
 
 	while (!Player.Dead() && Orion.Connected()) {
 		Orion.Wait(delay);
+		
+		mineIndex = Orion.GetGlobal('mineIndex');
+		
+		if( ! IsInBoundaires(Player.X(), Player.Y(), 2) ){
+			Orion.Print(infoColor, 'Antiplayer allowed here.');
+		 	Orion.Wait(5000);
+		 	continue;
+		 }
 
 		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', range, 'red|blue|gray|orange|green');
 
 		if (pksFound.length == 0) 
 			continue;
-		
-		 if( ! IsInBoundaires(Player.X(), Player.Y(), 2) ){
-			Orion.Print(infoColor, 'Antiplayer allowed here.');
-		 	Orion.Wait(5000);
-		 	continue;
-		 }
 		
 		/*	
 		//IGNORE MAGINCIA BANK
@@ -384,7 +386,8 @@ function AntiPlayer() {
 		Orion.Terminate('Mining');
 		Orion.Wait(1500);
 		Orion.Screenshot();
-		Orion.Wait(4000);
+		Orion.Wait(1500);
+		Orion.Screenshot();
 		Orion.BlockMoving(false);
 		Orion.Wait(6000);
  		OreToBank();
@@ -577,6 +580,10 @@ function DEBUG2(msg){
 
 function test(){
 
-Orion.Print( Orion.Count(miningTools)  )
 
+Orion.Print(mineIndex);
+
+Orion.Print(mineIndex);
+Orion.Print( IsInBoundaires(Player.X(), Player.Y(), 2) )
+Orion.Print( Player.X() )
 }
