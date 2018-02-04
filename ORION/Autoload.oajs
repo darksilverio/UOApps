@@ -506,7 +506,7 @@ function RunAway() {
 	else
 		Orion.Print(errorColor, 'No more invis potions =(');
 
-	Orion.Say('.recall 1 1');
+	Orion.Say('.recall 1,1');
 	Orion.BandageSelf();
 	Orion.Wait(5000);
 	Orion.Exec('Autostart', true);
@@ -516,7 +516,7 @@ function RunAway() {
 function GoHome() {
 	Orion.CharPrint(self, infoColor, 'Go Home ');
 
-	Orion.Say('.recall 1 1');
+	Orion.Say('.recall 1,1');
 	Orion.BandageSelf();
 }
 
@@ -632,7 +632,10 @@ function MassMove() {
 
 	for (var i = 0; i < list.length; i++) {
 		Orion.MoveItem(list[i], 0, 'receiver');
-		Orion.Wait('moveitemdelay', 0, 'receiver');
+		Orion.Wait(600);
+		//DEBUG(i + '/' + list.length);
+
+
 	}
 }
 
@@ -998,12 +1001,10 @@ function AntiPK() {
 				if (pksFound[i] == pkList[j]) {
 					Orion.BlockMoving(true);
 					Orion.UseType('0x0F0E', '0x0001', backpack, true); //invis
-					Orion.Say('.recall 1 1');
+					Orion.Say('.recall 1,1');
 					Orion.WarMode(false);
 					Orion.Sound(107);
-
-					var pk = Orion.FindObject(pksFound[i]);
-					Orion.CharPrint(self, 0xff, "PK[" + Orion.GetDistance((pksFound[i])) + " tiles away] " + pk.Name() + ' : ' + pkList[j]);
+					Orion.CharPrint(self, 0xff, "PK[" + Orion.GetDistance((pksFound[i])) + " tiles away] " + Orion.RequestName(pkList[j])+ ' : ' + pkList[j]);
 					Orion.Wait(1000);
 					Orion.BlockMoving(false);
 					Orion.Wait(20000);
@@ -1234,6 +1235,59 @@ function ShapedIron(){
 	}
 }
 
+function PotionsToSell(){
+
+	var iron, reags;
+
+	Orion.Print(infoColor, 'Mortar and pastle and reags must be in your backpack');
+	Orion.Print(infoColor, 'Select a container with bottles');
+
+	//Orion.RemoveObject('cbags');
+	//if('cbags' == null){
+	Orion.AddObject('cbags');
+	while (Orion.HaveTarget())
+		Orion.Wait(50);
+//}
+	Orion.UseObject('cbags');
+	
+	while(Orion.Connected){
+	
+		 bottles = Orion.FindType('0x0F0E', 0, backpack);
+	
+		 if(!bottles.length){
+	 		bottles = Orion.FindType('0x0F0E', 0, 'cbags');
+	 	
+	 		if(bottles.length){
+	 			Orion.MoveItem(bottles[0], 15,backpack, -1,-1,-1);
+	 			Orion.Wait(600);
+	 		}
+	 	 	else{
+		 		Orion.Print(infoColor, 'No more iron');
+		 		return;
+			 }
+		 }
+	
+		 bottles = Orion.FindType('0x0F0E', 0, backpack);
+		 bottles = Orion.FindObject(bottles[0]);
+	 
+	 	reags = Orion.FindType('0x0F88|0x0F84|0x0F7A', 0, backpack);
+
+		while(bottles.Count() > 10 ){
+	
+			Orion.UseObject(reags[0])
+			Orion.WaitMenu('Alchemy Menu', 0);
+			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 3000, -1 ,-1, -1);
+			Orion.ClearJournal();
+		}
+	
+		bottles = Orion.FindType('0x0F0E', -1, backpack);
+		for(var i=0; i<bottles.length; i++){
+			Orion.MoveItem(bottles[i], 0,'cbags', -1,-1,-1);
+			Orion.Wait(600);
+		}
+	}
+}
+
 
 function MakeLExplosion(){
 
@@ -1264,8 +1318,8 @@ function FullSpeelBook(){
 
 	var scrollID = 0x1F2E;
 	
-	for(var circle = 1; circle <= 8; circle++){
-		for(var spell = 0; spell <= 9; spell++){
+	for(var circle = 3; circle <= 7; circle++){
+		for(var spell = 0; spell <= 7; spell++){
 			
 			DEBUG2(circle + ' : '+ spell );
 			
@@ -1296,24 +1350,14 @@ function FullSpeelBook(){
 					Orion.UseSkill('Meditation');
 					Orion.Wait(1000);
 				}
-				
-			
-			
 			//var scroll =  Orion.FindType(scrollID++, 0, backpack);
 			//var spellBook = Orion.FindType(0x0EFA, 0, backpack);
 			
 			//Orion.MoveItem(scroll[0],1,spellBook);
 			//Orion.Wait(600);
 			//DEBUG2(scroll);
-			
-
-	
-			
 		}	
 	}
-
-
-
 }
 
 function SaySell(){
@@ -1465,6 +1509,21 @@ function ping(){
 }
 
 
+function DropHere(){
+
+	Orion.Print(infoColor, 'What item do you want to drop ?');
+
+Orion.DropHere(0);
+
+/*
+	Orion.AddObject('tmp');
+	while (Orion.HaveTarget())
+		Orion.Wait(50);
+		*/
+}
+
+
+
 function EchoAllJournal(){
 
 	while(true){
@@ -1572,15 +1631,7 @@ function PrintColors(){
 function TitleType(){
 
 
-var o = {a: 1, b: 2};
-var a = Orion
-
-Orion.Print( a )
-return
-
-SelectedTile('mine');
-Orion.Print( SelectedTile.Serial() )
-Orion.Print( SelectedTile.Graphic() )
+DEBUG2(Orion.CanWalk(0, 1444, 1533,  -1));
 
 
 }
