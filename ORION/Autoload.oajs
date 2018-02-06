@@ -50,12 +50,7 @@ function Autostart() {
 	
 	Orion.Print(infoColor, 'BG Macro: WatchManaStaminaPoison');
 	Orion.Exec('WatchManaStaminaPoison', true);
-	
-	
-	//Orion.Print(infoColor, 'BG Macro: ShapedIron');
-	//Orion.Exec('ShapedIron', true);
-	
-	
+
 	Orion.Exec('SetViewRange', true);
 	
 	
@@ -1184,11 +1179,12 @@ function LeatherClothes(){
 }
 
 
-function ShapedIron(){
+function EmptyBottles(){
 
 	var iron;
-
-	Orion.Print(infoColor, 'Container with Iron');
+	
+	Orion.Print(infoColor, 'Tinker tools must be in your bag');
+	Orion.Print(infoColor, 'Select a container with ceramic');
 
 	//Orion.RemoveObject('cbags');
 	//if('cbags' == null){
@@ -1200,13 +1196,13 @@ function ShapedIron(){
 	
 	while(Orion.Connected){
 	
-		 iron = Orion.FindType('0x1BEF', '-1', backpack);
+		 iron = Orion.FindType('0x1BEF', '0x00F2', backpack);
 	
 		 if(!iron.length){
-	 		iron = Orion.FindType('0x1BEF', '-1', 'cbags');
+	 		iron = Orion.FindType('0x1BEF', '0x00F2', 'cbags');
 	 	
 	 		if(iron.length){
-	 			Orion.MoveItem(iron[0], 2000,backpack, -1,-1,-1);
+	 			Orion.MoveItem(iron[0], 250,backpack, -1,-1,-1);
 	 			Orion.Wait(600);
 	 		}
 	 	 	else{
@@ -1215,23 +1211,26 @@ function ShapedIron(){
 			 }
 		 }
 	
-		 iron = Orion.FindType('0x1BEF', '-1', backpack);
+		 iron = Orion.FindType('0x1BEF', '0x00F2', backpack);
 		 iron = Orion.FindObject(iron[0]);
 	 
 
 		while(iron.Count() > 10 ){
 	
-			Orion.UseObject(iron.Serial())
-			Orion.WaitMenu('Blacksmithing', 1);
+			Orion.UseType('0x1EBC')
+			Orion.WaitMenu('Empty Bottles', 2);
 			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 3000, -1 ,-1, -1);
 			Orion.ClearJournal();
 		}
 	
-		Orion.MoveItem(iron.Serial(), 0,'cbags', -1,-1,-1);
-		Orion.Wait(600);
-		iron = Orion.FindType('0x1BD7', '-1', backpack);
+		iron = Orion.FindType('0x0F0E', '-1', backpack); // bottles
 		Orion.MoveItem(iron[0], 0,'cbags', -1,-1,-1);
 		Orion.Wait(600);
+		iron = Orion.FindType('0x1BEF', '-1', backpack);
+		if(iron.length){
+			Orion.MoveItem(iron[0], 0,'cbags', -1,-1,-1);
+			Orion.Wait(600);
+		}
 	}
 }
 
@@ -1285,6 +1284,67 @@ function PotionsToSell(){
 			Orion.MoveItem(bottles[i], 0,'cbags', -1,-1,-1);
 			Orion.Wait(600);
 		}
+	}
+}
+
+function SellPotions(){
+
+	var bagPotions = 0x40059708;
+	var bagGold = 0x40121A37;
+	var rune = 1;
+
+	while(true){
+		Orion.Say('.recall 1,14');
+		Orion.Wait(7000);
+
+		Orion.Say('banker bank');
+		Orion.Wait(600);
+		
+		var gold = Orion.FindType('0x0EED', '0', backpack);
+		if(gold.length){
+			for(var i=0; i<gold.length;i++){
+				Orion.MoveItem(gold[i], 0, bagGold );
+				Orion.Wait(600);
+			}
+		}
+		Orion.UseObject(bagPotions);
+		Orion.Wait(600);
+	
+		potions = Orion.FindType('0x0F0E', '0x008F|0x0049|0x0022', bagPotions);
+	
+		if(!potions.length){
+			Orion.Print(errorColor, 'No potions found in the bag: ' + bagPotions );
+			return;
+		}
+		
+		Orion.MoveItem(potions[0], 1900, backpack );
+	
+		Orion.Wait(600);
+
+	//potions = Orion.FindType('0x0F0E', '0x008F|0x0049|0x0022', bagPotions);
+		while(potions.length){
+	
+			Orion.Say('.recall 4,' + rune++);
+			Orion.Wait(7000);
+
+			var vendor = Orion.FindType('0x0190|0x0191', '-1', ground, 'human|near', 10, 'blue');
+	
+			if(vendor.length){
+				vendor = Orion.FindObject(vendor[0])
+		
+				Orion.WalkTo( vendor.X(), vendor.Y(), vendor.Z(), 1);	
+				Orion.Wait(600);
+				SaySell();
+			}
+		
+//Orion.FindType('graphic', ['color'], ['container'], ['flags'], ['distance'], ['notoriety'], [recurseSearch]);
+			potions = Orion.FindType('0x0F0E', '0x008F|0x0049|0x0022', backpack, 'item',3,-1,false);
+			if(rune > 10)
+				rune = 1;
+	
+		}
+	
+		DEBUG2('LOOPING AGAIN');
 	}
 }
 
