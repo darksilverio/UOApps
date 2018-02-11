@@ -2,7 +2,11 @@
 var infoColor = 61;
 var errorColor = 36;
 var moveDelay = 1000; //small delays may crash in high ping connections
+<<<<<<< HEAD
 var skillTools = '0x13E3|0x0FB4'
+=======
+var skillTools = '0x13E3'
+>>>>>>> 4b53c2e55b667accb45ddf8fd5d95ba0524a8de8
 
 function Autostart(){
 

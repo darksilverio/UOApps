@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <data version="0" size="43">
+=======
+<data version="0" size="44">
+>>>>>>> 4b53c2e55b667accb45ddf8fd5d95ba0524a8de8
     <enemy id="0x00089303" name="BeGood" enabled="true"/>
     <enemy id="0x000D6982" name="Iguin" enabled="true"/>
     <enemy id="0x00024863" name="Cannabis Sativa" enabled="true"/>
@@ -42,5 +46,20 @@
     <enemy id="0x000839B1" name="Sonic Wing" enabled="true"/>
     <enemy id="0x0005ECD4" name="LegO" enabled="true"/>
     <enemy id="0x0002EA08" name="Darbos Forever" enabled="true"/>
+<<<<<<< HEAD
     <enemy id="0x0006B199" name="1x1" enabled="true"/>
+=======
+    <enemy id="0x0006E2E3" name="H a i m" enabled="true"/>
+    <enemy id="0x000F55A0" name="MaLiA" enabled="true"/>
+    <enemy id="0x00092D95" name="SalgadinhO" enabled="false"/>
+    <enemy id="0x0001203F" name="DragonlorD" enabled="true"/>
+    <enemy id="0x00006C54" name="VENON - I g n o m i u S" enabled="false"/>
+    <enemy id="0x000E4599" name="Omega Hawk" enabled="false"/>
+    <enemy id="0x00036ECB" name="Belzeboss" enabled="false"/>
+    <enemy id="0x00052BC3" name="Calado" enabled="false"/>
+    <enemy id="0x000DC441" name="ScadufaX" enabled="false"/>
+    <enemy id="0x000EC21F" name="SirVeja" enabled="true"/>
+    <enemy id="0x0005B455" name="GonzO" enabled="true"/>
+    <enemy id="0x000839B1" name="Sonic Wing" enabled="true"/>
+>>>>>>> 4b53c2e55b667accb45ddf8fd5d95ba0524a8de8
 </data>

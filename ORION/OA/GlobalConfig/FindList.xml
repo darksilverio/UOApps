@@ -38,9 +38,13 @@
         <item graphic="0x1547" color="0x0000" comment=""/>
         <item graphic="0x1438" color="0xFFFF" comment="War Hammer"/>
         <item graphic="0x108A" color="0x0000" comment="Ring"/>
+<<<<<<< HEAD
         <item graphic="0x1545" color="0xFFFF" comment="Bear Mask"/>
         <item graphic="0x1549" color="0xFFFF" comment="Magic Tribal Mask"/>
         <item graphic="0x143E" color="0xFFFF" comment="Halberd"/>
+=======
+        <item graphic="0x1545" color="0x0455" comment="Bear Mask"/>
+>>>>>>> 4b53c2e55b667accb45ddf8fd5d95ba0524a8de8
     </findlist>
     <findlist name="myBows">
         <item graphic="0x13B1" color="0xFFFF" comment="Bow"/>

@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
     <macro name="macro">
+<<<<<<< HEAD
         <action type="5" convert_type="0" waiting_time="1000" value="19"/>
         <action type="3" convert_type="0" waiting_time="1000" serial="0x400189A5" graphic="0x2006" color="0x83EA"/>
+=======
+        <action type="1" convert_type="0" waiting_time="1000" serial="0x4006E248" graphic="0x0F51" color="0x0000"/>
+        <action type="3" convert_type="0" waiting_time="1000" serial="0x40080F44" graphic="0x1BDD" color="0x0000"/>
+        <action type="14" convert_type="0" waiting_time="1000" name="What do you want to carve the wood into?" item_name="Color Bows" graphic="0x13FC" color="0x0000"/>
+        <action type="14" convert_type="0" waiting_time="1000" name="Shadow Bows" item_name="Shadow Bow (60 Shadow Ingot, 1 log)" graphic="0x13B1" color="0x0000"/>
+>>>>>>> 4b53c2e55b667accb45ddf8fd5d95ba0524a8de8
     </macro>
 </data>

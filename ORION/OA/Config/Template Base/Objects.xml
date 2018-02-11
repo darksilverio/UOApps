@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <data version="0" size="7" dressbag="0x40036EC8">
     <object name="miningBox" id="0x400F88D5"/>
     <object name="miningResourcesBox" id="0x400AA2F7"/>
@@ -7,4 +8,16 @@
     <object name="sellShapedContainer" id="0x40059708"/>
     <object name="emptycontainer" id="0x400F88D5"/>
     <object name="receiver" id="0x400AFCA7"/>
+=======
+<data version="0" size="9" dressbag="0x40036EC8">
+    <object name="lootpack" id="0x40036EC8"/>
+    <object name="emptycontainer" id="0x00000000"/>
+    <object name="receiver" id="0x4000783F"/>
+    <object name="model" id="0x4009D74C"/>
+    <object name="follow" id="0x00109827"/>
+    <object name="cTo" id="0x40004811"/>
+    <object name="cbags" id="0x4006260C"/>
+    <object name="corpse" id="0x4002D592"/>
+    <object name="miningBox" id="0x400F88D5"/>
+>>>>>>> 4b53c2e55b667accb45ddf8fd5d95ba0524a8de8
 </data>
