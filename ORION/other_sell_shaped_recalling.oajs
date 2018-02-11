@@ -1,0 +1,141 @@
+var infoColor = 61;
+var errorColor = 36;
+var moveDelay = 1000; //small delays may crash in high ping connections
+
+
+//agente configurado e funcao auto ativada
+//hard code paginas do rune e runa inicial
+
+function SellShapedIron(){
+
+	var sellShapedContainer;
+	var bagGold;
+	
+	var page = 8;
+	var startRune = 1;
+	var lastRune = 20;
+	
+	while(Orion.Connected()){
+	
+		Orion.Say('.recall 1,14'); //Rune to bank
+		Orion.Wait(7000);
+
+		Orion.Say('banker bank');
+		Orion.Wait(600);
+		
+		var sellShapedContainer = AddOrUseContainerWithResources('sellShapedContainer', '0x1BD7', '0xFFFF');
+		var bagGold = AddOrUseContainerWithResources('bagGold', '0x0EED', '0x0000');
+		
+		var gold = Orion.FindType('0x0EED', '0', backpack);
+		if(gold.length){
+			for(var i=0; i<gold.length;i++){
+				Orion.MoveItem(gold[i], 0, bagGold.Serial() );
+				Orion.Wait(600);
+			}
+		}
+		
+		Orion.UseObject(sellShapedContainer.Serial());
+		Orion.Wait(600);
+	
+		var shapedIron = Orion.FindType('0x1BD7', '0x03BB', sellShapedContainer.Serial());
+	
+		if(!shapedIron.length){
+			Orion.Print(errorColor, 'No shapedIron found in the bag: ');
+			return;
+		}
+		
+		Orion.MoveItem(shapedIron[0], 1900, backpack );
+	
+		Orion.Wait(600);
+
+		while(shapedIron.length){
+	
+			Orion.Say('.recall ' + page + ',' + startRune++);
+			Orion.Wait(7000);
+
+			var vendor = Orion.FindType('0x0190|0x0191', '-1', ground, 'human|near', 10, 'blue');
+	
+			if(vendor.length){
+				vendor = Orion.FindObject(vendor[0])
+		
+				Orion.WalkTo( vendor.X(), vendor.Y(), vendor.Z(), 1);	
+				Orion.Wait(600);
+				SaySell();
+			}
+		
+			shapedIron = Orion.FindType('0x1BD7', '0x03BB', backpack, 'item',3,-1,false);
+			if(startRune > lastRune)
+				startRune = 1;
+		}
+	}
+}
+
+//=============================================================
+function AddOrUseContainerWithResources(objName, resourcesID, resourceColor){
+
+	var res = [];
+	var container = Orion.FindObject(objName)
+	
+
+	if(container)
+	{
+		Orion.UseObject(container.Serial());
+		Orion.Wait(moveDelay);
+		res = Orion.FindType(resourcesID, resourceColor, container.Serial());
+	}
+	
+	//get container (orion object) with iron inside
+	if(!res.length || !container)
+	{
+		Orion.Print(infoColor, 'Select a container: ' + objName);
+	
+		Orion.AddObject(objName);
+		while (Orion.HaveTarget())
+			Orion.Wait(100);
+		
+		container = Orion.FindObject(objName)
+		Orion.UseObject(container.Serial());
+		Orion.Wait(moveDelay);
+		res = Orion.FindType(resourcesID, resourceColor, container.Serial());
+		
+		if(!res.length)
+		{
+			Orion.RemoveObject(objName);
+			return null;
+		}
+	}
+	return container;
+}
+
+//=============================================================
+function SaySell(){
+
+	var gold;
+	var restocked = false;
+	
+	while(Orion.Connected()){
+	
+		 gold = Player.Gold();
+		Orion.Say('vendor sell');
+		
+		for(var i = 0; gold == Player.Gold(); i++  ){
+			Orion.Wait(40);
+			if(i > 30){
+				if(!restocked){
+				
+					Orion.Ignore(self);
+					var vendor = Orion.FindType('0x0190|0x0191', '-1', ground, 'human|first', 3, 'blue');
+					Orion.UseObject(vendor[0]);
+					restocked = true;
+					Orion.CharPrint(self, infoColor, 'RESTOCK DONE');
+					Orion.Wait(600);
+					break;
+				}
+				Orion.Print(infoColor, 'All done selling');
+				return;
+			}
+		}
+	
+	}
+
+}

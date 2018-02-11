@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+    <macro name="macro">
+        <action type="5" convert_type="0" waiting_time="1000" value="19"/>
+        <action type="3" convert_type="0" waiting_time="1000" serial="0x400189A5" graphic="0x2006" color="0x83EA"/>
+    </macro>
+</data>

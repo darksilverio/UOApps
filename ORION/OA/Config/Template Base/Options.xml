@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data version="0">
-    <main flags="8363788" messageslevel="2" searchdistance="3" usedistance="3" opencorpsedistance="3" corpsekeepdelay="15000" waittargetsdelay="0" moveitemsdelay="600" useitemsdelay="0" windowsopacity="100" usefontcolor="true" fontcolor="0x005A" usecharactersfontcolor="false" charactersfontcolor="0x0002" autoreconnect="true" autoreconnecttimer="10"/>
+    <main flags="4168462" messageslevel="2" searchdistance="3" usedistance="3" opencorpsedistance="3" corpsekeepdelay="15000" waittargetsdelay="0" moveitemsdelay="100" useitemsdelay="0" windowsopacity="100" usefontcolor="true" fontcolor="0x0031" usecharactersfontcolor="false" charactersfontcolor="0x0002" autoreconnect="true" autoreconnecttimer="10" doubleclickforopendoors="false"/>
     <display type="3" flags="4" textcolor="0" backgroundcolor="0" titledata="{name} ({server}) {barlarge} {hp_maxhp} {mp_maxmp} {sp_maxsp} {armor} {weight_maxweight} {gold2} {group allreag} {group pots} {sheaf}  X:{x} Y:{y} "/>
-    <hotkeys passhotkeys="false" hotkeyprefix="_" sortscripts="false"/>
-    <scripts scriptfile="C:/Users/gabriel/Documents/GitHub/UOApps/ORION/Autoload.oajs"/>
+    <scripts sortscripts="false" scriptfile="C:/Users/gabriel/Documents/GitHub/UOApps/ORION/mining_tfg_recall.oajs"/>
 </data>

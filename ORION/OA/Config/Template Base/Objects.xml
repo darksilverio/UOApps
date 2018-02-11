@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data version="0" size="5" dressbag="0x40036EC8">
-    <object name="lootpack" id="0x40036EC8"/>
-    <object name="emptycontainer" id="0x400CBE6D"/>
-    <object name="receiver" id="0x4013B70D"/>
-    <object name="model" id="0x400364C5"/>
-    <object name="follow" id="0x00009530"/>
+<data version="0" size="7" dressbag="0x40036EC8">
+    <object name="miningBox" id="0x400F88D5"/>
+    <object name="miningResourcesBox" id="0x400AA2F7"/>
+    <object name="sellPotionsContainer" id="0x00036ECB"/>
+    <object name="bagGold" id="0x40121A37"/>
+    <object name="sellShapedContainer" id="0x40059708"/>
+    <object name="emptycontainer" id="0x400F88D5"/>
+    <object name="receiver" id="0x400AFCA7"/>
 </data>

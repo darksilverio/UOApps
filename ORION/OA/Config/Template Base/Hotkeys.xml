@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data version="0" size="34">
-    <hotkey onescriptrunning="true" key="119" modifiers="0" macro="ExternalCode" externalcode="Orion.Cast('Paralyze', Orion.ClientLastTarget())"/>
-    <hotkey onescriptrunning="true" key="118" modifiers="0" macro="ExternalCode" externalcode="Orion.Cast('Lightning', Orion.ClientLastTarget())"/>
-    <hotkey onescriptrunning="true" key="117" modifiers="0" macro="CastGreaterHeal" externalcode=""/>
-    <hotkey onescriptrunning="true" key="117" modifiers="2" macro="CastHealFree" externalcode=""/>
-    <hotkey onescriptrunning="true" key="74" modifiers="6" macro="ExternalCode" externalcode="Orion.Cast('Resurrection', Orion.ClientLastTarget())"/>
-    <hotkey onescriptrunning="true" key="80" modifiers="6" macro="ExternalCode" externalcode="Orion.CancelWaitTarget();&#10;Orion.WaitTargetTileRelative(self, 0, 0, 0);&#10;Orion.Cast('Paralyze Field')"/>
-    <hotkey onescriptrunning="true" key="87" modifiers="2" macro="ExternalCode" externalcode="Orion.CancelWaitTarget();&#10;Orion.WaitTargetTileRelative(self, 0, 0, 0);&#10;Orion.Cast('Wall of Stone')"/>
-    <hotkey onescriptrunning="true" key="116" modifiers="8" macro="ExternalCode" externalcode="Orion.Cast('Magic Reflection', 'self')"/>
-    <hotkey onescriptrunning="true" key="86" modifiers="2" macro="EmptyContainer" externalcode=""/>
-    <hotkey onescriptrunning="false" key="19" modifiers="0" macro="RunAway" externalcode="Orion.TextWindow('fuga');&#10;//Orion.Say('.recall 1,1');"/>
-    <hotkey onescriptrunning="true" key="70" modifiers="2" macro="Follow" externalcode="follow thing"/>
-    <hotkey onescriptrunning="true" key="112" modifiers="0" macro="EquipBow" externalcode=""/>
-    <hotkey onescriptrunning="true" key="113" modifiers="0" macro="EquipWeaponAndShield" externalcode=""/>
-    <hotkey onescriptrunning="true" key="68" modifiers="2" macro="autoDoor" externalcode=""/>
-    <hotkey onescriptrunning="false" key="192" modifiers="0" macro="Autostart" externalcode="Orion.Terminate('all');"/>
-    <hotkey onescriptrunning="false" key="72" modifiers="4" macro="StealtForever" externalcode="Orion.Terminate('all');"/>
-    <hotkey onescriptrunning="true" key="77" modifiers="4" macro="Meditation" externalcode=""/>
-    <hotkey onescriptrunning="true" key="49" modifiers="4" macro="AttackNearestHostile" externalcode=""/>
-    <hotkey onescriptrunning="true" key="50" modifiers="4" macro="AttackNext" externalcode=""/>
-    <hotkey onescriptrunning="true" key="88" modifiers="2" macro="PVMCasts" externalcode="Orion.Cast('Greater Heal', 'self')"/>
-    <hotkey onescriptrunning="true" key="116" modifiers="0" macro="CastParalizeField" externalcode=""/>
-    <hotkey onescriptrunning="true" key="82" modifiers="4" macro="SkillTracking" externalcode=""/>
-    <hotkey onescriptrunning="true" key="82" modifiers="2" macro="SkillTrackingPlayer" externalcode=""/>
-    <hotkey onescriptrunning="true" key="84" modifiers="4" macro="SkillTaming" externalcode=""/>
-    <hotkey onescriptrunning="false" key="123" modifiers="0" macro="SuperFeno" externalcode=""/>
-    <hotkey onescriptrunning="false" key="123" modifiers="4" macro="ColectFeno" externalcode=""/>
-    <hotkey onescriptrunning="true" key="86" modifiers="4" macro="MassMove" externalcode=""/>
-    <hotkey onescriptrunning="false" key="65" modifiers="2" macro="AllNames" externalcode=""/>
-    <hotkey onescriptrunning="false" key="122" modifiers="0" macro="Corridor" externalcode=""/>
-    <hotkey onescriptrunning="true" key="114" modifiers="0" macro="CastMagicArrow" externalcode="Orion.Cast('Paralyze', Orion.ClientLastTarget())"/>
-    <hotkey onescriptrunning="true" key="115" modifiers="0" macro="CastParalyze" externalcode="Orion.Cast('Paralyze', Orion.ClientLastTarget())"/>
-    <hotkey onescriptrunning="false" key="45" modifiers="16" macro="GoHome" externalcode=""/>
-    <hotkey onescriptrunning="false" key="219" modifiers="0" macro="Skining" externalcode=""/>
-    <toggle_hotkeys key="0" modifiers="0"/>
+<data version="1" size="38">
+    <hotkey type="2" action="0" running_mode="true" key="0" modifiers="0" name="CastLightningFlood" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="120" modifiers="4" name="CastHealFree" external_code=""/>
+    <hotkey type="3" action="0" running_mode="true" key="74" modifiers="6" name="" external_code="Orion.Cast('Resurrection')"/>
+    <hotkey type="3" action="0" running_mode="true" key="80" modifiers="6" name="" external_code="Orion.CancelWaitTarget();&#10;Orion.WaitTargetTileRelative(self, 0, 0, 0);&#10;Orion.Cast('Paralyze Field')"/>
+    <hotkey type="3" action="0" running_mode="true" key="87" modifiers="2" name="" external_code="Orion.CancelWaitTarget();&#10;Orion.WaitTargetTileRelative(self, 0, 0, 0);&#10;Orion.Cast('Wall of Stone')"/>
+    <hotkey type="3" action="0" running_mode="true" key="116" modifiers="8" name="" external_code="Orion.Cast('Magic Reflection', 'self')"/>
+    <hotkey type="2" action="0" running_mode="true" key="86" modifiers="2" name="EmptyContainer" external_code=""/>
+    <hotkey type="2" action="0" running_mode="false" key="19" modifiers="0" name="RunAway" external_code="Orion.TextWindow('fuga');&#10;//Orion.Say('.recall 1,1');"/>
+    <hotkey type="2" action="0" running_mode="true" key="70" modifiers="2" name="Follow" external_code="follow thing"/>
+    <hotkey type="2" action="0" running_mode="true" key="112" modifiers="0" name="EquipBow" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="113" modifiers="0" name="EquipWeaponAndShield" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="68" modifiers="2" name="autoDoor" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="192" modifiers="0" name="Autostart" external_code=""/>
+    <hotkey type="2" action="0" running_mode="false" key="72" modifiers="4" name="StealtForever" external_code="Orion.Terminate('all');"/>
+    <hotkey type="2" action="0" running_mode="true" key="77" modifiers="4" name="Meditation" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="49" modifiers="4" name="AttackNearestHuman" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="50" modifiers="4" name="AttackNextHuman" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="88" modifiers="2" name="PVMCasts" external_code="Orion.Cast('Greater Heal', 'self')"/>
+    <hotkey type="2" action="0" running_mode="true" key="0" modifiers="0" name="CastParalizeField" external_code=""/>
+    <hotkey type="2" action="4294967295" running_mode="true" key="82" modifiers="4" name="SkillTracking" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="82" modifiers="2" name="SkillTrackingPlayer" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="84" modifiers="4" name="SkillTaming" external_code=""/>
+    <hotkey type="2" action="0" running_mode="false" key="123" modifiers="0" name="SuperFeno" external_code=""/>
+    <hotkey type="2" action="0" running_mode="false" key="123" modifiers="4" name="ColectFeno" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="86" modifiers="4" name="MassMove" external_code=""/>
+    <hotkey type="2" action="0" running_mode="false" key="65" modifiers="2" name="AllNames" external_code=""/>
+    <hotkey type="2" action="0" running_mode="false" key="122" modifiers="0" name="Corridor" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="114" modifiers="0" name="CastMagicArrow" external_code="Orion.Cast('Paralyze', Orion.ClientLastTarget())"/>
+    <hotkey type="2" action="0" running_mode="true" key="115" modifiers="0" name="CastParalyze" external_code="Orion.Cast('Paralyze', Orion.ClientLastTarget())"/>
+    <hotkey type="2" action="0" running_mode="false" key="45" modifiers="16" name="GoHome" external_code=""/>
+    <hotkey type="2" action="0" running_mode="false" key="219" modifiers="0" name="Skining" external_code=""/>
+    <hotkey type="2" action="4294967295" running_mode="true" key="116" modifiers="0" name="CastLighting" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="117" modifiers="0" name="CastFS" external_code=""/>
+    <hotkey type="2" action="4294967295" running_mode="true" key="49" modifiers="0" name="AttackNearestHostile" external_code=""/>
+    <hotkey type="2" action="0" running_mode="true" key="50" modifiers="0" name="AttackNextHostile" external_code=""/>
+    <hotkey type="2" action="0" running_mode="false" key="118" modifiers="0" name="CastMAFlood" external_code=""/>
+    <hotkey type="0" action="0" running_mode="false" key="0" modifiers="0" name="" external_code=""/>
 </data>

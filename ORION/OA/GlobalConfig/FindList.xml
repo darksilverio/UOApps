@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data version="0" size="5">
     <findlist name="AutoLoot">
-        <item graphic="0x0EED" color="0xFFFF" comment="gold coin"/>
-        <item graphic="0x0F3F" color="0xFFFF" comment="arrows"/>
-        <item graphic="0x1406" color="0xFFFF" comment="War Mace"/>
+        <item graphic="0x175D" color="0xFFFF" comment="Cloth"/>
         <item graphic="0x1F31" color="0xFFFF" comment="PS &amp; Recipe"/>
+        <item graphic="0x14EF" color="0xFFFF" comment="Deeds"/>
+        <item graphic="0x14EB" color="0xFFFF" comment="treasure map"/>
+        <item graphic="0x1400" color="0xFFFF" comment="Kryss"/>
+        <item graphic="0x0F3F" color="0xFFFF" comment="arrows"/>
+        <item graphic="0x0EED" color="0xFFFF" comment="gold coin"/>
+        <item graphic="0x1406" color="0xFFFF" comment="War Mace"/>
         <item graphic="0x0E40" color="0x0A23" comment="Paragon Chest"/>
         <item graphic="0x13FE" color="0xFFFF" comment="Katana"/>
-        <item graphic="0x14EB" color="0xFFFF" comment="treasure map"/>
         <item graphic="0x0F26" color="0x0000" comment="diamonds"/>
         <item graphic="0x0F0F" color="0x0000" comment="star sapphires"/>
         <item graphic="0x0F13" color="0x0000" comment="rubies"/>
@@ -19,13 +22,25 @@
         <item graphic="0x0E21" color="0x0000" comment="clean bandages"/>
         <item graphic="0x0F0E" color="0xFFFF" comment="Invisibility"/>
         <item graphic="0x1F5F" color="0x0000" comment="Flamestrike"/>
-        <item graphic="0x175D" color="0xFFFF" comment="Cloth"/>
-        <item graphic="0x14EF" color="0xFFFF" comment="Deeds"/>
         <item graphic="0x1BD1" color="0x0000" comment="feathers"/>
         <item graphic="0x0F45" color="0x0231" comment="Magic Silver Executioner's Axe"/>
         <item graphic="0x1BC4" color="0x0000" comment="Order Shield"/>
         <item graphic="0x0F87" color="0x0000" comment="Eyes of Newt"/>
-        <item graphic="0x1400" color="0xFFFF" comment="Kryss"/>
+        <item graphic="0x186E" color="0xFFFF" comment="virtue stone"/>
+        <item graphic="0x186B" color="0xFFFF" comment="virtue stone"/>
+        <item graphic="0x1869" color="0xFFFF" comment="virtue stone"/>
+        <item graphic="0x186C" color="0xFFFF" comment="virtue stone"/>
+        <item graphic="0x186D" color="0xFFFF" comment="virtue stone"/>
+        <item graphic="0x186F" color="0xFFFF" comment="virtue stone"/>
+        <item graphic="0x1870" color="0xFFFF" comment="virtue stone"/>
+        <item graphic="0x186C" color="0xFFFF" comment="virtue stone"/>
+        <item graphic="0x1AD6" color="0xFFFF" comment="Keg"/>
+        <item graphic="0x1547" color="0x0000" comment=""/>
+        <item graphic="0x1438" color="0xFFFF" comment="War Hammer"/>
+        <item graphic="0x108A" color="0x0000" comment="Ring"/>
+        <item graphic="0x1545" color="0xFFFF" comment="Bear Mask"/>
+        <item graphic="0x1549" color="0xFFFF" comment="Magic Tribal Mask"/>
+        <item graphic="0x143E" color="0xFFFF" comment="Halberd"/>
     </findlist>
     <findlist name="myBows">
         <item graphic="0x13B1" color="0xFFFF" comment="Bow"/>
@@ -45,5 +60,7 @@
         <item graphic="0x1406" color="0xFFFF" comment="War Mace"/>
         <item graphic="0x0F62" color="0xFFFF" comment="Spear"/>
         <item graphic="0x13AF" color="0xFFFF" comment="War Axe"/>
+        <item graphic="0x0F4E" color="0x0021" comment="Magic Blood Bardiche"/>
+        <item graphic="0x0E87" color="0xFFFF" comment="Pitchfork"/>
     </findlist>
 </data>

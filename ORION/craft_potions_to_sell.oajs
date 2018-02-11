@@ -1,0 +1,136 @@
+//GLOBALS
+var infoColor = 61;
+var errorColor = 36;
+var moveDelay = 1000; //small delays may crash in high ping connections
+var skillTools = '0x0E9B'
+
+function Autostart(){
+
+	Orion.Terminate('all', 'Autostart');
+	Orion.Exec('CraftPotionsToSell', true);
+}
+
+function CraftPotionsToSell(){
+
+	var bottles;	
+	var potionsContainer;
+	
+	Orion.Print(infoColor, 'Mortar and pastle and reagensts must be in your backpack.');
+	Orion.Print(infoColor, 'Only works with garlic, black pears and nightshade.');
+
+	potionsContainer = AddOrUseContainerWithResources('potionsContainer', '0x0F0E', '0x0000');
+	
+	if(!potionsContainer)
+	{
+			Orion.Print(errorColor, 'No resources found here');
+			return;
+	}
+
+	Orion.UseObject(potionsContainer.Serial());
+	Orion.Wait(moveDelay);
+	
+	//empty bag to avoid bug
+	bottles = Orion.FindType('0x0F0E', '0x008F|0x0049|0x0022|0x0000', backpack);
+	for(var i=0; i<bottles.length; i++){
+		Orion.MoveItem(bottles[i], 0,potionsContainer.Serial(), -1,-1,-1);
+		Orion.Wait(moveDelay);
+	}
+	
+	//start macro loop
+	while(Orion.Connected)
+	{
+
+		FindEquipTools(skillTools, potionsContainer.Serial() );
+		
+		bottles = Orion.FindType('0x0F0E', '0x0000', potionsContainer.Serial(), 'item', 3, -1, false);
+		bottles = Orion.FindObject(bottles[0]);
+
+	 	Orion.MoveItem(bottles.Serial(), 200,backpack, -1,-1,-1);
+		Orion.Wait(moveDelay);
+
+		reags = Orion.FindType('0x0F88|0x0F84|0x0F7A', 0, backpack);
+		
+		while(bottles.Count() > 10 ){
+	
+			Orion.UseObject(reags[0])
+			Orion.WaitMenu('Alchemy Menu', 0);
+			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 3000, -1 ,-1, -1);
+			Orion.ClearJournal();
+		}
+	
+		//move potions
+		bottles = Orion.FindType('0x0F0E', '0x008F|0x0049|0x0022|0x0000', backpack);
+		for(var i=0; i<bottles.length; i++){
+			Orion.MoveItem(bottles[i], 0, potionsContainer.Serial(), -1,-1,-1);
+			Orion.Wait(moveDelay);
+		}
+	}
+}
+
+//=============================================================
+function AddOrUseContainerWithResources(objName, resourcesID, resourceColor){
+
+	var res = [];
+	var container = Orion.FindObject(objName)
+	
+
+	if(container)
+	{
+		Orion.UseObject(container.Serial());
+		Orion.Wait(moveDelay);
+		res = Orion.FindType(resourcesID, resourceColor, container.Serial());
+	}
+	
+	//get container (orion object) with iron inside
+	if(!res.length || !container)
+	{
+		Orion.Print(infoColor, 'Select a container with resources');
+	
+		Orion.AddObject(objName);
+		while (Orion.HaveTarget())
+			Orion.Wait(100);
+		
+		container = Orion.FindObject(objName)
+		Orion.UseObject(container.Serial());
+		Orion.Wait(moveDelay);
+		res = Orion.FindType(resourcesID, resourceColor, container.Serial());
+		
+		if(!res.length)
+		{
+			Orion.RemoveObject(objName);
+			return null;
+		}
+	}
+	return container;
+}
+
+
+//=============================================================
+function FindEquipTools(tools, containerSerial)
+{
+	var tool = [];
+
+	//equip BS tool
+	if(!tool.length)
+		tool = Orion.FindType(tools, '0', self);	
+	if(!tool.length)
+		tool = Orion.FindType(tools, '0', backpack);
+	if(!tool.length && containerSerial)
+	{
+		tool = Orion.FindType(tools, '-1', containerSerial);
+		if(tool.length)
+		{
+			Orion.MoveItem(tool, 1, backpack);
+			Orion.Wait(moveDelay);
+		}
+		else
+		{
+			Orion.Print(errorColor, "No skill tools found with you");
+			return null;
+		}
+	}
+	
+	Orion.Equip(tool[0]);
+	//avoid bug next command after function
+	Orion.Wait(moveDelay);
+}

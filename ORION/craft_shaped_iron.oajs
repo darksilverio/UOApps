@@ -1,0 +1,133 @@
+//GLOBALS
+var infoColor = 61;
+var errorColor = 36;
+var moveDelay = 1000; //small delays may crash in high ping connections
+var skillTools = '0x13E3|0x0FB4'
+
+function Autostart(){
+
+	Orion.Terminate('all', 'Autostart');
+	Orion.Exec('CraftShapedIron', true);
+}
+
+function CraftShapedIron(){
+
+	var iron;	
+	var shapedContainer;
+
+	shapedContainer = AddOrUseContainerWithResources('shapedContainer', '0x1BEF', '0x0000');
+	
+	if(!shapedContainer)
+	{
+			Orion.Print(errorColor, 'No resources found here');
+			return;
+	}
+
+	Orion.UseObject(shapedContainer.Serial());
+	Orion.Wait(moveDelay);
+	
+	//empty bag to avoid bug
+	iron = Orion.FindType('0x1BEF', '-1', backpack);
+	if(iron.length){
+		Orion.MoveItem(iron[0], 0, shapedContainer.Serial(), -1,-1,-1);
+		Orion.Wait(moveDelay);
+	}
+	iron = Orion.FindType('0x1BD7', '-1', backpack);
+	if(iron.length){
+		Orion.MoveItem(iron[0], 0, shapedContainer.Serial(), -1,-1,-1);
+		Orion.Wait(moveDelay);
+	}
+	
+	//start macro loop
+	while(Orion.Connected)
+	{
+
+		FindEquipTools(skillTools, shapedContainer.Serial() );
+		
+		iron = Orion.FindType('0x1BEF', '0x0000', shapedContainer.Serial(), 'item', 3, -1, false);
+		iron = Orion.FindObject(iron[0]);
+
+	 	Orion.MoveItem(iron.Serial(), 1000,backpack, -1,-1,-1);
+		Orion.Wait(moveDelay);
+
+		while(iron.Count() > 10 ){
+			
+			Orion.UseObject(iron.Serial())
+			Orion.WaitMenu('Blacksmithing', 1);
+			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 6000, -1 ,-1, -1);
+			Orion.ClearJournal();
+		}
+	
+		//move shaped iron
+		iron = Orion.FindType('0x1BD7', '-1', backpack);
+		Orion.MoveItem(iron[0], 0, shapedContainer.Serial(), -1,-1,-1);
+		Orion.Wait(moveDelay);
+	}
+}
+
+//=============================================================
+function AddOrUseContainerWithResources(objName, resourcesID, resourceColor){
+
+	var res = [];
+	var container = Orion.FindObject(objName)
+	
+
+	if(container)
+	{
+		Orion.UseObject(container.Serial());
+		Orion.Wait(moveDelay);
+		res = Orion.FindType(resourcesID, resourceColor, container.Serial());
+	}
+	
+	//get container (orion object) with iron inside
+	if(!res.length || !container)
+	{
+		Orion.Print(infoColor, 'Select a container with resources');
+	
+		Orion.AddObject(objName);
+		while (Orion.HaveTarget())
+			Orion.Wait(100);
+		
+		container = Orion.FindObject(objName)
+		Orion.UseObject(container.Serial());
+		Orion.Wait(moveDelay);
+		res = Orion.FindType(resourcesID, resourceColor, container.Serial());
+		
+		if(!res.length)
+		{
+			Orion.RemoveObject(objName);
+			return null;
+		}
+	}
+	return container;
+}
+
+//=============================================================
+function FindEquipTools(tools, containerSerial)
+{
+	var tool = [];
+
+	//equip BS tool
+	if(!tool.length)
+		tool = Orion.FindType(tools, '0', self);	
+	if(!tool.length)
+		tool = Orion.FindType(tools, '0', backpack);
+	if(!tool.length && containerSerial)
+	{
+		tool = Orion.FindType(tools, '-1', containerSerial);
+		if(tool.length)
+		{
+			Orion.MoveItem(tool, 1, backpack);
+			Orion.Wait(moveDelay);
+		}
+		else
+		{
+			Orion.Print(errorColor, "No smith's hammer found with you");
+			return null;
+		}
+	}
+	
+	Orion.Equip(tool[0]);
+	//avoid bug next acoomand after function
+	Orion.Wait(moveDelay);
+}
