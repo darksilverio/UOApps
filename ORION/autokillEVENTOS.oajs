@@ -4,7 +4,7 @@ var errorColor = 0x028;
 var highlightColor = 0x168;
 var debugColor = 0x45F;
 
-var pontoDeFuga = {x: 2529, y: 3642}
+var pontoDeFuga = {x: 2528, y: 3621}
 var fugaIncremento = 0;
 
 function ___EXP_ENHANCEMENT___(){}
@@ -53,7 +53,7 @@ function AutoKillEvento(){
 			Orion.Print(errorColor, "NOTHING TO KILL");
 			fugaIncremento += 5;
 			PathFinder(pontoDeFuga.x - fugaIncremento, pontoDeFuga.y - fugaIncremento);
-			Orion.Wait(100);
+			Orion.Wait(50);
 			continue;
 		}
 		target = Orion.FindObject( found[0]);
@@ -73,11 +73,10 @@ function AutoKillEvento(){
 				PathFinder(pontoDeFuga.x, pontoDeFuga.y);
 			}
 			
-			Orion.Wait(100);
+			Orion.Wait(50);
 		}
-		Orion.Print(errorColor,"MORREU!");
+		Orion.Print(errorColor,"Matado e lootiando!");
 		FastLoot("null");
-		Orion.Print(errorColor,"CORPO LOOTIADO!");
 		//EquipWeaponAndShield();
 		fugaIncremento = 0;
 		var contaPerigo = Orion.FindType('!0x0190|!0x0191', '-1', ground, "live|mobile`", 10, "gray|red");
@@ -90,7 +89,7 @@ function AutoKillEvento(){
 			
 				Orion.Print(errorColor, "POUCO Perigo: " + contaPerigo.length);
 			}
-		Orion.Wait(100);
+		Orion.Wait(50);
 	}
 }
 
@@ -376,10 +375,10 @@ function FastLoot(listName) {
 			
 			Loot(listName, bodies[0]);
 		
-			var splitName = Orion.RequestName(bodies[0], 1500)
-			splitName =  splitName.split(' ').slice(3).join(' ');
+			//var splitName = Orion.RequestName(bodies[0], 1500)
+			//splitName =  splitName.split(' ').slice(3).join(' ');
 		
-			Orion.Print(0x0A4, 'Loot Completed: ' + splitName + ' (' + (Orion.Now() - t) + ' ms)' );
+			Orion.Print(0x0A4, 'Loot Completed' );
 		}
 	}
 }
@@ -393,6 +392,7 @@ function Loot(listName, corpseSerial) {
 
 	//Orion.AddObject('lootpack', Orion.GetSerial(backpack));
 
+	var attempCounter = 0;
 	var prevItem = null;
 	while (Orion.GetDistance(corpseSerial) <= 3) {
 		
@@ -408,49 +408,30 @@ function Loot(listName, corpseSerial) {
 			Orion.Wait(200);
 		
 
-		if(prevItem != lootList[0] ){
-			var item = Orion.FindObject(lootList[0]);
-			Orion.Print(0x0793, item.Count() + ' ' +Orion.RequestName(lootList[0], 1500) );
-		}
+		//if(prevItem != lootList[0] ){
+			//var item = Orion.FindObject(lootList[0]);
+			//Orion.Print(0x0793, item.Count() + ' ' +Orion.RequestName(lootList[0], 1500) );
+		//}
 
 		Orion.MoveItem(lootList[0], 0, backpack);
 		timer = Orion.Now();
 				
 		prevItem =  lootList[0];
+		
+		if(attempCounter++ > 35)
+		{
+			Orion.Ignore(corpseSerial);
+			Orion.Hide(corpseSerial);
+			Orion.Exec('Autostart', true);
+		}
 	}
 }
-
-function PrintItemDetails(dummy){
-
-	var item = Orion.FindObject(  Orion.GetGlobal('gTMP') );
-	Orion.Print(debugColor, item.Count() + ' ' +Orion.RequestName(item.Serial(), 1500) );
-	
-}
-function Skining() {
-	
-	Orion.CharPrint(self, infoColor, 'Cut Corpse' );
-	Orion.WaitTargetObject('corpse');
-	
-	equipments = Orion.FindList('myWeapons', self);
-	if (!equipments.length)
-		equipments = Orion.FindList('myWeapons', backpack);
-	if (!equipments.length)
-		Orion.CharPrint(self, infoColor, 'You have no utting weapon to use' );
-		
-	Orion.UseObject(equipments[0]);
-	
-	Orion.Terminate('FastLootRPGLoop');
-	Orion.Wait(200);
-	Orion.Exec('FastLootRPGLoop', true);
-	Orion.Wait(200);
-}
-
 
 function LootLoadingLag(bodySerial) {
 	
 	var timer = Orion.Now();
 
-	while (Orion.Now() - timer < 550 ){	
+	while (Orion.Now() - timer < 600 ){	
 		if(Orion.FindType('-1', '-1', bodySerial).length > 0 )
 			break;
 				
@@ -458,745 +439,8 @@ function LootLoadingLag(bodySerial) {
 	}
 }
 
-
-function Scavenger() {
-	
-	var list;
-	
-	while(!Player.Dead()){
-		
-		Orion.Wait(100);
-	
-		list = Orion.FindList('scavenger', 'ground','',3)     
-		if (!list.length)
-			continue;
-	
-		Orion.CharPrint(self, infoColor, 'Scavenging...');
-	
-		for (var i = 0; i < list.length; i++){
-			Orion.MoveItem(list[i], 0, 'lootpack');
-	      	Orion.Wait(1100);
-		}     
-	}
-	
-	return true;
- }
  
  
- 
-// ##############################################################
-// ############################### AUTO LOOT FUNCTIONS END #########
-// ##############################################################
-
-//lock animal with sheaf
-function SuperFeno() {
-
-	var delay = 600;
-
-	Orion.Ignore(self);
-
-	var mob = Orion.FindType('-1', '-1', ground, 'mobile|near|fast', '1', 'gray|red');
-	var feno = Orion.FindType('0x0F36', '-1', self, 'item', 1, 0, true);
-
-	if (!mob.length) {
-		Orion.CharPrint(self, infoColor, 'No GRAY MOB found in 2 tiles range');
-		return;
-	}
-	if (!feno.length) {
-		Orion.CharPrint(self, infoColor, 'No sheaf of hay in your backpack');
-		return;
-	}
-
-	mob = Orion.FindObject(mob[0]);
-	Orion.CharPrint(self, infoColor, "Locking: " + mob.Name());
-
-	Orion.Drop(feno[0], 1, mob.X() - 1, mob.Y(), -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[3], 1, mob.X(), mob.Y() - 1,  -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[1], 1, mob.X() + 1, mob.Y(),  -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[2], 1, mob.X(), mob.Y() + 1, -1);
-
-	Orion.Wait(delay);
-
-	Orion.Drop(feno[4], 1, Player.X() - 1, Player.Y(), -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[5], 1, Player.X() + 1, Player.Y(), -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[6], 1, Player.X(), Player.Y() - 1, -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[7], 1, Player.X(), Player.Y() + 1, -1);
-}
-
-function Corridor() {
-
-	var delay = 600;
-
-	var feno = Orion.FindType('0x0F36', '-1', self, 'item', 1, 0, true);
-
-	if (!feno.length) {
-		Orion.CharPrint(self, infoColor, 'No sheaf of hay in your backpack');
-		return;
-	}
-
-	Orion.CharPrint(self, infoColor, "Corridor Vertical");
-
-	Orion.Drop(feno[1], 1, Player.X() + 1, Player.Y() + 1,  -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[2], 1, Player.X() + 1, Player.Y(),  -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[3], 1, Player.X() + 1, Player.Y() - 1,  -1);
-	Orion.Wait(delay);
-
-	Orion.Drop(feno[4], 1, Player.X() - 1, Player.Y() + 1,  -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[5], 1, Player.X() - 1, Player.Y(), -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[6], 1, Player.X() - 1, Player.Y() - 1,  -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[7], 1, Player.X(), Player.Y() + 1,  -1);
-	Orion.Wait(delay);
-	Orion.Drop(feno[8], 1, Player.X(), Player.Y() - 1,  -1);
-
-}
-
-function ColectFeno() {
-
-	Orion.Terminate('Corridor');
-	Orion.Terminate('SuperFeno');
-
-	var pickupDelay = 1000;
-	var msg = 'You can not pick that up'
-	var timeout;
-
-	Orion.CharPrint(self, infoColor, "Colecting sheaf ...");
-
-	for (j = 0; j < 2; j++) {
-		var feno = Orion.FindType('0x0F36', '-1', ground, 'item', 3, 0, true);
-
-		for (var i = 0; i < feno.length; i++) {
-
-			Orion.ClearJournal(msg);
-			Orion.MoveItem(feno[i], 0, backpack);
-
-			timeout = Orion.Now() + pickupDelay;
-			while (Orion.Now() <= timeout) {
-
-				if (Orion.InJournal(msg)) {
-					break;
-				}
-				Orion.Wait(50);
-			}
-		}
-	}
-}
-
-//======================================================
-//==================== ANTI PK ============================
-//======================================================
-function ___ANTI_PKs___(){}
-function AntiPKOFF(){
-	Orion.Print(infoColor, 'Anti PK OFF' );
-	Orion.Terminate('AntiPKOFF', true);
-}
-function AntiPK() {
-
-	var delay = 50;
-	var range = 25;
-	var isInIgnoreArea;
-	
-	while (Orion.Connected()) {
-	Orion.Wait(delay);
-
-		isInIgnoreArea = false;
-	
-	
-		for(var i=0; i < AntiPKIgnoreAreas.length; i++){
-			if(IsInBoundaries(Player.X(), Player.Y(), 0, AntiPKIgnoreAreas[i]) ){
-				isInIgnoreArea = true;
-				break;
-			}
-		}
-
-		if(isInIgnoreArea){
-			Orion.Exec('CapturePksSerial', true);
-			continue;
-		}
-
-		Orion.Terminate('CapturePksSerial');
-
-		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', range, 'murderer|blue');
-
-		if (pksFound.length == 0 ) {
-			continue;
-		}
-		
-		var pkList = Orion.GetEnemyList();
-
-		for (var i = 0; i < pksFound.length; i++) {
-			found = false;
-			for (j = 0; j < pkList.length; j++) {
-				if (pksFound[i] == pkList[j]) {
-					Orion.UseType('0x0F0E', '0x0001', backpack, true); //invis
-					Orion.BlockMoving(true);
-					Orion.Say('.recall 1,1');
-					Orion.Sound(107);
-					Orion.WarMode(false);
-					Orion.CharPrint(self, 0xff, "PK[" + Orion.GetDistance((pksFound[i])) + " tiles away] " + Orion.RequestName(pkList[j])+ ' : ' + pkList[j]);
-					Orion.Wait(1000);
-					Orion.BlockMoving(false);
-					Orion.Terminate('AntiPK');
-				}
-			}
-		}
-	}
-}
-
-
-function ActivateStealthSteps(){
-
-	Orion.Say('!');
-	
-	while(Player.Hidden())
-		Orion.Wait(50);
-	
-	Orion.UseSkill('Hiding');
-	Orion.ClearJournal();
-		
-	timer = Orion.Now();
-	while(!Player.Hidden() && Orion.Now() - timer < 4000 ){
-		Orion.Wait(50)
-	}
-	
-	if(Player.Hidden()){
-		
-		Orion.UseSkill('Stealth');
-		Orion.ClearJournal();
-		Orion.WaitJournal('not hidden|quietly', Orion.Now(), Orion.Now() + 10000, 'my|sys',-1,-1);		
-		Orion.Say('!!');
-		
-	}
-}
-
-function CapturePksSerial() {
-
-	var delay = 500;
-	var found = false;
-
-	Orion.CharPrint(self, infoColor, "Capture Pks Serial");
-	
-	while (true) {
-		Orion.Wait(delay);
-		var pksFound = Orion.FindType('0x0190|0x0191', '-1', ground, 'human', 25, 'murderer');
-
-		if (pksFound.length == 0) {
-			continue;
-		}
-
-		var pkList = Orion.GetEnemyList();
-
-		for (var i = 0; i < pksFound.length; i++) {
-			found = false;
-			for (j = 0; j < pkList.length; j++) {
-				if (pksFound[i] == pkList[j])
-					found = true;
-			}
-			if (!found) {
-				var pk = Orion.FindObject(pksFound[i]);
-				Orion.Print(32, 'NEW PK : ' + pk.Name());
-				Orion.AddEnemy(pk.Name(), pksFound[i]);
-			}
-		}
-	}
-}
-
-
-
-//=====================================================
-//=============== CRAFTS ================================
-//=====================================================
-function ___CRAFTS___(){}
-
-function MakeBagsOfPVP(){
-
-	Orion.Print(infoColor, 'If you have a Dye tub in you bag this macro will paint de bag of reagents for you.');
-	Orion.Print(infoColor, 'Container with empty bags');
-
-	Orion.AddObject('cbags');
-	while (Orion.HaveTarget())
-		Orion.Wait(50);
-	
-	Orion.Print(infoColor, 'Container with Items');
-	
-	Orion.AddObject('cregs');
-	while (Orion.HaveTarget())
-		Orion.Wait(50);
-		
-	Orion.Print(infoColor, 'Container to put the loaded bags');
-	
-	Orion.AddObject('cTo');
-	while (Orion.HaveTarget())
-		Orion.Wait(50);
-
-	for(var j = 0; j < 10; j++){
-	
-		var bag = Orion.FindType('0x0E76', '-1', 'cbags','first', 3);
-	
-		Orion.MoveItem(bag[0], 1, backpack, 100,100,-1);
-		Orion.UseObject(bag[0]);
-	
-		Orion.Wait(600);
-	
-		var regs =  Orion.FindType('0x0F7A|0x0F85|0x0F8D|0x0F84|0x0F7B|0x0F8C|0x0F86|0x0F88', '-1', 'cregs', 3);
-		var lexplo =  Orion.FindType('0x0F02', '-1', 'cregs', 3); //lesser explosion
-	
-		for(var i = 0; i < regs.length; i++){
-			Orion.MoveItem(regs[i], 200,bag[0], 100,100,-1);
-			Orion.Wait(600);
-		}
-	
-		for(var i = 0; i < 20; i++){
-			Orion.MoveItem(lexplo[i], 1,bag[0],  Orion.Random(80, 100) , Orion.Random(60, 90) ,-1);
-			Orion.Wait(600);
-		}
-	
-		var dye =  Orion.FindType('0x0FAB', '-1',backpack);
-		if(dye){
-			Orion.UseObject(dye[0]);
-			Orion.WaitForTarget();
-			Orion.TargetObject(bag[0])
-			Orion.Wait(300);
-		}
-	
-		Orion.MoveItem(bag[0], 1,'cTo');
-		Orion.Wait(600);
-	}
-	
-}
-
-//buy and shiirink animals
-function ShrinkAnimals() {
-
-	var mob = Orion.FindType('-1', '-1', ground, 'mobile', '3', 'gray');
-
-	for(var i = 0; i < mob.length; i++){
-	
-		Orion.UseType('0x0F0E'); //use shrink
-		Orion.WaitTargetObject(mob[i]);
-		Orion.Wait(600);
-	}
-}
-
-function LeatherClothes(){
-
-	Orion.Print(infoColor, 'Instructions: Put the leather and sewing kit in your bag and let it run.')
-	
-	var leather = Orion.FindType('0x1078', '-1', backpack);
-	
-	if(leather.length)
-		leather = Orion.FindObject(leather[0]);
-	else
-		return;
-	
-	if(leather.Count() % 36 != 0){
-		Orion.Print(errorColor, 'Put leather amount multiple of 36 (36, 72, 108, 144, 180)')
-		return;
-	}
-	
-	while(leather.Count() % 36 == 0 && (leather.Count()) ){
-	
-		for(var i = 1; i <= 5; i ++){
-	
-			Orion.UseType(0x0F9D);
-			Orion.WaitTargetType(0x1078);
-		
-			Orion.Wait(1000);
-			var menu = Orion.GetMenu(0);
-			Orion.Wait(1000);
-			menu.Select(i);
-		
-			Orion.ClearJournal();
-			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 10000, -1 ,-1, -1);
-		}
-	}
-}
-
-
-function EmptyBottles(){
-
-	var iron;
-	
-	Orion.Print(infoColor, 'Tinker tools must be in your bag');
-	Orion.Print(infoColor, 'Select a container with ceramic');
-
-	//Orion.RemoveObject('cbags');
-	//if('cbags' == null){
-	Orion.AddObject('cbags');
-	while (Orion.HaveTarget())
-		Orion.Wait(50);
-//}
-	Orion.UseObject('cbags');
-	
-	while(Orion.Connected){
-	
-		 iron = Orion.FindType('0x1BEF', '0x00F2', backpack);
-	
-		 if(!iron.length){
-	 		iron = Orion.FindType('0x1BEF', '0x00F2', 'cbags');
-	 	
-	 		if(iron.length){
-	 			Orion.MoveItem(iron[0], 250,backpack, -1,-1,-1);
-	 			Orion.Wait(600);
-	 		}
-	 	 	else{
-		 		Orion.Print(infoColor, 'No more iron');
-		 		return;
-			 }
-		 }
-	
-		 iron = Orion.FindType('0x1BEF', '0x00F2', backpack);
-		 iron = Orion.FindObject(iron[0]);
-	 
-
-		while(iron.Count() > 10 ){
-	
-			Orion.UseType('0x1EBC')
-			Orion.WaitMenu('Empty Bottles', 2);
-			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 3000, -1 ,-1, -1);
-			Orion.ClearJournal();
-		}
-	
-		iron = Orion.FindType('0x0F0E', '-1', backpack); // bottles
-		Orion.MoveItem(iron[0], 0,'cbags', -1,-1,-1);
-		Orion.Wait(600);
-		iron = Orion.FindType('0x1BEF', '-1', backpack);
-		if(iron.length){
-			Orion.MoveItem(iron[0], 0,'cbags', -1,-1,-1);
-			Orion.Wait(600);
-		}
-	}
-}
-
-function Pickaxes(){
-
-	var iron;
-	
-	Orion.Print(infoColor, 'Tinker tools must be in your bag');
-	Orion.Print(infoColor, 'Select a container with iron');
-
-	//Orion.RemoveObject('cbags');
-	//if('cbags' == null){
-	Orion.AddObject('cbags');
-	while (Orion.HaveTarget())
-		Orion.Wait(50);
-//}
-	Orion.UseObject('cbags');
-	
-	while(Orion.Connected){
-	
-		 iron = Orion.FindType('0x1BEF', '0', backpack);
-	
-		 if(!iron.length){
-	 		iron = Orion.FindType('0x1BEF', '0', 'cbags');
-	 	
-	 		if(iron.length){
-	 			Orion.MoveItem(iron[0], 4,backpack, -1,-1,-1);
-	 			Orion.Wait(600);
-	 		}
-	 	 	else{
-		 		Orion.Print(infoColor, 'No more iron');
-		 		return;
-			 }
-		 }
-	
-		Orion.Wait(600);
-		 iron = Orion.FindType('0x1BEF', '0', backpack);
-		 iron = Orion.FindObject(iron[0]);
-		 
-Orion.Print(iron[0]);
-	Orion.Print(iron.Count());
-		while(iron.Count() >= 4 ){
-	
-			Orion.UseType('0x1EBC')
-			Orion.WaitMenu('Tinkering', 1);
-			Orion.WaitMenu('Tools', 5);
-			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 5000, -1 ,-1, -1);
-			Orion.ClearJournal();
-		}
-	
-		iron = Orion.FindType('0x0E85', '-1', backpack); // pickaxes
-		Orion.MoveItem(iron[0], 0,'cbags', -1,-1,-1);
-		Orion.Wait(600);
-		iron = Orion.FindType('0x1BEF', '-1', backpack);
-		if(iron.length){
-			Orion.MoveItem(iron[0], 0,'cbags', -1,-1,-1);
-			Orion.Wait(600);
-		}
-	}
-}
-
-function PotionsToSell(){
-
-	var iron, reags;
-
-	Orion.Print(infoColor, 'Mortar and pastle and reags must be in your backpack');
-	Orion.Print(infoColor, 'Select a container with bottles');
-
-	//Orion.RemoveObject('cbags');
-	//if('cbags' == null){
-	Orion.AddObject('cbags');
-	while (Orion.HaveTarget())
-		Orion.Wait(50);
-//}
-	Orion.UseObject('cbags');
-	
-	while(Orion.Connected){
-	
-		 bottles = Orion.FindType('0x0F0E', 0, backpack);
-	
-		 if(!bottles.length){
-	 		bottles = Orion.FindType('0x0F0E', 0, 'cbags');
-	 	
-	 		if(bottles.length){
-	 			Orion.MoveItem(bottles[0], 15,backpack, -1,-1,-1);
-	 			Orion.Wait(600);
-	 		}
-	 	 	else{
-		 		Orion.Print(infoColor, 'No more iron');
-		 		return;
-			 }
-		 }
-	
-		 bottles = Orion.FindType('0x0F0E', 0, backpack);
-		 bottles = Orion.FindObject(bottles[0]);
-	 
-	 	reags = Orion.FindType('0x0F88|0x0F84|0x0F7A', 0, backpack);
-
-		while(bottles.Count() > 10 ){
-	
-			Orion.UseObject(reags[0])
-			Orion.WaitMenu('Alchemy Menu', 0);
-			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 3000, -1 ,-1, -1);
-			Orion.ClearJournal();
-		}
-	
-		bottles = Orion.FindType('0x0F0E', -1, backpack);
-		for(var i=0; i<bottles.length; i++){
-			Orion.MoveItem(bottles[i], 0,'cbags', -1,-1,-1);
-			Orion.Wait(600);
-		}
-	}
-}
-
-function SellPotions(){
-
-	var bagPotions = 0x40059708;
-	var bagGold = 0x40121A37;
-	var rune = 1;
-
-	while(true){
-		Orion.Say('.recall 1,14');
-		Orion.Wait(7000);
-
-		Orion.Say('banker bank');
-		Orion.Wait(600);
-		
-		var gold = Orion.FindType('0x0EED', '0', backpack);
-		if(gold.length){
-			for(var i=0; i<gold.length;i++){
-				Orion.MoveItem(gold[i], 0, bagGold );
-				Orion.Wait(600);
-			}
-		}
-		Orion.UseObject(bagPotions);
-		Orion.Wait(600);
-	
-		potions = Orion.FindType('0x0F0E', '0x008F|0x0049|0x0022', bagPotions);
-	
-		if(!potions.length){
-			Orion.Print(errorColor, 'No potions found in the bag: ' + bagPotions );
-			return;
-		}
-		
-		Orion.MoveItem(potions[0], 1900, backpack );
-	
-		Orion.Wait(600);
-
-	//potions = Orion.FindType('0x0F0E', '0x008F|0x0049|0x0022', bagPotions);
-		while(potions.length){
-	
-			Orion.Say('.recall 4,' + rune++);
-			Orion.Wait(7000);
-
-			var vendor = Orion.FindType('0x0190|0x0191', '-1', ground, 'human|near', 10, 'blue');
-	
-			if(vendor.length){
-				vendor = Orion.FindObject(vendor[0])
-		
-				Orion.WalkTo( vendor.X(), vendor.Y(), vendor.Z(), 1);	
-				Orion.Wait(600);
-				SaySell();
-			}
-		
-//Orion.FindType('graphic', ['color'], ['container'], ['flags'], ['distance'], ['notoriety'], [recurseSearch]);
-			potions = Orion.FindType('0x0F0E', '0x008F|0x0049|0x0022', backpack, 'item',3,-1,false);
-			if(rune > 10)
-				rune = 1;
-	
-		}
-	
-		DEBUG2('LOOPING AGAIN');
-	}
-}
-
-
-function MakeLExplosion(){
-
-	Orion.Print(infoColor, 'Instructions: Put SS, empty bottles and mortar&pastle in your bag and let it go.')
-	
-	var ss = Orion.FindType('0x0F8C', 0, backpack);
-	
-	if(ss.length)
-		ss = Orion.FindObject(ss[0]);
-	else
-		return;
-		
-	while(ss.Count() > 0 ){
-	
-		Orion.UseType(0x0F8C);
-		Orion.WaitMenu('Alchemy menu', 0);
-
-		Orion.ClearJournal();
-		Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 10000, -1 ,-1, -1);
-	}
-}
-
-function FullSpeelBook(){
-
-// 1 - Put logs and saw in your bag.
-// 2 - Must have skill to craft blank scroll.
-// 3 - Tested at TFG Shard
-
-	var scrollID = 0x1F2E;
-	
-	for(var circle = 3; circle <= 7; circle++){
-		for(var spell = 0; spell <= 7; spell++){
-			
-			DEBUG2(circle + ' : '+ spell );
-			
-			Orion.CancelWaitMenu();		
-			Orion.ClearJournal();
-			
-			Orion.UseType(0x1034); //saw
-			Orion.WaitMenu('Carpentry', 2);
-			Orion.WaitMenu('Blank Scrolls', 0);
-			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 5000, -1 ,-1, -1);
-			
-			Orion.CancelWaitMenu();		
-			Orion.ClearJournal();
-			
-			Orion.UseType(0x0E34); //blank scroll
-			Orion.WaitMenu('Spell Circles', circle);
-						
-			Orion.Wait(600);
-			var menu = Orion.GetMenu(0);
-			menu.Select(spell);
-			Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 5000, -1 ,-1, -1);
-			
-			
-			if( Player.WarMode() == true  )
-				Orion.WarMode(false);
-		
-				while(Player.Mana() <= 44 ){
-					Orion.UseSkill('Meditation');
-					Orion.Wait(1000);
-				}
-			//var scroll =  Orion.FindType(scrollID++, 0, backpack);
-			//var spellBook = Orion.FindType(0x0EFA, 0, backpack);
-			
-			//Orion.MoveItem(scroll[0],1,spellBook);
-			//Orion.Wait(600);
-			//DEBUG2(scroll);
-		}	
-	}
-}
-
-function SaySell(){
-
-	var gold;
-	var restocked = false;
-	
-	while(Orion.Connected()){
-	
-		 gold = Player.Gold();
-		Orion.Say('vendor sell');
-		
-		for(var i = 0; gold == Player.Gold(); i++  ){
-			Orion.Wait(40);
-			if(i > 30){
-				if(!restocked){
-				
-					Orion.Ignore(self);
-					var vendor = Orion.FindType('0x0190|0x0191', '-1', ground, 'human|first', 3, 'blue');
-					Orion.UseObject(vendor[0]);
-					restocked = true;
-					Orion.CharPrint(self, infoColor, 'RESTOCK DONE');
-					Orion.Wait(600);
-					break;
-				}
-				Orion.Print(infoColor, 'All done selling');
-				return;
-			}
-		}
-	
-	}
-
-}
-
-
-//=================================================
-//============  MACROS  ==============================
-//=================================================
-function ___SkillMacros___(){}
-
-function HidingAndStealth(){
-
-	var timer;
-	while(!Player.Dead()){
-	
-		Orion.UseSkill('Hiding');
-		Orion.ClearJournal();
-		
-		timer = Orion.Now();
-		while(!Player.Hidden() && Orion.Now() - timer < 6000 ){
-		
-			if(Orion.InJournal('seem to hide here|hidden', 'my|sys', -1, -1, Orion.Now() -1000, Orion.Now() + 1000) ){
-				DEBUG2('Hidding Delay: ' + (Orion.Now() - timer) );
-				break;
-			}
-			Orion.Wait(50)
-		}
-		
-		if(Player.Hidden()){
-		
-			Orion.UseSkill('Stealth');
-			Orion.ClearJournal();
-			DEBUG2('Waiting Stealth');
-			Orion.WaitJournal('not hidden|quietly', Orion.Now(), Orion.Now() + 10000, 'my|sys',-1,-1);
-			DEBUG2('Stealthed...');
-			
-			Orion.Say('Costela de Panamino, HUMM. Nao ha coisa melhor!');
-		
-			while(Player.Hidden()){
-			Orion.Wait(50);
-			}
-		}
-	}
-}
-
-
-
 //=================================================
 //============  DEBUG   ==============================
 //=================================================
