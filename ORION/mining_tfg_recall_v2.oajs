@@ -1,0 +1,127 @@
+var miningRange = 50
+var miningTools = '0x0E85|0x0E86';
+var miningDelay=16000
+var persist = false;
+var bankweight = 380;
+var oresType='0x19B7|0x19BA|0x19B8|0x19B9|0x0F0F|0x0F10|0x0F16|0x0F15|0x0F11|0x0F26|0x0F18|0x19B7|0x0F13'
+var moveitemdelay=600
+var food='0x097B' //fish
+
+var newSpotMsgs='Try mining elsewhere|There is nothing here|That is too far|You have no line of sight|You cannot mine so close'
+var sameSpotMsgs='You put'
+var persistSpotMsgs='You loosen some rocks but fail'
+var toolUsageMsg='Where do you want to use'
+var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite'
+
+
+
+function Mining()
+{
+	TextWindow.Clear();
+	ViewLog();
+	
+	while(!Player.Dead() && Orion.Connected() )
+	{
+		//standard delay
+		Orion.Wait(50);
+		
+		GoToBank();
+		Destock();
+		Restock();
+
+		
+	DEBUG('macro ends')
+	return;
+	
+	}
+}
+
+
+//----------------------------------------------
+function GoToBank()
+{
+	DEBUG('GoToBank');
+	
+	Orion.Say('.recall 1, 14');
+	Orion.WaitJournal('soundecho: id=0x01FE', Orion.Now(), Orion.Now() + 13000, -1, -1, -1);
+	Orion.Wait(600);
+}
+
+
+function Destock()
+{
+	DEBUG('Destocking ...');
+	
+	Orion.SayYell('banker bank');
+	Orion.Wait(600);
+	
+	var pickaxes = Orion.FindType(miningTools, 0, backpack,-1, 3);	
+	for(var i=0; i < pickaxes.length; i++){
+		Orion.MoveItem(pickaxes[i], 1, 'miningResourcesBox', -1,-1,-1);
+		Orion.Wait(600);
+	}
+	
+	var regs =  Orion.FindType('0x0F7A|0x0F86|0x0F7B', 0, backpack,-1, 3);
+		for(var i=0; i < regs.length; i++){
+		Orion.MoveItem(regs[i], 1000, 'miningResourcesBox', -1,-1,-1);
+		Orion.Wait(600);
+	}
+	
+	var invis =  Orion.FindType('0x0F0E','-1', backpack,-1, 3);
+	for(var i=0; i < invis.length; i++){
+		Orion.MoveItem(invis[i], 1000, 'miningResourcesBox', -1,-1,-1);
+		Orion.Wait(600);
+	}
+	
+	var foods =  Orion.FindType(food, '0X0000', backpack,-1, 3);
+	Orion.MoveItem(foods[0], 0, 'miningResourcesBox', -1,-1,-1);
+	Orion.Wait(600);
+	
+	if(Orion.HaveTarget())
+		Orion.CancelTarget();
+}
+
+function Restock(){
+
+	DEBUG('Restocking ...');
+	
+	Orion.SayYell('banker bank');
+	Orion.Wait(600);
+	Orion.UseObject('miningResourcesBox');
+	Orion.Wait(600);
+	
+	var pickaxes = Orion.FindType(miningTools, 0, 'miningResourcesBox',-1, 3);	
+	for(var i=0; i < 3; i++){
+		Orion.MoveItem(pickaxes[i], 1, backpack, -1,-1,-1);
+		Orion.Wait(600);
+	}
+	
+	var regs =  Orion.FindType('0x0F7A|0x0F86|0x0F7B', 0, 'miningResourcesBox',-1, 3);
+		for(var i=0; i < 3; i++){
+		Orion.MoveItem(regs[i], 10, backpack, -1,-1,-1);
+		Orion.Wait(600);
+	}
+	
+	var invis =  Orion.FindType('0x0F0E','0x0001', 'miningResourcesBox',-1, 3);
+	Orion.MoveItem(invis[0], 2, backpack, -1,-1,-1);
+	Orion.Wait(600);
+	
+	var foods =  Orion.FindType(food ,'0x0000', 'miningResourcesBox',-1, 3);
+	Orion.MoveItem(foods[0], 6, backpack, -1,-1,-1);
+	Orion.Wait(600);
+	
+	if(Orion.HaveTarget())
+		Orion.CancelTarget();
+}
+
+
+function DEBUG(str)
+{
+	TextWindow.Print(str);
+}
+	
+function ViewLog()
+{
+	TextWindow.Open();
+} 
+

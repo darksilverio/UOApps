@@ -44,7 +44,7 @@ var newSpotMsgs='Try mining elsewhere|There is nothing here|That is too far|You 
 var sameSpotMsgs='You put'
 var persistSpotMsgs='You loosen some rocks but fail'
 var toolUsageMsg='Where do you want to use'
-var garbageOreMsg='Ceramic|Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite'
+var garbageOreMsg='Rusty|Old Copper|Rose|Dull Copper|Agapite|Bronze|Shadow|Copper|Silver|Verite|Valorite'
 
 // DONT CHANGE THESE VARS
 var timeout=-1;

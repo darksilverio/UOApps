@@ -17,7 +17,7 @@ function SellPotions(){
 	while(Orion.Connected()){
 	
 		Orion.Say('.recall 1,14'); //Rune to bank
-		Orion.Wait(7000);
+		Orion.Wait(60000);
 
 		Orion.Say('banker bank');
 		Orion.Wait(600);
@@ -50,7 +50,7 @@ function SellPotions(){
 		while(potions.length){
 	
 			Orion.Say('.recall ' + page + ',' + startRune++);
-			Orion.Wait(7000);
+			Orion.Wait(9000);
 
 			var vendor = Orion.FindType('0x0190|0x0191', '-1', ground, 'human|near', 10, 'blue');
 	
