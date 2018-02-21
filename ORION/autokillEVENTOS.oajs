@@ -345,41 +345,41 @@ function autoDoor() {
 
 function __LOOTING__(){}
 
-function FastLoot(listName) {
+function FastLoot() {
 	
-	var bodies = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC', '-1', ground, '', 3);
+	
+		var bodies = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC', '-1', ground, '', 3);
 
-	if (bodies.length) {
+		if (bodies.length) {
 		
-		for(var i=0; i < bodies.length; i++ )
-		{
-			var t = Orion.Now();
-		
-			Orion.UseObject(bodies[0]);
-			LootLoadingLag(bodies[0]);
+			for(var i=0; i < bodies.length; i++ )
+			{
+
+				//for(var j=0; j <= 2; j++ )
+				//{
+					Orion.UseObject(bodies[i]);
+					LootLoadingLag(bodies[i]);
 			
-			Loot(listName, bodies[0]);
+					Loot(bodies[i]);
+				//}
+			}
 		}
-	}
+	
 }
 
-function Loot(listName, corpseSerial) {
-
-	//GETTING PLAYER BAG
-	//TODO: MAKE PROMPT FOR BAG OR ADD TO THE OBJECT LIST AND VALIDATE BEFORE LOOP
-	//var bag = '0x0E75';
-	//var lootBagList = Orion.FindType(bag);
-
-	//Orion.AddObject('lootpack', Orion.GetSerial(backpack));
+function Loot(corpseSerial) {
 
 	var attempCounter = 0;
-	var prevItem = null;
+
 	while (Orion.GetDistance(corpseSerial) <= 3) {
 		
 		//var lootList = Orion.FindList(listName, corpseSerial);
-		var lootList = Orion.FindType('-1', '-1', corpseSerial, '-1', 3);
+		
+//		
+		var lootList = Orion.FindType('-1', '-1', corpseSerial, 'item', '3', -1, true);
 
 		if (lootList.length == 0) {
+			Orion.Print(infoColor, attempCounter + " --ALL DONE LOOTING: " +  lootList.length );
 			Orion.Ignore(corpseSerial);
 			return;
 		}	
@@ -403,7 +403,7 @@ function LootLoadingLag(bodySerial) {
 	var timer = Orion.Now();
 
 	while (Orion.Now() - timer < 700 ){	
-		if(Orion.FindType('-1', '-1', bodySerial).length > 0 )
+		if( Orion.FindType('-1', '-1', bodySerial, 'item', '3', -1, true).length > 0 )
 			break;
 				
 		Orion.Wait(50);
