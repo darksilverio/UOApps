@@ -4,19 +4,21 @@ var errorColor = 0x0bb6;
 var highlightColor = 0x0bb6;
 var debugColor = 0x45F;
 
-var pontoDeFuga = {x: 2520, y: 3618}
-var fugaIncremento = 0;
+	var pontoDeFuga = { x: Player.X(), y: Player.Y() }
+	var fugaIncremento = 0;
+	var fastLoot = {};
 
 function Autostart() {
 
 	Orion.Terminate('all', 'Autostart');
 
 	Orion.Wait(500);
+	TextWindow.Clear();
 	
 	Orion.BlockMoving(false);
 
-	Orion.Print(infoColor, 'BG Macro: AutoKillEvento');
-	Orion.Exec('AutoKillEvento', true);
+	Orion.Print(infoColor, 'BG Macro: AutoKillBOW');
+	Orion.Exec('AutoKillBOW', true);
 	
 	Orion.Print(infoColor, 'BG Macro: HideBlood');
 	Orion.Exec('HideBlood', true);
@@ -41,53 +43,127 @@ function reset()
 
 }
 
-function AutoKillEvento(){
+function AutoKillBOW(){
 
-	while(true)
+	Orion.Ignore(self);
+
+	while(!Player.Dead())
 	{
-		var found = Orion.FindType('!0x0190|!0x0191', '-1', ground, "near|live|mobile`", 21, "gray|red");
-		if (found.length == 0) 
+		debug('Ponto de fuga: ' + pontoDeFuga.x + ', ' + pontoDeFuga.y, false);
+		debug('Incremento de fuga: ' + fugaIncremento)
+		var target = FindNearEnemy(25)
+		if (target == null) 
 		{
-			Orion.Print(errorColor, "NOTHING TO KILL");
-			fugaIncremento += 5;
+			debug("NOTHING TO KILL");
+			fugaIncremento += 4;
 			PathFinder(pontoDeFuga.x - fugaIncremento, pontoDeFuga.y - fugaIncremento);
 			Orion.Wait(50);
 			continue;
 		}
-		target = Orion.FindObject( found[0]);
 
+		debug('Target acquired at ' + Orion.GetDistance(target.Serial()) + ' tiles');
+		//var target = approachLookingForNewEnemies(found.Serial(), 10);
+		var retreated = false;
 		while(target != null)
-		{
-			//Orion.Print(errorColor, "Atacando: " + Orion.RequestName(found[0]))
-			target = Orion.FindObject( found[0]);
+		{	
+			retreated = Retreat();
+			if(retreated)
+				break;
 			
-			Orion.AddObject('follow', found[0])
-			Orion.Exec('Follow', true);
-			Orion.Attack(found[0]);
+			//PathFinder(target.X(), target.Y(), 12);
+			target = approachLookingForClosestEnemies(target, 12);
+			Orion.CharPrint(target.Serial(), infoColor, 'Target: ' + Orion.GetDistance(target.Serial()) );
+			fastLoot = {x: target.X(), y: target.Y() }
 
-			if(Player.Hits() < 60 )
-			{
-				Orion.Print(errorColor, "Life muito baixo. RECUANDO!");
-				PathFinder(pontoDeFuga.x, pontoDeFuga.y);
-			}
+			Orion.UseType('0x13B1');//
+			Orion.Attack(target.Serial());
 			
-			Orion.Wait(50);
+			Orion.Wait(500);
+			target = Orion.FindObject(target.Serial());//
 		}
-		FastLoot("null");
-		//EquipWeaponAndShield();
-		var contaPerigo = Orion.FindType('!0x0190|!0x0191', '-1', ground, "live|mobile`", 10, "gray|red");
-		if(contaPerigo.length > 4 )
-			{
-				Orion.Print(errorColor, "Muito Perigo: " + contaPerigo.length);
-				PathFinder(pontoDeFuga.x - fugaIncremento, pontoDeFuga.y - fugaIncremento);
-				fugaIncremento = 0;
-			}
-			else{
-			
-				Orion.Print(errorColor, "POUCO Perigo: " + contaPerigo.length);
-			}
+		if(!retreated)
+			FastLoot(fastLoot);
+		
 		Orion.Wait(50);
 	}
+}
+
+function Retreat(){
+
+		var enemyTooClose = FindNearEnemy(1)
+			if(enemyTooClose)
+			{
+				debug("Inimigo muito perto. RECUANDO! - Incremento zerado.");
+				fugaIncremento = 0;
+				PathFinder(pontoDeFuga.x, pontoDeFuga.y, 0);
+				return true;
+			}
+			if(Player.Hits() < 60 )
+			{
+				debug("Life muito baixo. RECUANDO! - Incremento zerado.");
+				fugaIncremento = 0;
+				PathFinder(pontoDeFuga.x, pontoDeFuga.y, 0);
+				return true;
+			}
+			
+			var contaPerigo = Orion.FindType('!0x0190|!0x0191', '-1', ground, "live|mobile`", 10, "gray|red");
+			if(contaPerigo.length > 4 )
+			{
+				debug("Muito Perigo: " + contaPerigo.length + '  - Incremento zerado.');
+				fugaIncremento = 0;
+				PathFinder(pontoDeFuga.x, pontoDeFuga.y, 0);
+				return true;
+			}
+			else{
+				debug("POUCO Perigo: " + contaPerigo.length, false);
+			}
+			
+			return false;
+}
+
+function approachLookingForClosestEnemies(target, tolerance){
+
+	var distance = Orion.GetDistance(target.Serial());
+	
+	//while(true)
+	//{
+		debug('lookin for the closest enemy');
+		if(distance > tolerance)
+			PathFinder(target.X(), target.Y(), --distance);
+		
+		var newE = Orion.FindType('!0x0190|!0x0191', '-1', ground, 'live|mobile', 25, "gray|red");
+		
+		for(var i = 0; i < newE.length; i++)
+		{
+			var newD = Orion.GetDistance(newE[i]);
+			//Orion.CharPrint(newE[i], infoColor, 'distance: ' + newD );
+			if(newD < distance)
+			{
+				//debug('New closest');
+				target = Orion.FindObject(newE[i]);
+				distance = newD;
+				Orion.CharPrint(newE[i], infoColor, 'Target: ' + distance );
+				//break;
+			}
+			
+		}
+		
+		
+		
+	//}
+	
+	return target;
+}
+
+function FindNearEnemy(range){
+
+	var enemies =  Orion.FindType('!0x0190|!0x0191', '-1', ground, "near|live|mobile", range, "gray|red");
+	
+	if(enemies.length)
+		return Orion.FindObject(enemies[0])
+	
+	return null;
+
 }
 
 //------------------------------------------------------
@@ -179,48 +255,19 @@ function Follow() {
 	Orion.OptionAlwaysRun(false);
 }
 
-function EquipWeaponAndShield() {
-
-	Orion.WarMode(true);
-
-	if (Player.Hits() < Player.MaxHits()) {
-		Orion.CharPrint(self, infoColor, 'Weapon + Shield + Band');
-		
-		if(Orion.FindType('0x0E21', '-1', backpack).length <=  0){
-			Orion.Print(errorColor, 'No more bandages.')
-		}
-		else{			
-			//Better use of bandage at TFG
-			Orion.CreateClientMacro('BandageSelf').Play(false, 1000);
-		}
-		
-	} else
-		Orion.CharPrint(self, infoColor, 'Weapon + Shield');
-	
-	var equipments = Orion.FindList('myShields', backpack);
-
-	if (equipments.length > 0 ) 	
-		Orion.UseObject(equipments[0]);
-
-	equipments = Orion.FindList('myWeapons', backpack);
-
-	if (equipments.length) 	
-		Orion.UseObject(equipments[0]);
-	
-	
-	Orion.Attack(lastattack);
-	Orion.Wait(300);
-	Orion.CancelTarget();
-}
 
 function __LOOTING__(){}
 
 function FastLoot() {
+
+	debug('Going to loot.')
+	PathFinder(fastLoot.x, fastLoot.y, 0);
 	
 	var bodies = Orion.FindType('0x0ECD|0x2006|0x0ECA|0x0ECC', '-1', ground, '', 3);
 
 	if (bodies.length)
 	{
+		debug('Looting: ' + bodies.length)
 		for(var i=0; i < bodies.length; i++ )
 		{
 			Orion.UseObject(bodies[i]);
@@ -280,15 +327,20 @@ function PrintColors(){
 }
 
 
-function PathFinder(x, y)
+
+
+function PathFinder(x, y, tolerance)
 {
-		
+	debug('PathFinder:' + x + ', ' + y + ' ~ ' + tolerance, false);
 	Orion.OptionAlwaysRun(true);
-	while(!Orion.WalkTo(x, y, Player.Z(), 1)){
+	while(!Orion.WalkTo(x, y, Player.Z(), tolerance))
+	{
+		if(x == 0 || y == 0)
+			break;
+				
 		Orion.Wait(500);
-		Orion.Print(31, 'Going to: ' + x + ', ' + y + ' Can walk: ' + Orion.CanWalk(Player.Direction(), x, y, -1));
+		Orion.Print(31, 'Going to: ' + x + ', ' + y );
 	}
-	
 	Orion.OptionAlwaysRun(false);
 }
 
@@ -330,4 +382,19 @@ function AntiPK() {
 			}
 		}
 	}
+}
+
+
+function debug(inputtext, active) {
+
+	if(active == null)
+		active = true;
+	
+	if(active)
+	{
+		if(!TextWindow.Open()) 
+      		TextWindow.Open();
+      		
+		TextWindow.Print(Orion.Time('hh:mm:ss') + ' >  ' + inputtext );
+    }
 }

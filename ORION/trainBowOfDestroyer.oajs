@@ -1,0 +1,87 @@
+// GLOBAL VARIABLES
+var infoColor = 0x0bb6;
+var errorColor = 0x0bb6;
+var highlightColor = 0x0bb6;
+var debugColor = 0x45F;
+
+var pontoDeFuga = {x: 2520, y: 3618}
+var fugaIncremento = 0;
+
+function Autostart() {
+
+
+Orion.Ignore(self);
+
+while(true){
+	
+var arrow = [];
+	
+	var vendorSerial = Orion.FindType(-1, '-1', ground, "live|human`", 12, "blue");
+	
+	for(var v = 0 ; v < vendorSerial.length; v++)
+	{
+	
+		vendor = Orion.FindObject( vendorSerial[v]);	
+	
+		Orion.WalkTo(vendor.X(), vendor.Y(), vendor.Z(), 1)
+		//PathFinder(vendor.X(), vendor.Y());
+	 
+	 	Orion.UseObject(vendorSerial[v]);
+	 	Orion.Wait(1000);
+		Orion.Say('Salome buy');
+		Orion.Wait(600);
+		Orion.Say('all stay');
+		Orion.Wait(600);
+		Orion.Say('Pierce buy');
+		Orion.Wait(600);
+		Orion.Say('all stay');
+		Orion.Wait(600);
+		Orion.UseType('0x13B1')
+		Orion.Wait(1000);
+		
+		Orion.Wait(1000);
+		Orion.WarMode(true);
+		Orion.Wait(1000);
+	
+	
+	 
+	 	var animals = Orion.FindType('!0x0190|!0x0191|!0x00D0', '-1', ground, "live|mobile", 21, "gray");
+	 
+		for(var i = 0; i < animals.length; i++ )
+		{
+			Orion.ClearJournal();	
+			Orion.Attack(animals[i]);
+			
+			//delay
+			for(var j = 0; j <= 10; j++)
+			{
+				if(Orion.InJournal('too close') != null)
+		 			break;
+				
+				Orion.Wait(120);
+			}
+		
+		 	Orion.Print('Next ANIMAL: ' + (i+1) + '/' + animals.length);
+		 	
+		
+		 } 
+		 
+		  Orion.Print('Next VENDOR: ' + (v+1) + '/' + vendorSerial.length);
+		  Orion.Wait(10000);
+	}
+	
+}	
+
+}
+
+
+function EchoAllJournal(){
+
+	while(true){
+	
+		var j = Orion.WaitJournal('a|e|i|o|u',  Orion.Now(), Orion.Now() + 10000 , -1 ,-1, -1);
+		if(j)
+			Orion.Print(0xff, j.Text());
+		Orion.Wait(200);
+	}
+}

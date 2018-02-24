@@ -1199,6 +1199,32 @@ function LeatherClothes(){
 	}
 }
 
+function FullPlates(){
+
+	Orion.Print(infoColor, 'Instructions: Put the leather and sewing kit in your bag and let it run.')
+	
+	var ore = Orion.FindType('0x1BEF', '-1', backpack);
+
+	if(ore.length == 0){
+		Orion.Print(errorColor, 'Put Ores in your bag')
+		return;
+	}
+	
+	for(var i = 1; i <= 5; i ++){
+	
+		Orion.UseType(0x1BEF);
+
+		Orion.Wait(600);
+		var menu = Orion.GetMenu(0);
+		Orion.Wait(1000);
+		menu.Select(1);
+		Orion.Wait(1000);
+		menu.Select(i);
+		
+		Orion.ClearJournal();
+		Orion.WaitJournal('You put|fail', Orion.Now(), Orion.Now() + 10000, -1 ,-1, -1);
+	}
+}
 
 function EmptyBottles(){
 
