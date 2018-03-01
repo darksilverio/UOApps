@@ -1,0 +1,207 @@
+                                                                         initEvents
+    ;********************************************************************
+    ; Manual Varible setup
+    set %Skin 1       ;1 to use dagger to skin before looting 0=false
+    set %CutL 0 ;1 to cut looted leather with sissors
+    ;********************************************************************
+    ;event macro 31 0 ;Close Gumps
+     ;wait 5
+    event macro 8 3 ;open journal
+     wait 7
+     contpos 1635 13 ;moves to position
+     wait 7
+
+    event macro 8 4 ;open journal
+     wait 10
+     contpos 1300 13 ;moves to position
+     wait 7
+
+    event macro 8 1  ;Open Paperdoll
+     wait 7
+     set %paperdoll #contid ;records your Paperdoll container id as %paperdoll
+     contpos 1600 -45 ;moves you paperdoll to Position
+     wait 7
+
+    event macro 8 7  ;Open Backpack
+     wait 10
+     set %backpack #contid ;records your main backpack container id
+     contpos 946 805 ;moves it to Position
+     wait 7
+
+    event macro 8 8  ;Open Overview
+    event macro 11 8  ;maximize Overview
+     wait 7
+     contpos 1130 790 ;moves you overview to position
+     wait 7
+
+    event macro 8 2  ;Open Statusbar
+     wait 7
+    ;event macro 10 2  ;minimize Statusbar
+    ; wait 5
+    contpos 1470 865 ;moves you Statusbar to position
+     wait 7
+    ;Setings your lootbag position where you put your looted items
+    set %lootbagX 1745
+    set %lootbagY 175
+    ;****************************************************************************
+    ;****************************************************************************
+    ;Searching Corpse near your Char
+    FINDCORPSE:
+     wait 7
+    FINDITEM YFM G_2
+    if #findkind <> -1
+    goto OPENCORPSE
+    goto FINDCORPSE
+    ;****************************************************************************
+    ;****************************************************************************
+    OPENCORPSE:
+    set %corpse #findid
+    ;****skin corpse? 1 =Skin Corpse 0= not Skin Corpse****
+    if %Skin = 1
+            gosub skinit
+    set #lObjectID %corpse ;sets the corpse as lastobject used
+    event Macro 17 0 ;use last object macro
+     wait 7
+    ;gosub looting stuff looks for loot in every open container then ignores
+    ;items on your paperdoll and in your backpack
+    gosub look4stuff
+     wait 7
+    hideItem %corpse ;hides the corpse
+    goto FINDCORPSE
+    ;****************************************************************************
+    ;****************************************************************************
+    sub look4stuff
+    nextcpos 600 400
+    if %skin = 1
+            gosub leatherlooter
+    ;*****Find LOOT ITEMS*****
+    FINDLOOT:
+    FINDITEM POF_
+    +OZF_ZLF_LNK_IUF_DUF_TZF_YZF_UZF_KUF_
+    +GVF_BVF_VUF_RVF_HVF_OVF_EVF_UVF_FVF_VRD_NSF_
+    +SZF_RZF_WZF_JUF_MZF_JZF_KZF_KUF_CKF_PZH_
+    +MZF_WZF_RZF_TVH_PCK_QCK_XVH_UJG_LWL_DBG_VLK_
+    +IJG_CWL_JSL_STO_YWL_TTO_RWF_WYM_SYM_KYM_
+    +MYM_PYM_TYM_LYM_JYM_UYM_RYM_NYM_OYM_VYM_IYM_
+    +CK_AK_PJ_ZJ_ZJF                                             _TSF_NZF_GMF_OKF_BMH_IMH_WLH_
+    +XLH_ZOH_APH_DPH_LSH_HSH_ISH_MSH_NSH_MSK_CSH_ASH_GSH_
+    +OSH_ESH_MIK_NIK_AIK_GIK_CIK_FIK_CLK_HLK_NMH_VRH_JPH_NPO_FUO_
+    +ATF_BPH_SOH_JTF_BSF_RMH_ZRF_LPH_LSF_UOH_NSF_ZTO_OPO_CUO_GUO_
+    +BUO_HSF_MTF_XTH_XRH_RRH_BUH_YSF_ZTH_VTH_AUO_TRH_
+    +HYM_QYM_NVF_CCF_SVH_ZVF C
+    ;CKF --BAG
+    If #Findkind = -1
+            return
+    If #Findbagid = %paperdoll ;ignores stuff worn
+       {
+       ignoreitem #findid
+       goto FINDLOOT
+       }
+    If #Findbagid = %backpack ;ignores stuff in backpack
+       {
+       ignoreitem #findid
+       goto FINDLOOT
+       }
+    Event Drag #findid
+        wait 7
+    If #findstack > 1
+       msg  $
+        wait 7
+       click 1745 175 p
+        wait 15
+    if is_out_of in #SYSMSG
+       {
+       ignoreitem #findid
+       goto FINDLOOT
+       }
+    If can_not_pick_that in #SYSMSG
+       {
+       ignoreitem #findid
+       goto FINDLOOT
+       }
+    goto FINDLOOT
+    ;****************************************************************************
+    ;****************************************************************************
+    sub skinit
+    findItem WRH C_ , %backpack ;Finds Dagger or Kryss to skin corpse with
+    If #findKind = -1
+            {
+            findItem WRH C_ , #CHARID ;Finds Dagger or Kryss to skin corpse with
+            If #findKind = -1
+                    {
+                    msg Dam wheres my dagger? $
+                    set %skin 0
+                    return
+                    }
+            }
+    set %Dagger #findID
+    set #lTargetID %corpse
+    set #lObjectID %Dagger
+    set #lTargetKind 1
+    event Macro 17 0
+     wait 7
+    Target
+    event Macro 22 0
+    wait 7
+    return
+    ;****************************************************************************
+    ;****************************************************************************
+    Sub leatherLooter
+    look4leather:
+    FINDITEM EEG C
+    If #Findkind = -1
+            {
+             wait 7
+            If %CutL = 1
+                    gosub cutleather
+            return
+            }
+    If #Findbagid = %backpack ;ignores stuff in backpack
+            {
+            ignoreitem #findid
+            goto look4leather
+            }
+    Event Drag #findid
+             wait 7
+    If #findstack > 1
+            msg  $
+             wait 14
+            click 930 634 p
+    if is_out_of in #SYSMSG
+            {
+            ignoreitem #findid
+            goto look4leather
+            }
+    If can_not_pick_that in #SYSMSG
+            {
+            ignoreitem #findid
+            goto look4leather
+            }
+    goto look4leather
+    ;****************************************************************************
+    ;****************************************************************************
+    Sub cutleather
+    ignoreItem reset
+    check4leather:
+    findItem EEG C_ , %backpack
+     wait 7
+    If #findKind = -1
+            return
+    set %leather #findID
+    findItem KAG
+    If #findKind = -1
+            {
+            msg Wheres my sissors? $
+            set %CutL 0
+            return
+            }
+    set %sissors #findID
+    set #lObjectID %sissors
+    set #lTargetID %leather
+    set #lTargetKind 1
+    event Macro 17 0
+     wait 7
+    Target
+    event Macro 22 0
+     wait 7
+    goto check4leather

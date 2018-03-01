@@ -1,0 +1,352 @@
+                                       ;===MANDATORY CONFIG===
+;Position IF the container in the bank box (Bank will awasly open op position x:10 y:10
+SET %bankBagx 58
+SET %bankBagY 127
+
+;Mining delay in seconds of your shard ( recomended to add +1 second)
+SET %miningDelay 16
+
+;Go to bank when Weight reaches ...
+;Put 0 to disable bank
+SET %maxMiningWeight 300
+
+;IF you fail to mine a tile, perhaps it contains good ore. But IF your mining skill is
+;too low you will be only wasting time.
+;recomended to turn on only after 70.0%
+SET %persist 1
+
+;===OPTIONAL CONFIG===
+;Ores and gems (need to add more gems)
+SET %ores DWJ_GWJ_EWJ_TVJ_EVF_VUF_GVF_FVF_HVF_UVF_OVF_BVF
+;Pickaxe and shovel
+SET %miningTool NPF_QPF
+
+
+GOSUB intro
+GOSUB preValidations
+GOSUB setGumps
+GOSUB setForMining
+
+SET %posToMine 0
+
+GOSUB  journalScan
+
+;========= FUNCTIONS ================
+
+;Main loop inside this function
+SUB journalScan
+
+  SET %jrnl #jindex
+
+  GOSUB mine
+
+  while #true
+  {
+
+   IF #jindex > %jrnl
+   {
+    SET %jrnl %jrnl + 1
+    scanjournal %jrnl
+    IF There_is_nothing_here_to_mine_for in #journal
+    {
+     GOSUB setForMining
+     GOSUB mine
+    }
+    IF Try_mining_elsewhere in #journal
+    {
+     GOSUB setForMining
+     GOSUB mine
+    }
+    IF That_is_too_far_away in #journal
+    {
+     GOSUB setForMining
+     GOSUB mine
+    }
+    IF You_have_no_line_of_sight_to_that_location in #journal
+    {
+     GOSUB setForMining
+     GOSUB mine
+    }
+    IF You_cannot_mine_so_close_to_yourself in #journal
+    {
+     GOSUB setForMining
+     GOSUB mine
+    }
+    IF Ceramic in #journal ||  Rusty in #journal ||  Old_Copper in #journal || Rose in #journal || Dull_Copper in #journal || Agapite in #journal || Shadow in #journal || Copper in #journal
+    {
+     GOSUB setForMining
+     GOSUB mine
+    }
+
+    IF You_loosen_some_rocks_but_fail_to_find_any_useable_ore in #journal
+    {
+     IF %persist = 0
+          GOSUB setForMining
+     GOSUB mine
+    }
+    IF You_put in #journal
+    {
+     EVENT sysmessage  --> YEAH ! ORES ...
+     GOSUB mine
+    }
+
+    IF  #SCNT - %timeOut >= %miningDelay
+    {
+     SET %jrnl #jindex
+     SET %t  #SCNT - %timeOut
+     EVENT sysmessage  --> TIMEOUT %t
+     GOSUB setForMining
+     GOSUB mine
+    }
+    IF #WEIGHT >= %maxMiningWeight && %maxMiningWeight <> 0
+    {
+       GOSUB MineToBank
+       GOSUB OreToBank
+       GOSUB BankToMine
+       GOSUB setForMining
+       GOSUB mine
+    }
+   }
+  }
+RETURN
+
+
+SUB walk
+
+  SET %walkDirection #random % 8
+  GOSUB %walkDirection 2
+  MOVE #ltargetx #ltargety 0 2s
+  ;SET %walkDirection %walkDirection + 1
+  ;IF %walkDirection > 7
+  ;{
+  ; SET %walkDirection 0
+  ;}
+RETURN
+
+SUB 0
+  SET #ltargetx #charposx
+  SET #ltargety #charposy - %1
+RETURN
+
+SUB 1
+  SET #ltargetx #charposx + %1
+  SET #ltargety #charposy - %1
+RETURN
+
+SUB 2
+  SET #ltargetx #charposx + %1
+  SET #ltargety #charposy
+RETURN
+
+SUB 3
+  SET #ltargetx #charposx + %1
+  SET #ltargety #charposy + %1
+RETURN
+
+SUB 4
+  SET #ltargetx #charposx
+  SET #ltargety #charposy + %1
+RETURN
+
+SUB 5
+  SET #ltargetx #charposx - %1
+  SET #ltargety #charposy + %1
+RETURN
+
+SUB 6
+  SET #ltargetx #charposx - %1
+  SET #ltargety #charposy
+RETURN
+
+SUB 7
+  SET #ltargetx #charposx - %1
+  SET #ltargety #charposy - %1
+RETURN
+
+
+
+SUB setForMining
+  ; Reset variables in case you CLICK with your mouse
+  SET #LTARGETID 0
+  SET #LTARGETZ 0
+  SET #LTARGETKIND 2
+
+  ; SET mining position
+  GOSUB %posToMine 1
+  ; Increment mining spot
+  SET %posToMine %posToMine + 1
+
+  ; IF last stop reached
+  IF %posToMine > 7
+  {
+   SET %posToMine 0
+   GOSUB walk
+  }
+  
+  IF #CHARPOSY > 482
+    GOSUB pathFind 2581 463 0
+    
+  IF #CHARPOSY < 455
+    GOSUB pathFind 2581 463 0
+  
+  
+RETURN
+
+
+SUB mine
+
+    SET %timeOut #SCNT
+
+    FINDITEM %miningTool
+    SET #LOBJECTID #FINDID
+    EVENT macro 17 0 ; uses last object
+    target 3s ; WAIT for target cursor
+    EVENT macro 22 0 ; last target
+    
+    msg guards $
+
+RETURN
+
+
+SUB intro
+
+  EVENT sysmessage  --> Mining macro by BELZEBOSS
+  EVENT sysmessage  --> TFG shard 2017/10/16
+  EVENT sysmessage  --> Screen resolution 1920x1080
+
+RETURN
+
+
+SUB setGumps
+
+  EVENT macro 8 3 ;open journal
+   WAIT 7
+   contpos 1635 13 ;moves to position
+   WAIT 7
+
+  EVENT macro 8 4 ;open journal
+   WAIT 10
+   contpos 1300 13 ;moves to position
+   WAIT 7
+
+  EVENT macro 8 1  ;Open Paperdoll
+   WAIT 7
+   contpos 1600 -45 ;moves you paperdoll to Position
+   WAIT 7
+
+  EVENT macro 8 7  ;Open Backpack
+   WAIT 10
+   contpos 946 805 ;moves it to Position
+   WAIT 7
+
+  EVENT macro 8 8  ;Open Overview
+  EVENT macro 8 8  ;Open Overview
+   WAIT 7
+   contpos 1130 790 ;moves you overview to position
+   WAIT 7
+
+  EVENT macro 8 2  ;Open Statusbar
+   WAIT 7
+  ;EVENT macro 10 2  ;minimize Statusbar
+  ; WAIT 5
+  contpos 1470 865 ;moves you Statusbar to position
+   WAIT 7
+
+RETURN
+
+SUB preValidations
+
+  FINDITEM %miningTool C_ , #BACKPACKID ;Finds pickaxe in your bag
+  IF #findKind = -1
+  {
+    FINDITEM %miningTool C_ , #CHARID ;Finds pickaxe in your paperdoll
+    IF #findKind = -1
+    {
+      EVENT sysmessage  --> NO MINING TOOL FOUND. MACRO ABORTED
+      HALT
+    }
+  }
+
+RETURN
+
+
+SUB OreToBank
+
+   nextCPos 10 10
+   msg ! Banker Bank $
+   WAIT 1s
+
+__AGAIN:
+   FINDITEM %ores C
+   EVENT drag #findId
+   WAIT 10
+   IF #findstack > 1
+   {
+      MSG $
+      WAIT 7
+   }
+   CLICK %bankBagx %bankBagy p
+
+   IF #Findkind <> -1
+      GOTO __AGAIN
+
+RETURN
+
+
+SUB MineToBank
+
+	GOSUB pathFind 2579 475 0
+	GOSUB pathFind 2571 478 0
+	GOSUB pathFind 2567 484 0
+	GOSUB pathFind 2559 491 0
+	GOSUB pathFind 2558 501 0
+	GOSUB pathFind 2553 504 14
+	GOSUB pathFind 2547 501 30
+	GOSUB pathFind 2536 500 30
+	GOSUB pathFind 2525 505 15
+	GOSUB pathFind 2528 515 0
+	GOSUB pathFind 2529 526 0
+	GOSUB pathFind 2524 536 0
+	GOSUB pathFind 2518 540 0
+	GOSUB pathFind 2512 545 0
+
+RETURN
+
+SUB BankToMine
+
+	GOSUB pathFind 2524 536 0
+	GOSUB pathFind 2529 526 0
+	GOSUB pathFind 2528 515 0
+	GOSUB pathFind 2525 505 15
+	GOSUB pathFind 2536 500 30
+	GOSUB pathFind 2547 501 30
+	GOSUB pathFind 2553 504 9
+	GOSUB pathFind 2558 501 0
+	GOSUB pathFind 2559 491 0
+	GOSUB pathFind 2567 484 0
+	GOSUB pathFind 2571 478 0
+	GOSUB pathFind 2579 475 0
+
+RETURN
+
+
+SUB pathFind
+
+  REPEAT
+
+    ;try to avoid getting stuck when something is on that particular tile
+    IF #RANDOM % 2 = 0
+       {
+        SET %fPathx %1 + 1
+        SET %fPathy %2 - 1
+
+        EVENT pathFind %fPathx %fPathy %3
+       }
+    ELSE
+        {
+         EVENT pathFind %1 %2 %3
+        }
+    WAIT 10
+  UNTIL #CHARPOSX = %1 && #CHARPOSY = %2
+
+RETURN

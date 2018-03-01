@@ -1,0 +1,269 @@
+                                                                                                                                                                    =========================================================================
+; Script Name: EnCode MegaLumberjack
+; Author: EnCode
+; Version: 1.2.0
+; Client Tested with: 4.0.10b
+; EUO version tested with: 1.42.00A5
+; Shard OSI / FS: FS
+; Revision Date: 5-31-05
+; Public Release: 5-15-05
+; Global Variables Used: All global vars used by settings starts by *ECLJ
+; This is a very powerful and easy to set up fully automatic script without rails!
+; All you need is enough skills to craft tools and recall and some ingots in your bank box.
+=========================================================================
+
+; if you wish to use login by password (NOT RECOMMENDED)
+; set up the macro as using razorlogin but uncomment and change these lines:
+
+;You may edit these values if you wish but you should do just fine
+;with these.
+set %axetype FSF_LSF_BSF_NSF_ZRF_RMH_LPH_UOH_MPH
+set %tooltype AIG_AGG_BIG_CIG_CGG_EGG_IGG_KGG_WFG_YFG_ZHG
+set %solvepk 0 ;if you have the PKCurses.txt set up change this to 1
+set %forcebankweight 400 ;maxweight before bankup
+;================================
+;do not change below here
+;================================
+set %VerMajor 1
+set %VerMinor 2
+set %VerRevision 0
+
+set %spot 0
+tile init
+linespercycle 200
+set %hod 0
+
+
+gosub chooseforest
+start:
+gosub closest
+move %x %y 1 10s
+gosub checkdistance
+gosub choptree
+  if #TARGCURS = 1
+  {
+    event sysmessage MACRO LOOP W KILL TARGET
+    event sysmessage killing target cursor
+    set #TARGCURS 0
+  }
+  else
+  {
+     event sysmessage MACRO LOOP
+  }
+goto start
+
+sub checkdistance
+    set %distx #charposx - %x
+    set %disty #charposy - %y
+    if %distx > -2 && %distx < 2 && %disty > -2 && %disty < 2
+        return
+    set %tempx #charposx - 5
+    move %tempx #charposy 1 2s
+    set %tempy #charposy - 5
+    move #charposx %tempy 1 2s
+    move %x %y 1 10s
+return
+
+sub choptree
+    menu delete status
+    menu Text status 116 119 Chopping...
+    set %backupwait #scnt + 60
+    choploop:
+    if #scnt > %backupwait
+        goto ready
+    event sysmessage WAIT_CHOPPING_S
+    wait 4s
+    gosub hit
+    set %hitwait #scnt + 5
+    deletejournal
+    jrloop:
+    wait 1
+    scanjournal 1
+    if You_put_the_logs_in_your_pack in #journal
+    {
+        event sysmessage YAYY_LOGS
+        goto choploop
+    }
+    if You_hack_at_the_tree_for_a_while,_but_fail_to_produce_any_useable_wood in #journal
+    {
+        event sysmessage YOU_HACK_AT_THE_TREE
+        goto choploop
+    }
+
+    if There_is_nothing_here_to_chop. in #journal
+    {
+        event sysmessage NOTHING_TO_CHOP
+        goto ready
+    }
+    if It_appears_immune_to_your_blow in #journal
+    {
+        event sysmessage IMMUNE
+        goto ready
+    }
+    if cannot_be_seen in #journal
+        goto ready
+    if You_can't_reach_this in #journal
+    {
+        event sysmessage TOO_FAR
+        goto ready
+    }
+    gosub checkConLost
+    gosub toboards
+    if is_attacking_you in #journal
+    {
+        gosub antipk
+        return
+    }
+    if #scnt > %hitwait
+        goto choploop
+    goto jrloop
+    ready:
+return
+
+sub hit
+    chop:
+    finditem %axetype C_ , #charid
+    if #findkind = -1
+    {
+        finditem %axetype C_ , #backpackid
+        if #findkind = -1
+        {
+            gosub toboards
+            menu delete status
+            set %hod 0
+            gosub chooseforest
+            return
+
+        }
+        set #lhandid #findid
+        event macro 24 1
+        wait 15
+    }
+    set #lobjectid #findid
+    event macro 17
+    target 1s
+    set #ltargetkind 3
+    set #ltargettile %tiletype
+    set #ltargetx %x
+    set #ltargety %y
+    set #ltargetz %tilez
+    event macro 22
+return
+
+sub closest
+    menu delete status
+    menu Text status 116 119 Finding tree...
+    set %x #charposx
+    set %y #charposy
+    set %r 0
+    set %fspiral -1
+    treefinder:
+    if %fspiral = -1
+    {
+        set %fspiral 1
+    }
+    else
+    {
+        set %fspiral -1
+    }
+    set %r %r + 1
+    for %yx 1 %r
+    {
+        set %x %x + %fspiral
+        gosub checktile
+        if %findkind = 1
+            return
+    }
+    for %yy 1 %r
+    {
+        set %y %y + %fspiral
+        gosub checktile
+        if %findkind = 1
+            return
+    }
+    goto treefinder
+
+sub checktile
+    tile cnt %x %y
+    set %ennestaan 0
+    set %findkind -1
+    for %cnt 1 #tilecnt
+    {
+        tile get %x %y %cnt
+        if tree in #tilename
+        {
+            if %hod > 0
+            {
+                set %doh 0
+                for %doh 1 %hod
+                {
+                    if %x = %hodx . %doh && %y = %hody . %doh
+                    {
+                        set %ennestaan 1
+                    }
+                }
+            }
+            if %ennestaan = 0
+            {
+                set %hod %hod + 1
+                set %hodx . %hod %x
+                set %hody . %hod %y
+                set %findkind 1
+                set %tilez #tilez
+                set %tiletype #tiletype
+            }
+        }
+    }
+return
+
+sub chooseforest
+    set %spot %spot + 1
+    if %spot > %ljspots
+        set %spot 1
+    set %runenum %spot + 1
+    menu delete status
+    menu Text status 116 119 Recalling to forest # %spot
+    gosub recall %runenum %recallstyle
+return
+
+sub findcol
+    finditem %1 %3
+    for %i 1 #findcnt
+    {
+        finditem %1 %i %3
+        if #findcol = %2
+        return
+    }
+    set #findkind -1
+return
+
+sub target
+    set %wait #scnt + 1
+    wait_for_target:
+        wait 1
+        scanjournal 1
+        if fizzles in #journal || already_performing in #journal ||  more_reagants in #journal || not_yet_recovered in #journal ||  your_concentration in #journal || insufficent_mana in #journal
+            return
+        scanjournal 2
+        if fizzles in #journal || already_performing in #journal ||  more_reagants in #journal || not_yet_recovered in #journal ||  your_concentration in #journal || insufficent_mana in #journal
+            return
+        if #scnt > %wait
+            return
+        if #targcurs = 0
+            goto wait_for_target
+    if %1 = 1
+    {
+        chkdistance:
+            wait 1
+            finditem #ltargetid
+            if #findkind = -1 && #targcurs = 1
+                goto chkdistance
+            if #finddist > 12 && #targcurs = 1
+                goto chkdistance
+        event macro 22
+    }
+    if %1 = 2
+    {
+        event macro 23
+    }
+return

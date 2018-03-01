@@ -1,0 +1,40 @@
+;--- CANCEL TARGET
+sub cancelTarget
+  if #TARGCURS = 1
+  {
+    event sysmessage killing target cursor
+    set #TARGCURS 0
+  }
+return
+;--- FISHING
+sub fishing
+  gosub cancelTarget
+  findItem XHF 1
+  set #LObjectID #FindID
+  set #LTargetKind 2
+  set #LTargetX 2 + #CharPosX
+  set #LTargetY #CharPosY
+  event macro 17 0
+  target 3
+  event macro 22 0
+  wait 9s
+
+return
+
+
+for %i 1 20
+{
+    gosub fishing
+    msg one forward$
+}
+
+for %i 1 20
+{
+    gosub fishing
+    msg one back$
+}
+
+
+
+
+

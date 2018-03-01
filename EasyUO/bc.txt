@@ -1,0 +1,66 @@
+if #WEIGHT >= #MAXWEIGHT + 10
+{
+
+ msg vendor sell$
+
+ finditem LMH C_
+ set %loops #FINDCNT / 3
+ event sysmessage #FINDCNT CROSS BOWS ( %loops loops )
+ 
+ for %repeats 1 %loops
+ {
+  gosub clickobj
+  gosub clickroll
+ }
+
+
+
+wait 10
+click 315 421 d
+wait 2s
+
+}
+else
+{
+
+key f1
+wait 30
+gosub buykit
+
+}
+
+
+;------------------
+sub clickobj
+
+;for %i 1 3
+;{
+  click 205 80 d
+  click 205 142 d
+  click 205 205 d
+;}
+return
+;------------------
+;------------------
+sub clickroll
+
+for %i 1 3
+{
+  click 343 200
+}
+return
+;------------------
+
+
+sub buykit
+{
+
+    finditem UFG C_
+    if #findkind = -1
+    {
+      msg vendor buy$
+    }
+
+
+}
+

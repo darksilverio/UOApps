@@ -7,6 +7,7 @@ var debugColor = 0x45F;
 	var pontoDeFuga = { x: Player.X(), y: Player.Y() }
 	var fugaIncremento = 0;
 	var fastLoot = {};
+	var gWalk = {};
 
 function Autostart() {
 
@@ -50,11 +51,12 @@ function AutoKillBOW(){
 	while(!Player.Dead())
 	{
 		debug('Ponto de fuga: ' + pontoDeFuga.x + ', ' + pontoDeFuga.y, false);
-		debug('Incremento de fuga: ' + fugaIncremento)
+		
 		var target = FindNearEnemy(25)
 		if (target == null) 
 		{
-			debug("NOTHING TO KILL");
+			debug("NOTHING TO KILL", true, true);
+			debug('Incremento de fuga: ' + fugaIncremento, false)
 			fugaIncremento += 4;
 			PathFinder(pontoDeFuga.x - fugaIncremento, pontoDeFuga.y - fugaIncremento);
 			Orion.Wait(50);
@@ -62,7 +64,6 @@ function AutoKillBOW(){
 		}
 
 		debug('Target acquired at ' + Orion.GetDistance(target.Serial()) + ' tiles');
-		//var target = approachLookingForNewEnemies(found.Serial(), 10);
 		var retreated = false;
 		while(target != null)
 		{	
@@ -106,8 +107,8 @@ function Retreat(){
 				return true;
 			}
 			
-			var contaPerigo = Orion.FindType('!0x0190|!0x0191', '-1', ground, "live|mobile`", 10, "gray|red");
-			if(contaPerigo.length > 4 )
+			var contaPerigo = Orion.FindType('!0x0190|!0x0191', '-1', ground, "live|mobile`", 8, "gray|red");
+			if(contaPerigo.length > 3 )
 			{
 				debug("Muito Perigo: " + contaPerigo.length + '  - Incremento zerado.');
 				fugaIncremento = 0;
@@ -125,11 +126,12 @@ function approachLookingForClosestEnemies(target, tolerance){
 
 	var distance = Orion.GetDistance(target.Serial());
 	
-	//while(true)
-	//{
+
 		debug('lookin for the closest enemy');
-		if(distance > tolerance)
-			PathFinder(target.X(), target.Y(), --distance);
+		if(distance > tolerance){
+			gWalk = {x: target.X(), y: target.Y(), tolerance: (distance-=3) };
+			Orion.Exec('GPathFinder', true);  
+		}
 		
 		var newE = Orion.FindType('!0x0190|!0x0191', '-1', ground, 'live|mobile', 25, "gray|red");
 		
@@ -147,11 +149,6 @@ function approachLookingForClosestEnemies(target, tolerance){
 			}
 			
 		}
-		
-		
-		
-	//}
-	
 	return target;
 }
 
@@ -344,6 +341,21 @@ function PathFinder(x, y, tolerance)
 	Orion.OptionAlwaysRun(false);
 }
 
+function GPathFinder()
+{
+	debug('PathFinder:' + gWalk.x + ', ' + gWalk.y + ' ~ ' + gWalk.tolerance, false);
+	Orion.OptionAlwaysRun(true);
+	while(!Orion.WalkTo(gWalk.x, gWalk.y, Player.Z(), gWalk.tolerance))
+	{
+		if(gWalk.x == 0 || gWalk.y == 0)
+			break;
+				
+		Orion.Wait(500);
+		Orion.Print(31, 'Going to: ' + gWalk.x + ', ' + gWalk.y );
+	}
+	Orion.OptionAlwaysRun(false);
+}
+
 
 
 function AntiPK() {
@@ -385,7 +397,7 @@ function AntiPK() {
 }
 
 
-function debug(inputtext, active) {
+function debug(inputtext, active, statusActive) {
 
 	if(active == null)
 		active = true;
@@ -396,5 +408,8 @@ function debug(inputtext, active) {
       		TextWindow.Open();
       		
 		TextWindow.Print(Orion.Time('hh:mm:ss') + ' >  ' + inputtext );
+
+		if(statusActive)
+			Orion.Print(debugColor, inputtext)
     }
 }

@@ -1,0 +1,48 @@
+event sysmessage ---------------------
+event sysmessage RUNNING SELL MACRO
+event sysmessage .
+event sysmessage 1) Unckeck in EasyUO TOOLS > Dont move cursor
+event sysmessage 2) The Selling item must be in your bag
+event sysmessage ---------------------
+
+
+set %vendorName Lulu
+set %itemCode ZPF
+
+ 
+ msg %vendorName sell$
+ wait 1s
+ 
+ finditem %itemCode C_
+ set %loops ( #FINDCNT / 3 )
+
+  for %count 1 %loops
+  {
+   gosub clickobj
+   gosub clickroll
+   event sysmessage Loop > %count of %loops
+  }
+  
+  
+    halt
+  
+  
+  
+  
+;------------------
+sub clickobj
+
+  click 205 80 d
+  click 205 142 d
+  click 205 205 d
+
+return
+;------------------
+;------------------
+sub clickroll
+
+for %i 1 3
+{
+  click 343 200
+}
+return

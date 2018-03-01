@@ -1,0 +1,312 @@
+event sysmessage ---------------------
+event sysmessage RUNNING LUMBER MACRO
+event sysmessage ---------------------
+
+gosub initVars
+
+
+
+start:
+
+if #HITS >= #MAXHITS
+{
+
+  key f2  ;razor guards
+   ;halt
+  gosub closest
+  move %x %y 1 10s
+  gosub checkdistance
+  gosub choptree
+  gosub clearTarget
+  gosub goBANK
+}
+else
+{
+    ;msg Guards$
+    event sysmessage Waiting LIFE ...
+    wait 15s
+
+}
+
+goto start
+
+;------------------------------------------
+sub closest
+
+    ;msg closest $
+    set %x #charposx
+    set %y #charposy
+    set %r 0
+    set %fspiral -1
+    treefinder:
+    if %fspiral = -1
+    {
+        set %fspiral 1
+    }
+    else
+    {
+        set %fspiral -1
+    }
+    set %r %r + 1
+    for %yx 1 %r
+    {
+        set %x %x + %fspiral
+        gosub checktile
+        if %findkind = 1
+            return
+    }
+    for %yy 1 %r
+    {
+        set %y %y + %fspiral
+        gosub checktile
+        if %findkind = 1
+            return
+    }
+    goto treefinder
+return
+;------------------------------------------
+
+sub checktile
+
+gosub goYewProtection
+
+    tile cnt %x %y
+    set %ennestaan 0
+    set %findkind -1
+    for %cnt 1 #tilecnt
+    {
+        tile get %x %y %cnt
+        if tree in #tilename
+        {
+            if %hod > 0
+            {
+                set %doh 0
+                for %doh 1 %hod
+                {
+                    if %x = %hodx . %doh && %y = %hody . %doh
+                    {
+                        set %ennestaan 1
+                    }
+                }
+            }
+            if %ennestaan = 0
+            {
+                set %hod %hod + 1
+                set %hodx . %hod %x
+                set %hody . %hod %y
+                set %findkind 1
+                set %tilez #tilez
+                set %tiletype #tiletype
+            }
+        }
+    }
+return
+;------------------------------------------
+
+sub checkdistance
+
+;msg checkdistance$
+
+    set %distx #charposx - %x
+    set %disty #charposy - %y
+    if %distx > -2 && %distx < 2 && %disty > -2 && %disty < 2
+        return
+    set %tempx #charposx - 5
+    move %tempx #charposy 1 2s
+    set %tempy #charposy - 5
+    move #charposx %tempy 1 2s
+    move %x %y 1 10s
+return
+
+;------------------------------------------
+
+sub choptree
+
+;msg choptree... $
+
+    set %backupwait #scnt + 60
+    choploop:
+    if #scnt > %backupwait
+        goto ready
+    wait 4
+    gosub hit
+    set %hitwait #scnt + 5
+    deletejournal
+    jrloop:
+    wait 2
+    scanjournal 1
+   ; msg jrloop ...$
+    if logs in #journal
+    {
+        event sysmessage LOGS
+        goto choploop
+    }
+
+    if hack in #journal
+    {
+        event sysmessage EXTRACT FAILED
+        goto choploop
+    }
+
+    if not_enough_wood in #journal
+    {
+        event sysmessage THIS THREE IS DONE
+        goto ready
+    }
+    if you_can't_use_an_axe_on_that in #journal
+    {
+        event sysmessage ITEM NOT LOGGABLE
+        goto ready
+    }
+
+    if cannot_be_seen in #journal
+    {
+        event sysmessage CANNOT BE SEEN
+        goto ready
+    }
+
+    if that_is_too_far in #journal
+    {
+        event sysmessage THAT IS TOO FAR
+        goto ready
+    }
+
+    ;gosub checkConLost
+    ;gosub toboards
+    if is_attacking_you in #journal
+    {
+        ;gosub antipk
+        return
+    }
+    if #scnt > %hitwait
+        goto choploop
+    goto jrloop
+    ready:
+return
+
+;------------------------------------------
+
+sub hit
+    chop:
+    finditem %axetype C_ , #charid
+    if #findkind = -1
+    {
+        finditem %axetype C_ , #backpackid
+        if #findkind = -1
+        {
+            gosub toboards
+            menu delete status
+            set %hod 0
+            gosub chooseforest
+            return
+
+        }
+        set #lhandid #findid
+        event macro 24 1
+        wait 15
+    }
+    set #lobjectid #findid
+    event macro 17
+    target 1s
+    set #ltargetkind 3
+    set #ltargettile %tiletype
+    set #ltargetx %x
+    set #ltargety %y
+    set #ltargetz %tilez
+    event macro 22
+return
+
+;------------------------------------------
+
+sub clearTarget
+
+  if #TARGCURS = 1
+  {
+    event sysmessage KILL PENDING TARGET$
+    set #TARGCURS 0
+  }
+
+return
+
+;------------------------------------------
+
+sub goBANK
+
+if #WEIGHT > #MAXWEIGHT - 5
+{
+   event sysmessage GOING TO BANK
+  ;key F4 ; GBRLMagnum
+  ;key F5 ; Lumbarina
+  ;key F6 ; Lumberino
+  wait 20s
+  gosub initVars
+
+}
+
+return
+;------------------------------------------
+sub goYewProtection
+
+set %loops 0
+
+while %loops <  10
+{
+  set %scanPons #JINDEX - %loops
+  scanjournal  %scanPons
+
+  set %loops %loops + 1
+
+  if left_the_protection in #journal
+  {
+    set %longWalk #RANDOM
+
+   ; for %gowalk 1  %longWalk
+    ;{
+       move 559 1038 0 1 30s
+     ;  event sysmessage Walkback
+
+    ;}
+
+    ; msg GUARDS!!!!$
+
+  }
+}
+
+return
+;------------------------------------------
+sub initVars
+
+	event macro 31 0 ;Close Gumps
+	wait 10
+	event macro 8 1  ;Open Paperdoll
+	wait 10
+	contpos 805 -28 ;moves you paperdoll to Position
+	wait 10
+	event macro 8 7  ;Open Backpack
+	wait 10
+	contpos 821 527 ;moves it to Position
+	wait 10
+	event macro 8 8  ;Open Overview
+	wait 10
+	contpos 833 342 ;moves you overview to position
+	wait 10
+	event macro 8 2  ;Open Statusbar
+	wait 10
+	;event macro 10 2  ;minimize Statusbar
+	wait 10
+	contpos -30 0 ;moves you Statusbar to position
+	wait 10
+	;Setings your lootbag position where you put your looted items
+
+
+	;You may edit these values if you wish but you should do just fine with these.
+	set %axetype FSF_LSF_BSF_NSF_ZRF_RMH_LPH_UOH
+
+
+	set %spot 0
+	tile init
+	linespercycle 200
+	set %hod 0
+
+return
+;------------------------------------------

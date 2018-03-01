@@ -1,0 +1,51 @@
+set %movex 559
+set %movey 1038
+
+set %walksize 15
+
+
+
+
+
+set %loops 0
+
+while %loops <  10
+{
+  set %scanPons #JINDEX - %loops
+  scanjournal  %scanPons
+
+  set %loops %loops + 1
+  
+  if #CHARPOSX > %movex
+  {
+   set %pfinderx #CHARPOSX - %walksize
+  }
+  else
+  {
+   set %pfinderx #CHARPOSX + %walksize
+  }
+  
+  if #CHARPOSY > %movey
+  {
+   set %pfindery #CHARPOSY - %walksize
+  }
+  else
+  {
+   set %pfindery #CHARPOSY + %walksize
+  }
+  
+   event PathFind %pfinderx %pfindery 0 1 3
+  
+  
+  ;if left_the_protection in #journal
+  ;{
+  ;  set %longWalk #RANDOM
+    
+  ;     move 559 1038 0 1 30s
+
+
+ ; }
+}
+
+
+halt
