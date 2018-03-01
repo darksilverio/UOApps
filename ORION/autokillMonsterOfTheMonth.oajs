@@ -30,6 +30,7 @@ var runas = [
 //var monsterGraph = '0x0018'; //liche
 var monsterGraph = '0x0032|0x0038|0x0039'; //eskeleton 
 
+//GLOBALS
 var nextRune = 0;
 
 //------------------------------------------------------
@@ -260,7 +261,6 @@ function Follow() {
 
 function ___PVP_PVM___() { }
 //------------------------------------------------------
-
 
 function AutoPotion() {
 
