@@ -10,19 +10,27 @@ var map = '0x14EB'
 var lootTosave = gems + '|' + cloth + '|' + map
 
 var runas = [
-	//{ runa: 10, fuga: { x: 2736, y: 874 }, viewRange: 21 }, //vesper
-	//{ runa: 99, fuga: { x: 2740, y: 852 }, viewRange: 21 }, //vesper
-	//{ runa: 1, fuga: { x: 5715, y: 3591 }, viewRange: 21 }, //wastelands -- safe
+	{ runa: 10, fuga: { x: 2736, y: 874 }, viewRange: 21 }, //vesper
+	{ runa: 99, fuga: { x: 2740, y: 852 }, viewRange: 21 }, //vesper
+	{ runa: 1, fuga: { x: 5715, y: 3591 }, viewRange: 21 }, //wastelands -- safe
 	{runa: 2, fuga: {x: 2045, y: 232}, viewRange: 21}, //wrong entrance -- go to open door
 	{runa: 99, fuga: {x: 2029, y: 231}, viewRange: 21}, //wrong entrance -- go hide
-	//-del{runa: 99, fuga: {x: 2042, y: 213}, viewRange: 21}, //wrong entrance -- go hide
 	{runa: 3, fuga: {x: 5827, y: 621}, viewRange: 21}, //wrrong 1 -- go entrance -- consider not to come
-	//{runa: 99, fuga: {x: 5826, y: 627}, viewRange: 14}, //go left
 	{runa: 99, fuga: {x: 5822, y: 577}, viewRange: 9}, //go left
-	{ runa: 4, fuga: { x: 5292, y: 545 }, viewRange: 21 }, //deceit 2 -- mid
-	{ runa: 99, fuga: { x: 5308, y: 528 }, viewRange: 21 }, //deceit 2 -- safe
-	{ runa: 5, fuga: { x: 5325, y: 620 }, viewRange: 16 }, //deceit 2 -- mid
-	{ runa: 99, fuga: { x: 5326, y: 592 }, viewRange: 10 },
+	{ runa: 4, fuga: { x: 5290, y: 541 }, viewRange: 21 }, //deceit 2 -- mid
+	{ runa: 99, fuga: { x: 5283, y: 550 }, viewRange: 21 }, //deceit 2 -- mid
+	{ runa: 99, fuga: { x: 5283, y: 574 }, viewRange: 21 }, //deceit 2 -- safe
+	{ runa: 99, fuga: { x: 5294, y: 579 }, viewRange: 21 }, //deceit 2 -- safe
+	{ runa: 99, fuga: { x: 5310, y: 580 }, viewRange: 21 }, //deceit 2 -- safe
+	{ runa: 99, fuga: { x: 5322, y: 590 }, viewRange: 21 }, //deceit 2 -- safe
+	{ runa: 99, fuga: { x: 5312, y: 603 }, viewRange: 21 }, //deceit 2 -- safe
+	{ runa: 99, fuga: { x: 5302, y: 606 }, viewRange: 21 }, //deceit 2 -- safe
+	{ runa: 99, fuga: { x: 5310, y: 603 }, viewRange: 21 }, //deceit 2 -- safe
+	{ runa: 99, fuga: { x: 5325, y: 624 }, viewRange: 21 }, //deceit 2 -- safe
+	{ runa: 99, fuga: { x: 5342, y: 590 }, viewRange: 21 }, //deceit 2 -- safe
+	{ runa: 99, fuga: { x: 5342, y: 593 }, viewRange: 21 }, //deceit 2 -- safe
+	//{ runa: 5, fuga: { x: 5325, y: 620 }, viewRange: 16 }, //deceit 2 -- mid
+	{ runa: 99, fuga: { x: 5326, y: 592 }, viewRange: 1 },
 	//{runa: 6, fuga: {x: 5219, y: 3671}, viewRange: 21}, //city of the dead
 	//{runa: 99, fuga: {x: 5235, y: 3637}, viewRange: 21},
 	{ runa: 7, fuga: { x: 776, y: 710 }, viewRange: 21 },
@@ -31,7 +39,7 @@ var runas = [
 ];
 
 //var monsterGraph = '0x0018'; //liche
-var monsterGraph = '0x0032|0x0038|0x0039|0x00D9'; //eskeleton 
+var monsterGraph = '0x0032|0x0038|0x0039'; //eskeleton 
 
 //GLOBALS
 var nextRune = 0;
@@ -215,9 +223,10 @@ function getBestMonster(){
 	
 	debug('Choosing best kill');
 	Orion.Ignore(self);
-	var normal = Orion.FindType(monsterGraph, "0|0x065E|0x0641|0x0650|0x0663",ground, "live|mobile", 25, "gray|red");
-	var paragon = Orion.FindType(monsterGraph, '0x0A23',ground, "live|mobile", 25, "gray|red");
-	var human = Orion.FindType('0x0190|0x0191', -1,ground, "human|live", 8, "blue|red|gray");
+	//var normal = Orion.FindType(monsterGraph, "0|0x065E|0x0641|0x0650|0x0663|0x0676",ground, "live|mobile", 25, "gray|red");
+	var normal = Orion.FindType(monsterGraph, '0|!0x0A23',ground, 'live|mobile', 25, 'gray|red');
+	var paragon = Orion.FindType(monsterGraph, '0x0A23',ground, 'live|mobile', 25, 'gray|red');
+	var human = Orion.FindType('0x0190|0x0191', -1,ground, 'human|live', 8, 'blue|red|gray');
 	
 	var nearest = [];
 	
