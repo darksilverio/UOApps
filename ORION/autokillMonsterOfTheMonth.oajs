@@ -10,21 +10,23 @@ var map = '0x14EB'
 var lootTosave = gems + '|' + cloth + '|' + map
 
 var runas = [
-	{ runa: 12, fuga: { x: 776, y: 710 }, viewRange: 21 }, //casa teste
+	//{ runa: 10, fuga: { x: 2736, y: 874 }, viewRange: 21 }, //vesper
+	//{ runa: 99, fuga: { x: 2740, y: 852 }, viewRange: 21 }, //vesper
 	//{ runa: 1, fuga: { x: 5715, y: 3591 }, viewRange: 21 }, //wastelands -- safe
-	//{runa: 2, fuga: {x: 2045, y: 232}, viewRange: 21}, //wrong entrance -- go to open door
-	//{runa: 99, fuga: {x: 2029, y: 231}, viewRange: 21}, //wrong entrance -- go hide
-	//{runa: 3, fuga: {x: 5827, y: 621}, viewRange: 21}, //wrrong 1 -- go entrance
-	//{runa: 99, fuga: {x: 5838, y: 577}, viewRange: 14}, //go left
-	//{runa: 99, fuga: {x: 5838, y: 577}, viewRange: 14}, //finish left
-	//{ runa: 4, fuga: { x: 5292, y: 545 }, viewRange: 21 }, //deceit 2 -- mid
-	//{ runa: 99, fuga: { x: 5308, y: 528 }, viewRange: 21 }, //deceit 2 -- safe
-	//{ runa: 5, fuga: { x: 5325, y: 620 }, viewRange: 16 }, //deceit 2 -- mid
-	//{ runa: 99, fuga: { x: 5326, y: 592 }, viewRange: 10 },
-	//{runa: 6, fuga: {x: 5227, y: 3667}, viewRange: 21}, //city of the dead
+	{runa: 2, fuga: {x: 2045, y: 232}, viewRange: 21}, //wrong entrance -- go to open door
+	{runa: 99, fuga: {x: 2029, y: 231}, viewRange: 21}, //wrong entrance -- go hide
+	//-del{runa: 99, fuga: {x: 2042, y: 213}, viewRange: 21}, //wrong entrance -- go hide
+	{runa: 3, fuga: {x: 5827, y: 621}, viewRange: 21}, //wrrong 1 -- go entrance -- consider not to come
+	//{runa: 99, fuga: {x: 5826, y: 627}, viewRange: 14}, //go left
+	{runa: 99, fuga: {x: 5822, y: 577}, viewRange: 9}, //go left
+	{ runa: 4, fuga: { x: 5292, y: 545 }, viewRange: 21 }, //deceit 2 -- mid
+	{ runa: 99, fuga: { x: 5308, y: 528 }, viewRange: 21 }, //deceit 2 -- safe
+	{ runa: 5, fuga: { x: 5325, y: 620 }, viewRange: 16 }, //deceit 2 -- mid
+	{ runa: 99, fuga: { x: 5326, y: 592 }, viewRange: 10 },
+	//{runa: 6, fuga: {x: 5219, y: 3671}, viewRange: 21}, //city of the dead
 	//{runa: 99, fuga: {x: 5235, y: 3637}, viewRange: 21},
-	//{ runa: 7, fuga: { x: 776, y: 710 }, viewRange: 21 },
-	//{ runa: 8, fuga: { x: 4441, y: 1280 }, viewRange: 21 }
+	{ runa: 7, fuga: { x: 776, y: 710 }, viewRange: 21 },
+	{ runa: 8, fuga: { x: 4441, y: 1280 }, viewRange: 21 }
 
 ];
 
@@ -40,7 +42,6 @@ function __MACROS_MAIN__() { }
 //------------------------------------------------------
 function Autostart() {
 
-	TextWindow.Clear();
 
 	if (Orion.ScriptRunning('AutoKillMOTF')) {
 		Orion.CharPrint(self, infoColor, 'Stop Auto Kill MOTF and reset');
@@ -52,12 +53,7 @@ function Autostart() {
 	else {
 		Orion.CharPrint(self, infoColor, 'BG Macro: AutoKillMOTF');
 		Orion.Exec('AutoKillMOTF', true);
-		
-		
-		//Orion.CharPrint(self, infoColor, 'BG Macro: autoOpenDoor');
-		//Orion.Exec('autoOpenDoor', true);
-		
-		
+		TextWindow.Clear();
 	}
 
 	//Orion.Wait(500);
@@ -72,9 +68,6 @@ function Autostart() {
 
 	Orion.Print(infoColor, 'BG Macro: AntiPK');
 	Orion.Exec('AntiPK', true);
-
-	//Orion.Print(infoColor, 'BG Macro: autoOpenDoor');
-	//Orion.Exec('autoOpenDoor', true);
 
 	Orion.Exec('SetViewRange', true);
 }
@@ -92,8 +85,8 @@ function AutoKillMOTF() {
 
 	debug('So the blood bath begins ...');
 	while (!Player.Dead()) {
-		debug('Looking for kill...');
-		var monster = Orion.FindType(monsterGraph, '-1', ground, "near|live|mobile", runas[nextRune].viewRange, "gray|red");
+		debug(' ');
+		var monster = getBestMonster();
 		if (monster.length == 0) {
 			debug("NOTHING TO KILL", true, true);
 			Orion.IgnoreReset();
@@ -104,11 +97,12 @@ function AutoKillMOTF() {
 			continue;
 		}
 
+		debug('Attacking ...');
 		var startedFollowing = false;
 		while (Orion.ObjectExists(monster[0])) {
-			debug('Attacking ...');
+
 			//Check if fallowing is failed .. else keep following
-			if( !Orion.ScriptRunning('Follow') && startedFollowing ){
+			if( !Orion.ScriptRunning('Follow') && startedFollowing && Orion.GetDistance(monster[0]) > 1){
 				debug('Cant follow: ' + monster[0], true, true);
 				Orion.Ignore(monster[0]);
 				break;
@@ -116,7 +110,8 @@ function AutoKillMOTF() {
 			else{
 				Orion.Exec('Follow', true, monster[0]);
 				startedFollowing = true;
-				//Orion.Attack(monster[0]);
+				Orion.Attack(monster[0]);
+				OpenDoor() ;
 			}
 
 			if (Player.Hits() < 40) {
@@ -127,9 +122,9 @@ function AutoKillMOTF() {
 				Orion.Exec('Autostart', true);
 			}
 
-			Orion.Wait(1000);
+			Orion.Wait(100);
 		}
-		for (var i = 0; i < 3; i++) {
+		for (var i = 0; i < 2; i++) {
 			FastLoot();
 			GEMCHECK();
 		}
@@ -143,7 +138,7 @@ function AutoKillMOTF() {
 
 			debug("POUCO Perigo: " + contaPerigo.length, true, false);
 		}
-		Orion.Wait(50);
+		Orion.Wait(100);
 	}
 	return;
 }
@@ -215,6 +210,41 @@ function findMonsterDelay() {
 	}
 }
 
+function getBestMonster(){
+	//assuming that we will never have 2 paragons together
+	
+	debug('Choosing best kill');
+	Orion.Ignore(self);
+	var normal = Orion.FindType(monsterGraph, "0|0x065E|0x0641|0x0650|0x0663",ground, "live|mobile", 25, "gray|red");
+	var paragon = Orion.FindType(monsterGraph, '0x0A23',ground, "live|mobile", 25, "gray|red");
+	var human = Orion.FindType('0x0190|0x0191', -1,ground, "human|live", 8, "blue|red|gray");
+	
+	var nearest = [];
+	
+	for(var i = 0; i < normal.length; i++){
+	
+		var obj = Orion.FindObject(normal[i])	
+		
+		//don't kill someones monster
+		if( (obj.Hits() < obj.MaxHits()) && human.length)		{
+			debug('Avoiding to steal kill from: ' + human[0]);
+			continue;
+		}
+		
+		var dis = Orion.GetDistance(normal[i]);
+		Orion.CharPrint(normal[i], infoColor, dis);
+	
+		if( dis < Orion.GetDistance(nearest) )
+			nearest = [normal[i]];
+	}
+
+
+	if(nearest.length == 0)
+		return paragon;
+	else
+		return nearest;
+}
+
 
 function __WALKING__() { }
 
@@ -229,12 +259,22 @@ function GoToBank() {
 function PathFinder(x, y) {
 
 	Orion.OptionAlwaysRun(true);
+
+	var playerXY = {x: Player.X(), y: Player.Y()};
+
 	while (!Orion.WalkTo(x, y, Player.Z(), 1)) {
-		Orion.Wait(500);
-		Orion.Print(31, 'Going to: ' + x + ', ' + y + ' Can walk: ' + Orion.CanWalk(Player.Direction(), x, y, -1));
+
+		debug('Can Walk to: ' + x + ', ' + y + '? - ' + Orion.CanWalk(Player.Direction(), x, y, Player.Z()) );
+
+		if(Player.X() == playerXY.x && Player.Y() == playerXY.y  && !Player.Frozen())
+			break; 
+		
+		Orion.Wait(100);
+		playerXY = {x: Player.X(), y: Player.Y()};
 	}
 
 	Orion.OptionAlwaysRun(false);
+	return false
 }
 
 //--------------------------------------------------------------------------
@@ -252,11 +292,11 @@ function Follow(serial) {
 	Orion.OptionAlwaysRun(true);
 
 	var playerXY = {x: Player.X(), y: Player.Y()};
-
+	
 	while ( Orion.ObjectExists( obj.Serial() ) ) {
 		Orion.WalkTo(obj.X(), obj.Y(), obj.Z(), 1);
 
-		if(Player.X() == playerXY.x && Player.Y() == playerXY.y)
+		if(Player.X() == playerXY.x && Player.Y() == playerXY.y && !Player.Frozen() )
 			break;
 		
 		Orion.Wait(50);
@@ -395,6 +435,7 @@ function GEMCHECK() {
 		GoHide();
 		Escape();
 		Destock();
+		Orion.Terminate('all', 'GEMCHECK');
 		Orion.Exec('Autostart', true);
 
 
@@ -433,31 +474,17 @@ function __NON_MACRO__() { }
 
 
 //--------------------------------------------------------------------------
-function autoOpenDoor() {
-
-	while (!Player.Dead()) {
-		Orion.Wait(100);
-		var portaFechada = Orion.FindType('0x3EB2|0x3EB1|0x0675|0x0677|0x0679|0x067B|0x067D|0x067F|0x0681|0x0683|0x0685|0x0687|0x0689|0x068B|0x068D|0x068F|0x0691|0x0693|0x0695|0x0697|0x0699|0x069B|0x069D|0x069F|0x06A1|0x06A3|0x06A5|0x06A7|0x06A9|0x06AB|0x06AD|0x06AF|0x06B1|0x06B3|0x06B5|0x06B7|0x06B9|0x06BB|0x06BD|0x06BF|0x06C1|0x06C3|0x06C5|0x06C7|0x06C9|0x06CB|0x06CD|0x06CF|0x06D1|0x06D3|0x06D5|0x06D7|0x06D9|0x06DB|0x06DD|0x06DF|0x06E1|0x06E3|0x06E5|0x06E7|0x06E9|0x06EB|0x06ED|0x06EF|0x06F1|0x06F3|0x06F5|0x0824|0x0826|0x0828|0x082A|0x082C|0x082E|0x0830|0x0832|0x0839|0x083B|0x083D|0x083F|0x0841|0x0843|0x0845|0x0847|0x084C|0x084E|0x0850|0x0852|0x0854|0x0856|0x0858|0x085A|0x0866|0x0868|0x086A|0x086C|0x086E|0x0870|0x0872|0x0874|0x1FED|0x1FEF|0x1FF1|0x1FF3|0x1FF5|0x1FF7|0x1FF9|0x1FFB|0x00E8|0x00EA|0x00EC|0x00EE|0x00F0|0x00F2|0x00F4|0x00F6|0x0314|0x0316|0x0318|0x031A|0x031C|0x031E|0x0320|0x0322|0x0324|0x0326|0x0328|0x032A|0x032C|0x032E|0x0330|0x0332|0x0334|0x0336|0x0338|0x033A|0x033C|0x033E|0x0340|0x0342|0x0344|0x0346|0x0348|0x034A|0x034C|0x034E|0x0350|0x0352|0x0354|0x0356|0x0358|0x035A|0x035C|0x035E|0x0360|0x0362', '-1', ground, '', 2);
-
-		if (portaFechada.length) {
-			for (i = 0; i < portaFechada.length; i++) {
-				Orion.UseObject(portaFechada[i]);
-				debug('Opening door ...');
-				//Orion.Wait(50);
-			}
-		}
-	}
-}
-
 function OpenDoor() {
 
-	debug('Opening doors');
+	
 	var portaFechada = Orion.FindType('0x3EB2|0x3EB1|0x0675|0x0677|0x0679|0x067B|0x067D|0x067F|0x0681|0x0683|0x0685|0x0687|0x0689|0x068B|0x068D|0x068F|0x0691|0x0693|0x0695|0x0697|0x0699|0x069B|0x069D|0x069F|0x06A1|0x06A3|0x06A5|0x06A7|0x06A9|0x06AB|0x06AD|0x06AF|0x06B1|0x06B3|0x06B5|0x06B7|0x06B9|0x06BB|0x06BD|0x06BF|0x06C1|0x06C3|0x06C5|0x06C7|0x06C9|0x06CB|0x06CD|0x06CF|0x06D1|0x06D3|0x06D5|0x06D7|0x06D9|0x06DB|0x06DD|0x06DF|0x06E1|0x06E3|0x06E5|0x06E7|0x06E9|0x06EB|0x06ED|0x06EF|0x06F1|0x06F3|0x06F5|0x0824|0x0826|0x0828|0x082A|0x082C|0x082E|0x0830|0x0832|0x0839|0x083B|0x083D|0x083F|0x0841|0x0843|0x0845|0x0847|0x084C|0x084E|0x0850|0x0852|0x0854|0x0856|0x0858|0x085A|0x0866|0x0868|0x086A|0x086C|0x086E|0x0870|0x0872|0x0874|0x1FED|0x1FEF|0x1FF1|0x1FF3|0x1FF5|0x1FF7|0x1FF9|0x1FFB|0x00E8|0x00EA|0x00EC|0x00EE|0x00F0|0x00F2|0x00F4|0x00F6|0x0314|0x0316|0x0318|0x031A|0x031C|0x031E|0x0320|0x0322|0x0324|0x0326|0x0328|0x032A|0x032C|0x032E|0x0330|0x0332|0x0334|0x0336|0x0338|0x033A|0x033C|0x033E|0x0340|0x0342|0x0344|0x0346|0x0348|0x034A|0x034C|0x034E|0x0350|0x0352|0x0354|0x0356|0x0358|0x035A|0x035C|0x035E|0x0360|0x0362', '-1', ground, '', 3);
 
 	if (portaFechada.length <= 0) 
 		return;
 
-	for (i = 0; i < portaFechada.length; i++) {
+	
+	for (var i = 0; i < portaFechada.length; i++) {
+		debug('Opening doors: ' + (i+1) + '/' + portaFechada.length);
 		Orion.UseObject(portaFechada[i]);
 		Orion.Wait(300);
 	}
